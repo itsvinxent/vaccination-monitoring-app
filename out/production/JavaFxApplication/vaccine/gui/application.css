@@ -1,0 +1,33 @@
+/*--Variables--*/
+* {
+    -light-teal: #76F2FF;
+    -dark-blue: #052440;
+}
+.button {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+#main {
+
+}
+
+#pageTitle {
+    -fx-alignment: "center";
+    -fx-text-fill: -dark-blue;
+    -fx-font-size: 20;
+    -fx-font-weight: bold;
+}
+
+#menuContainer {
+    -fx-background-color: -dark-blue;
+}
+#menuButtonCurrent {
+    -fx-background-radius: 0;
+    -fx-background-color: -light-teal;
+}
+#drName {
+    -fx-alignment: "center";
+    -fx-text-fill: -dark-blue;
+    -fx-font-size: 14;
+}

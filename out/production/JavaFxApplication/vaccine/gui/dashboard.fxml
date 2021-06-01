@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+
+<AnchorPane fx:id="maindashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.controllers.patientTable">
+   <children>
+      <AnchorPane fx:id="menuContainer" prefHeight="720.0" prefWidth="250.0">
+         <children>
+            <Button fx:id="menuButtonCurrent" layoutX="1.0" layoutY="304.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="250.0" text="Patient Records" />
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="content" layoutX="250.0" prefHeight="720.0" prefWidth="1030.0">
+         <children>
+            <Label fx:id="pageTitle" layoutX="14.0" layoutY="14.0" text="Patient Records" />
+            <TableView fx:id="patientT" layoutX="12.0" layoutY="197.0" prefHeight="500.0" prefWidth="1000.0">
+              <columns>
+                  <TableColumn fx:id="patientNum" prefWidth="100.0" resizable="false" text="Patient #" />
+                  <TableColumn fx:id="doctorNum" prefWidth="100.0" resizable="false" text="Doctor #" />
+                  <TableColumn fx:id="patientName" prefWidth="200.0" resizable="false" text="Name" />
+                  <TableColumn fx:id="vaccineBrand" prefWidth="100.0" resizable="false" text="Vaccine" />
+                  <TableColumn fx:id="firstDose" prefWidth="100.0" resizable="false" text="1st Dose" />
+                  <TableColumn fx:id="secondDose" prefWidth="100.0" resizable="false" text="2nd Dose" />
+                  <TableColumn fx:id="patientStatus" prefWidth="100.0" resizable="false" text="Status" />
+              </columns>
+            </TableView>
+            <TextField fx:id="searchBar" layoutX="14.0" layoutY="162.0" prefHeight="25.0" prefWidth="200.0" promptText="Search by Patient # or Name" />
+            <Button fx:id="addPatientButton" layoutX="912.0" layoutY="162.0" mnemonicParsing="false" onAction="#addPopUp" prefHeight="25.0" prefWidth="100.0" text="+ New Patient" />
+            <Label fx:id="name" layoutX="753.0" layoutY="14.0" prefHeight="17.0" prefWidth="150.0" text="Juan Dela Cruz" textAlignment="CENTER" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="100.0" layoutX="912.0" layoutY="14.0" stroke="BLACK" strokeType="INSIDE" width="100.0" />
+            <Button fx:id="clear" disable="true" layoutX="221.0" layoutY="162.0" mnemonicParsing="false" onAction="#clear" opacity="0.0" text="Clear Results" />
+            <Button fx:id="searchButton" layoutX="221.0" layoutY="162.0" mnemonicParsing="false" onAction="#search" text="Search" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
