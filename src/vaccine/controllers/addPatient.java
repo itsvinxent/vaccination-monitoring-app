@@ -17,7 +17,11 @@ import vaccine.classes.Schedule;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.ResourceBundle;
 
 import vaccine.classes.Vaccine;
@@ -51,12 +55,18 @@ public class addPatient implements Initializable {
     @FXML
     private Button saveEntry;
 
+    int interval;
+    String first_dose, second_dose;
+    SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+    Calendar calendar = Calendar.getInstance();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Populate ComboBoxes with doctor names and vaccine brands
         ObservableList<String> vaccines = vaccineDAO.getAllVaccineBrand();
         ObservableList<String> doctors = doctorDAO.getAllDoctorsByName();
-        ObservableList<String> sched = FXCollections.observableArrayList("7:30AM", "10:30AM", "1:30PM", "4:30PM");
+//        ObservableList<String> sched = FXCollections.observableArrayList("7:30AM", "10:30AM", "1:30PM", "4:30PM");
+        ObservableList<String> sched = FXCollections.observableArrayList("AM", "PM");
         vaccineID.setItems(vaccines);
         drID.setItems(doctors);
         schedule.setItems(sched);
@@ -64,58 +74,23 @@ public class addPatient implements Initializable {
     }
 
     public void save(ActionEvent event) throws Exception {
-        String pattern = "MM-dd-yyyy";
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
-
-//        Schedule patient = new Schedule(0,
-//                drID.getValue(),
-//                patientLName.getText(),
-//                patientFName.getText(),
-//                vaccineID.getValue(),
-//                firstDose.getValue().format(dateFormatter),
-//                secondDose.getValue().format(dateFormatter),
-//                "incomplete");
-        // todo: system for setting the status
         Schedule patient = new Schedule(0,
-                2,
-                "Silonga",
-                "Blaster",
-                "1",
-                "03-03-2021",
-                "03-24-2021",
-                "10:30AM",
-                "10:30AM",
+                drID.getValue(),
+                patientLName.getText(),
+                patientFName.getText(),
+                vaccineID.getValue(),
+                first_dose,
+                second_dose,
+                schedule.getValue(),
+                schedule.getValue(),
                 "incomplete");
-
-        int stat = scheduleDAO.save(patient);
-//        save(patient);
+        // todo: system for setting the status
+        scheduleDAO.save(patient);
 
         Stage stage = (Stage) main.getScene().getWindow();
         stage.hide();
 
         saveEntry.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
-
-
-
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/dashboard.fxml"));
-//        Parent root = loader.load();
-//
-//        Stage stage2 = (Stage) main.getScene().getWindow();
-//        stage2.close();
-//
-//        Stage stage = new Stage();
-//        Scene scene = new Scene(root, 854, 480);
-//        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("../gui/application.css")).toExternalForm());
-//        String css = Objects.requireNonNull(this.getClass().getResource("../gui/application.css")).toExternalForm();
-//        scene.getStylesheets().add(css);
-//
-//        Image logo = new Image("vaccine/img/GitHub.png");
-//        stage.setTitle("Vaccine Monitoring App");
-//        stage.setResizable(false);
-//        stage.getIcons().add(logo);
-//        stage.setScene(scene);
-//        stage.show();
-
     }
 
     public void cancel(ActionEvent event)  {
@@ -123,5 +98,20 @@ public class addPatient implements Initializable {
         popup.close();
     }
 
-
+    public void showSecondDose(ActionEvent event) {
+        first_dose = firstDose.getEditor().getText();
+        interval = vaccineDAO.getDosageIntervalsByBrand(vaccineID.getValue());
+        System.out.println(vaccineID.getValue());
+        System.out.println(interval);
+        System.out.println(first_dose);
+        try {
+            if (event.getSource() == firstDose)
+                calendar.setTime(format.parse(first_dose));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        calendar.add(Calendar.DAY_OF_MONTH, interval);
+        second_dose = format.format(calendar.getTime());
+        secondDose.getEditor().setText(second_dose);
+    }
 }

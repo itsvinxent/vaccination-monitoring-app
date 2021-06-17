@@ -22,8 +22,7 @@ public class accountDAO {
             ps.setString(3, u.getUsertype());
             ps.executeUpdate();
             id = getUserIDByUsername(u.getUsername());
-            return id;
-
+            conn.close();
         } catch (Exception exception) {
             // to do
         }
@@ -48,13 +47,12 @@ public class accountDAO {
                     u.setUsertype(rs.getString("usertype"));
                     u.setUsername(username);
                     u.setPassword(password);
-                    return u;
                 } else {
                     System.out.println("Failed");
                     return null;
                 }
             }
-
+            conn.close();
         } catch (Exception exception) {
             // to do
         }
@@ -70,6 +68,7 @@ public class accountDAO {
             rs = ps.executeQuery();
             while (rs.next())
                 id = rs.getInt("userID");
+            conn.close();
         } catch (Exception exception) {
             // to do
         }

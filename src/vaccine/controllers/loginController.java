@@ -49,7 +49,7 @@ public class loginController {
             String name = null;
             int id = details.getUserID();
             if (usertype.equals("doctor"))
-                name = doctorDAO.getDoctorNameByID(details.getUserID());
+                name = doctorDAO.getDoctorNameByUserID(details.getUserID());
             else if (usertype.equals("medstaff"))
                 name = staffDAO.getStaffNameByID(details.getUserID());
             else

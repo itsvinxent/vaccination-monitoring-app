@@ -21,9 +21,6 @@ import vaccine.classes.Schedule;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -38,7 +35,7 @@ public class patientTable implements Initializable {
     @FXML
     private TableColumn<Schedule, Integer> patientNum;
     @FXML
-    private TableColumn<Schedule, Integer> doctorNum;
+    private TableColumn<Schedule, String> doctorNum;
     @FXML
     private TableColumn<Schedule, String> patientName;
     @FXML
@@ -54,10 +51,6 @@ public class patientTable implements Initializable {
     @FXML
     private TableView<Schedule> schedT;
     @FXML
-    private TableView<Account> accountT;
-    @FXML
-    private TableView<Vaccine> vaccineT;
-    @FXML
     private TableColumn<Schedule, String> dateCol;
     @FXML
     private TableColumn<Schedule, String> timeCol;
@@ -69,6 +62,14 @@ public class patientTable implements Initializable {
     private TableColumn<Schedule, String> vaccineCol;
     @FXML
     private TableColumn<Schedule, String> dosageCol;
+
+    // Account Management Table
+    @FXML
+    private TableView<Account> accountT;
+
+    // Vaccine Management Table
+    @FXML
+    private TableView<Vaccine> vaccineT;
 
     // Components
     @FXML
@@ -86,13 +87,10 @@ public class patientTable implements Initializable {
 
     // Var
     InnerShadow innerShadow = new InnerShadow();
+    ObservableList<String> filters = FXCollections.observableArrayList("Vaccine Brand", "Vaccination Status");
+    ObservableList<Schedule> patients;
     String type;
     int id;
-    ObservableList<Schedule> patients;
-    ObservableList<String> filters = FXCollections.observableArrayList("Vaccine Brand", "Vaccination Status");
-    Connection conn = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
 
     // JAVA FX onAction Functions
     @Override
@@ -102,7 +100,7 @@ public class patientTable implements Initializable {
 
     public void reloadRecordTable() {
         patientNum.setCellValueFactory(new PropertyValueFactory<Schedule, Integer>("patientNum"));
-        doctorNum.setCellValueFactory(new PropertyValueFactory<Schedule, Integer>("doctorNum"));
+        doctorNum.setCellValueFactory(new PropertyValueFactory<Schedule, String>("doctorName"));
         patientName.setCellValueFactory(new PropertyValueFactory<Schedule, String>("patientName"));
         vaccineBrand.setCellValueFactory(new PropertyValueFactory<Schedule, String>("vaccineBrand"));
         firstDose.setCellValueFactory(new PropertyValueFactory<Schedule, String>("firstDose"));
@@ -113,10 +111,9 @@ public class patientTable implements Initializable {
 //            patients = scheduleDAO.getPatientByDoctor(id);
 //        else
         patients = scheduleDAO.getAllPatients();
-
         patientT.setItems(patients);
         filterButton.setItems(filters);
-        // set Row Color to complete
+        // set Row Color to complete, incomplete
         patientT.setRowFactory(tv -> new TableRow<Schedule>() {
             @Override
             protected void updateItem(Schedule item, boolean empty) {
@@ -131,6 +128,14 @@ public class patientTable implements Initializable {
                     setStyle("");
             }
         });
+        // by default, the table is sorted by status when it is loaded
+        patientStatus.setSortType(TableColumn.SortType.DESCENDING);
+        patientT.getSortOrder().add(patientStatus);
+        patientT.sort();
+    }
+
+    public void reloadScheduleTable() {
+
     }
 
     public void setScheduleTable(int usertype) {
@@ -165,14 +170,15 @@ public class patientTable implements Initializable {
                 addPatientButton.setDisable(true);
                 addPatientButton.setOpacity(0);
                 setScheduleTable(1);
-
                 break;
+
             case "medstaff":
                 msg = "Welcome, " + name;
                 vaccineInfoButton.setDisable(false);
                 vaccineInfoButton.setOpacity(1);
                 setScheduleTable(0);
                 break;
+
             case "admin":
                 msg = "Welcome, Admin!";
                 accountMButton.setDisable(false);

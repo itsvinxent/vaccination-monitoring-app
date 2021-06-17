@@ -14,22 +14,6 @@ public class vaccineDAO {
     static PreparedStatement ps = null;
     static ResultSet rs = null;
 
-    public static String getVaccineBrandByID(int vaccineID) {
-        String brand = null;
-        try {
-            conn = SqliteDBCon.Connector();
-            ps = conn.prepareStatement("select vaccineBrand from vaccine_info where vaccineID=?");
-            ps.setInt(1, vaccineID);
-            rs=ps.executeQuery();
-            while(rs.next()) {
-                brand = rs.getString("vaccineBrand");
-            }
-        } catch (Exception exception) {
-            return null;
-        }
-        return brand;
-    }
-
     public static ObservableList<String> getAllVaccineBrand() {
         ObservableList<String> list = FXCollections.observableArrayList();
         try {
@@ -39,10 +23,45 @@ public class vaccineDAO {
             while(rs.next()) {
                 list.add(rs.getString("vaccineBrand"));
             }
+            conn.close();
         } catch (Exception exception) {
             return null;
         }
         return list;
+    }
+
+    public static int getVaccineIDByBrand(String vaccineBrand) {
+        int vaccineID = 0;
+        try {
+            conn = SqliteDBCon.Connector();
+            ps = conn.prepareStatement("select vaccineID from vaccine_info where vaccineBrand = ?");
+            ps.setString(1, vaccineBrand);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                vaccineID = rs.getInt("vaccineID");
+            }
+            conn.close();
+        } catch (Exception exception) {
+            return -1;
+        }
+        return vaccineID;
+    }
+
+    public static int getDosageIntervalsByBrand(String vaccineBrand) {
+        int interval = 0;
+        try {
+            conn = SqliteDBCon.Connector();
+            ps = conn.prepareStatement("select doseInterval from vaccine_info where vaccineBrand = ?");
+            ps.setString(1, vaccineBrand);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                interval = rs.getInt("doseInterval");
+            }
+            conn.close();
+        } catch (Exception exception) {
+            return -1;
+        }
+        return interval;
     }
 
     public static int addVaccine(Vaccine u) {
@@ -54,8 +73,9 @@ public class vaccineDAO {
             ps.setInt(2, u.getStorageAmount());
             ps.setInt(3, u.getDoseInterval());
             status = ps.executeUpdate();
+            conn.close();
         } catch (Exception exception) {
-            return status;
+            return -1;
         }
         return status;
     }

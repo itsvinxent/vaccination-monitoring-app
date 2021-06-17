@@ -1,41 +1,151 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="maindashboard" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.controllers.patientTable">
-   <children>
-      <AnchorPane fx:id="menuContainer" prefHeight="720.0" prefWidth="250.0">
-         <children>
-            <Button fx:id="menuButtonCurrent" layoutX="1.0" layoutY="304.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="250.0" text="Patient Records" />
-         </children>
-      </AnchorPane>
-      <AnchorPane fx:id="content" layoutX="250.0" prefHeight="720.0" prefWidth="1030.0">
-         <children>
-            <Label fx:id="pageTitle" layoutX="14.0" layoutY="14.0" text="Patient Records" />
-            <TableView fx:id="patientT" layoutX="12.0" layoutY="197.0" prefHeight="500.0" prefWidth="1000.0">
-              <columns>
-                  <TableColumn fx:id="patientNum" prefWidth="100.0" resizable="false" text="Patient #" />
-                  <TableColumn fx:id="doctorNum" prefWidth="100.0" resizable="false" text="Doctor #" />
-                  <TableColumn fx:id="patientName" prefWidth="200.0" resizable="false" text="Name" />
-                  <TableColumn fx:id="vaccineBrand" prefWidth="100.0" resizable="false" text="Vaccine" />
-                  <TableColumn fx:id="firstDose" prefWidth="100.0" resizable="false" text="1st Dose" />
-                  <TableColumn fx:id="secondDose" prefWidth="100.0" resizable="false" text="2nd Dose" />
-                  <TableColumn fx:id="patientStatus" prefWidth="100.0" resizable="false" text="Status" />
-              </columns>
+<AnchorPane fx:id="main" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.controllers.patientTable">
+    <children>
+        <AnchorPane fx:id="menu" prefHeight="720.0" prefWidth="250.0" style="-fx-background-color: #0e2a47;">
+            <effect>
+                <InnerShadow />
+            </effect>
+            <children>
+                <ImageView fitHeight="250.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img/Logoforside.png" />
+               </image>
+            </ImageView>
+                <Button fx:id="recordsButton" layoutX="5.0" layoutY="197.0" mnemonicParsing="false" onAction="#switchtoRecords" prefHeight="39.0" prefWidth="240.0" style="-fx-background-color: #48ffd5;" text="Patient Records" textAlignment="CENTER" textFill="#170101">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="18.0" />
+                    </font>
+               <effect>
+                  <InnerShadow />
+               </effect>
+                </Button>
+                <Button fx:id="scheduleButton" layoutX="5.0" layoutY="242.0" mnemonicParsing="false" onAction="#switchtoSchedule" prefHeight="39.0" prefWidth="240.0" style="-fx-background-color: #48ffd5;" text="Schedule" textAlignment="CENTER" textFill="#2f0101">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="18.0" />
+                    </font>
+                </Button>
+            <Button fx:id="accountMButton" disable="true" layoutX="5.0" layoutY="287.0" mnemonicParsing="false" onAction="#switchtoAccountManagement" opacity="0.0" prefHeight="39.0" prefWidth="240.0" style="-fx-background-color: #48ffd5;" text="Account Management" textAlignment="CENTER" textFill="#2f0101">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="18.0" />
+               </font>
+            </Button>
+            <Button fx:id="vaccineInfoButton" disable="true" layoutX="5.0" layoutY="287.0" mnemonicParsing="false" onAction="#switchtoVaccine" opacity="0.0" prefHeight="39.0" prefWidth="240.0" style="-fx-background-color: #48ffd5;" text="Vaccine Information" textAlignment="CENTER" textFill="#2f0101">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="18.0" />
+               </font>
+            </Button>
+                <Button layoutX="5.0" layoutY="660.0" mnemonicParsing="false" onAction="#logout" prefHeight="39.0" prefWidth="240.0" style="-fx-background-color: #48ffd5;" text="Logout" textAlignment="CENTER" textFill="#2f0101">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="18.0" />
+                    </font>
+                </Button>
+            </children>
+        </AnchorPane>
+        <AnchorPane fx:id="recordBody" layoutX="250.0" prefHeight="720.0" prefWidth="1030.0" style="-fx-background-color: #0e2a47;">
+            <children>
+            <TableView fx:id="schedT" disable="true" layoutX="65.0" layoutY="180.0" opacity="0.0" prefHeight="500.0" prefWidth="900.0">
+               <columns>
+                  <TableColumn fx:id="dateCol" minWidth="40.0" prefWidth="125.0" resizable="false" text="Date" />
+                  <TableColumn fx:id="timeCol" minWidth="40.0" prefWidth="125.0" resizable="false" text="Time" />
+                  <TableColumn fx:id="patientNameCol" minWidth="100.0" prefWidth="175.0" resizable="false" text="Patient Name" />
+                  <TableColumn fx:id="docNameCol" minWidth="100.0" prefWidth="175.0" resizable="false" text="Assigned Doctor" visible="false" />
+                  <TableColumn fx:id="vaccineCol" minWidth="50.0" prefWidth="149.0" resizable="false" text="Vaccine" />
+                  <TableColumn fx:id="dosageCol" minWidth="50.0" prefWidth="149.0" resizable="false" text="Dosage" />
+               </columns>
             </TableView>
-            <TextField fx:id="searchBar" layoutX="14.0" layoutY="162.0" prefHeight="25.0" prefWidth="200.0" promptText="Search by Patient # or Name" />
-            <Button fx:id="addPatientButton" layoutX="912.0" layoutY="162.0" mnemonicParsing="false" onAction="#addPopUp" prefHeight="25.0" prefWidth="100.0" text="+ New Patient" />
-            <Label fx:id="name" layoutX="753.0" layoutY="14.0" prefHeight="17.0" prefWidth="150.0" text="Juan Dela Cruz" textAlignment="CENTER" />
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="100.0" layoutX="912.0" layoutY="14.0" stroke="BLACK" strokeType="INSIDE" width="100.0" />
-            <Button fx:id="clear" disable="true" layoutX="221.0" layoutY="162.0" mnemonicParsing="false" onAction="#clear" opacity="0.0" text="Clear Results" />
-            <Button fx:id="searchButton" layoutX="221.0" layoutY="162.0" mnemonicParsing="false" onAction="#search" text="Search" />
-         </children>
-      </AnchorPane>
-   </children>
+            <TableView fx:id="patientT" layoutX="25.0" layoutY="180.0" prefHeight="500.0" prefWidth="980.0">
+               <columns>
+                  <TableColumn fx:id="patientNum" prefWidth="114.0" resizable="false" text="Patient #" />
+                  <TableColumn fx:id="doctorNum" prefWidth="181.0" resizable="false" text="Assigned Doctor" />
+                  <TableColumn fx:id="patientName" prefWidth="181.0" resizable="false" text="Name" />
+                  <TableColumn fx:id="vaccineBrand" prefWidth="125.0" resizable="false" text="Vaccine" />
+                  <TableColumn fx:id="firstDose" prefWidth="125.0" resizable="false" text="1st Dose" />
+                  <TableColumn fx:id="secondDose" prefWidth="125.0" resizable="false" text="2nd Dose" />
+                  <TableColumn fx:id="patientStatus" prefWidth="125.0" resizable="false" text="Status" />
+               </columns>
+            </TableView>
+            <TableView fx:id="accountT" disable="true" layoutX="65.0" layoutY="180.0" opacity="0.0" prefHeight="500.0" prefWidth="900.0">
+               <columns>
+                  <TableColumn fx:id="userIDCol" minWidth="40.0" prefWidth="140.0" resizable="false" text="User ID" />
+                  <TableColumn fx:id="accountCreationCol" minWidth="40.0" prefWidth="180.0" resizable="false" text="Account Created at" />
+                  <TableColumn fx:id="usernameCol" minWidth="100.0" prefWidth="200.0" resizable="false" text="Username" />
+                  <TableColumn fx:id="passwordCol" minWidth="100.0" prefWidth="200.0" resizable="false" text="Password" />
+                  <TableColumn fx:id="usertype" minWidth="50.0" prefWidth="180.0" resizable="false" text="Usertype" />
+               </columns>
+            </TableView>
+            <TableView fx:id="vaccineT" disable="true" layoutX="65.0" layoutY="180.0" opacity="0.0" prefHeight="500.0" prefWidth="900.0">
+               <columns>
+                  <TableColumn fx:id="vaccineIDCol" minWidth="40.0" prefWidth="225.0" resizable="false" text="Vaccine ID" />
+                  <TableColumn fx:id="vaccineBrandCol" minWidth="180.0" prefWidth="225.0" resizable="false" text="Vaccine Brand" />
+                  <TableColumn fx:id="storageAmountCol" minWidth="100.0" prefWidth="225.0" resizable="false" text="Storage Amount" />
+                  <TableColumn fx:id="doseIntervalCol" minWidth="100.0" prefWidth="225.0" resizable="false" text="Dosage Interval" />
+               </columns>
+            </TableView>
+                <ComboBox fx:id="filterButton" layoutX="900.0" layoutY="145.0" prefHeight="25.0" prefWidth="100.0" promptText="Filter By:" style="-fx-background-color: #48ffd5;" visibleRowCount="3" />
+                <TextField fx:id="searchBar" layoutX="25.0" layoutY="140.0" prefHeight="30.0" prefWidth="350.0" promptText="Search by Patient Name or Patient ID #...">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="15.0" />
+                    </font>
+                </TextField>
+                <Label fx:id="recordTitle" layoutX="34.0" layoutY="24.0" text="Patient Records" textFill="WHITE">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="30.0" />
+                    </font>
+                </Label>
+            <Label fx:id="schedTitle" disable="true" layoutX="34.0" layoutY="24.0" opacity="0.0" text="Schedule" textFill="WHITE">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="30.0" />
+               </font>
+            </Label>
+            <Label fx:id="accountTitle" disable="true" layoutX="34.0" layoutY="24.0" opacity="0.0" text="Account Management" textFill="WHITE">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="30.0" />
+               </font>
+            </Label>
+            <Label fx:id="vaccineTitle" disable="true" layoutX="34.0" layoutY="24.0" opacity="0.0" text="Vaccine Information" textFill="WHITE">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="30.0" />
+               </font>
+            </Label>
+                <Label fx:id="nameLabel" layoutX="34.0" layoutY="60.0" text="Name" textFill="WHITE">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="14.0" />
+                    </font>
+                </Label>
+            <ImageView fitHeight="100.0" fitWidth="100.0" layoutX="902.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" />
+            <Button fx:id="addPatientButton" layoutX="790.0" layoutY="145.0" mnemonicParsing="false" onAction="#addPopUp" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #48ffd5;" text="+ Add Patient">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button fx:id="updatePatientButton" disable="true" layoutX="755.0" layoutY="145.0" mnemonicParsing="false" onAction="#addPopUp" opacity="0.0" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #48ffd5;" text="Update">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button fx:id="addAccountButton" disable="true" layoutX="753.0" layoutY="145.0" mnemonicParsing="false" onAction="#registerPopUp" opacity="0.0" prefHeight="25.0" prefWidth="102.0" style="-fx-background-color: #48ffd5;" text="+ Add Account">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button fx:id="addVaccineButton" disable="true" layoutX="753.0" layoutY="145.0" mnemonicParsing="false" onAction="#vaccinePopUp" opacity="0.0" prefHeight="25.0" prefWidth="102.0" style="-fx-background-color: #48ffd5;" text="+ Add Vaccine">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="12.0" />
+               </font>
+            </Button>
+            </children></AnchorPane>
+    </children>
 </AnchorPane>

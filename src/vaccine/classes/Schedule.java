@@ -2,17 +2,17 @@ package vaccine.classes;
 
 public class Schedule {
 
-    int patientNum, doctorNum;
-    String patientName;
+    int patientNum;
+    String doctorName, patientName;
     String patientLName, patientFName;
     String vaccineBrand, firstDose, secondDose, firstTime, secondTime, status;
 
     // Constructor
-    public Schedule(int patientNum, int doctorNum, String patientLName, String patientFName,
+    public Schedule(int patientNum, String doctorName, String patientLName, String patientFName,
                     String vaccineBrand, String firstDose, String secondDose,
                     String firstTime, String secondTime,String status) {
         this.patientNum = patientNum;
-        this.doctorNum = doctorNum;
+        this.doctorName = doctorName;
         this.patientName = patientLName + ", " + patientFName;
         this.patientLName = patientLName;
         this.patientFName = patientFName;
@@ -40,8 +40,8 @@ public class Schedule {
         return patientNum;
     }
 
-    public int getDoctorNum() {
-        return doctorNum;
+    public String getDoctorName() {
+        return doctorName;
     }
 
     public String getVaccineBrand() {
@@ -85,8 +85,8 @@ public class Schedule {
         this.patientNum = patientNum;
     }
 
-    public void setDoctorNum(int doctorNum) {
-        this.doctorNum = doctorNum;
+    public void setDoctorNum(String doctorName) {
+        this.doctorName = doctorName;
     }
 
     public void setVaccineBrand(String vaccineBrand) {

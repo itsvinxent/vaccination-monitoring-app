@@ -69,8 +69,8 @@
             <TableView fx:id="patientT" layoutX="25.0" layoutY="180.0" prefHeight="500.0" prefWidth="980.0">
                <columns>
                   <TableColumn fx:id="patientNum" prefWidth="114.0" resizable="false" text="Patient #" />
-                  <TableColumn fx:id="doctorNum" prefWidth="114.0" resizable="false" text="Doctor #" />
-                  <TableColumn fx:id="patientName" prefWidth="250.0" resizable="false" text="Name" />
+                  <TableColumn fx:id="doctorNum" prefWidth="181.0" resizable="false" text="Assigned Doctor" />
+                  <TableColumn fx:id="patientName" prefWidth="181.0" resizable="false" text="Name" />
                   <TableColumn fx:id="vaccineBrand" prefWidth="125.0" resizable="false" text="Vaccine" />
                   <TableColumn fx:id="firstDose" prefWidth="125.0" resizable="false" text="1st Dose" />
                   <TableColumn fx:id="secondDose" prefWidth="125.0" resizable="false" text="2nd Dose" />
@@ -88,11 +88,10 @@
             </TableView>
             <TableView fx:id="vaccineT" disable="true" layoutX="65.0" layoutY="180.0" opacity="0.0" prefHeight="500.0" prefWidth="900.0">
                <columns>
-                  <TableColumn fx:id="vaccineIDCol" minWidth="40.0" prefWidth="180.0" resizable="false" text="Vaccine ID" />
-                  <TableColumn fx:id="vaccineBrandCol" minWidth="180.0" prefWidth="180.0" resizable="false" text="Vaccine Brand" />
-                  <TableColumn fx:id="storageAmountCol" minWidth="100.0" prefWidth="180.0" resizable="false" text="Storage Amount" />
-                  <TableColumn fx:id="doseIntervalCol" minWidth="100.0" prefWidth="180.0" resizable="false" text="Dosage Interval" />
-                  <TableColumn prefWidth="180.0" text="Description" />
+                  <TableColumn fx:id="vaccineIDCol" minWidth="40.0" prefWidth="225.0" resizable="false" text="Vaccine ID" />
+                  <TableColumn fx:id="vaccineBrandCol" minWidth="180.0" prefWidth="225.0" resizable="false" text="Vaccine Brand" />
+                  <TableColumn fx:id="storageAmountCol" minWidth="100.0" prefWidth="225.0" resizable="false" text="Storage Amount" />
+                  <TableColumn fx:id="doseIntervalCol" minWidth="100.0" prefWidth="225.0" resizable="false" text="Dosage Interval" />
                </columns>
             </TableView>
                 <ComboBox fx:id="filterButton" layoutX="900.0" layoutY="145.0" prefHeight="25.0" prefWidth="100.0" promptText="Filter By:" style="-fx-background-color: #48ffd5;" visibleRowCount="3" />

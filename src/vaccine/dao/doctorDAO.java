@@ -23,6 +23,7 @@ public class doctorDAO {
             ps.setString(2, d.getDoctorName());
             ps.setInt(3, d.getSchedule());
             status = ps.executeUpdate();
+            conn.close();
         } catch (Exception exception) {
             return 0; // TODO: show a messageBox for error message
         }
@@ -36,6 +37,7 @@ public class doctorDAO {
             ps = conn.prepareStatement("delete from doctor_info where drID=?");
             ps.setInt(1, d.getDoctorNum());
             status = ps.executeUpdate();
+            conn.close();
         } catch (Exception exception) {
             return 0;
         }
@@ -51,13 +53,14 @@ public class doctorDAO {
             while (rs.next()) {
                 list.add(rs.getString("drName"));
             }
+            conn.close();
         } catch (Exception exception) {
             return null;
         }
         return list;
     }
 
-    public static String getDoctorNameByID(int userID) {
+    public static String getDoctorNameByUserID(int userID) {
         String name = null;
         try {
             conn = SqliteDBCon.Connector();
@@ -67,9 +70,27 @@ public class doctorDAO {
             while (rs.next()) {
                 name = rs.getString("drName");
             }
+            conn.close();
         } catch (Exception exception) {
             return null;
         }
         return name;
+    }
+
+    public static int getDoctorIDByDoctorName(String drName) {
+        int id = 0;
+        try {
+            conn = SqliteDBCon.Connector();
+            ps = conn.prepareStatement("select drID from doctor_info where drName = ?");
+            ps.setString(1, drName);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                id = rs.getInt("drID");
+            }
+            conn.close();
+        } catch (Exception exception) {
+            return id;
+        }
+        return id;
     }
 }
