@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="main" prefHeight="585.0" prefWidth="763.0" style="-fx-background-color: #0e2a47;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.controllers.addVaccine">
+<AnchorPane fx:id="main" prefHeight="585.0" prefWidth="763.0" style="-fx-background-color: #0e2a47;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.frontend.controllers.addVaccine">
    <children>
       <Button alignment="CENTER" layoutX="144.0" layoutY="460.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="171.0" style="-fx-background-color: #48ffd5;" text="Add Vaccine">
          <font>

@@ -1,4 +1,4 @@
-package vaccine.controllers;
+package vaccine.frontend.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,11 +13,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import vaccine.classes.Account;
-import vaccine.classes.Schedule;
+import vaccine.backend.classes.Account;
+import vaccine.backend.classes.Schedule;
 
 import java.io.IOException;
 import java.net.URL;
@@ -25,8 +24,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import vaccine.classes.Vaccine;
-import vaccine.dao.scheduleDAO;
+import vaccine.backend.classes.Vaccine;
+import vaccine.backend.dao.scheduleDAO;
 
 public class patientTable implements Initializable {
     // Record Table
@@ -198,6 +197,9 @@ public class patientTable implements Initializable {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../gui/addPatient.fxml")));
             Scene scene = new Scene(root);
             Stage stage = new Stage();
+            Stage current = (Stage) main.getScene().getWindow();
+            stage.initOwner(current);
+
             draw.popUp(root, stage, scene);
 
             stage.setOnHidden(new EventHandler<WindowEvent>() {
@@ -218,9 +220,8 @@ public class patientTable implements Initializable {
         Scene scene = new Scene(root);
         Stage current = (Stage) main.getScene().getWindow();
         stage.initOwner(current);
-        stage.initModality(Modality.APPLICATION_MODAL);
 
-        draw.screen(root, stage, scene, null);
+        draw.popUp(root, stage, scene);
 
     }
 
@@ -230,9 +231,8 @@ public class patientTable implements Initializable {
         Scene scene = new Scene(root);
         Stage current = (Stage) main.getScene().getWindow();
         stage.initOwner(current);
-        stage.initModality(Modality.APPLICATION_MODAL);
 
-        draw.screen(root, stage, scene, null);
+        draw.popUp(root, stage, scene);
 
     }
 
@@ -405,13 +405,13 @@ public class patientTable implements Initializable {
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
 
-                draw.screen(root, stage, scene, null);
+                draw.screen(root, stage, scene);
 
                 Stage current = (Stage) main.getScene().getWindow();
                 current.close();
             }
         } catch (Exception exception) {
-            System.out.println(exception);
+            exception.printStackTrace();
         }
     }
 

@@ -1,4 +1,4 @@
-package vaccine.classes;
+package vaccine.backend.classes;
 
 public class Account {
     int userID;
@@ -6,6 +6,12 @@ public class Account {
 
     public Account(int userID, String username, String password, String usertype) {
         this.userID = userID;
+        this.username = username;
+        this.password = password;
+        this.usertype = usertype;
+    }
+
+    public Account(String username, String password, String usertype) {
         this.username = username;
         this.password = password;
         this.usertype = usertype;

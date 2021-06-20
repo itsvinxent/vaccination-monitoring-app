@@ -1,6 +1,5 @@
-package vaccine.connect;
+package vaccine.backend.util;
 
-import javax.swing.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 

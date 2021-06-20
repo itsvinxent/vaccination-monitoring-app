@@ -1,10 +1,10 @@
-package vaccine.dao;
+package vaccine.backend.dao;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
-import vaccine.classes.Schedule;
-import vaccine.connect.SqliteDBCon;
+import vaccine.backend.classes.Schedule;
+import vaccine.backend.util.SqliteDBCon;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -120,7 +120,7 @@ public class scheduleDAO {
         return list;
     }
 
-    public static int save (Schedule u) {
+    public static int addSchedule(Schedule u) {
         int status = 0;
         try {
             conn = SqliteDBCon.Connector();
@@ -145,6 +145,46 @@ public class scheduleDAO {
         return status;
     }
 
+    public static int updateSchedule (Schedule u) {
+        int status = 0;
+        try {
+            conn = SqliteDBCon.Connector();
+            ps = conn.prepareStatement("update schedule_info " +
+                    "set doctorID = ?, vacID = ?, " +
+                    "patientLName = ?, patientFName =?, " +
+                    "firstDose = ?, secondDose = ?, " +
+                    "firstTime = ?, secondTime = ?, status = ? " +
+                    "where patientID = ?");
+            ps.setInt(1, doctorDAO.getDoctorIDByDoctorName(u.getDoctorName()));
+            ps.setInt(2, vaccineDAO.getVaccineIDByBrand(u.getVaccineBrand()));
+            ps.setString(3, u.getPatientLName());
+            ps.setString(4, u.getPatientFName());
+            ps.setString(5, u.getFirstDose());
+            ps.setString(6, u.getSecondDose());
+            ps.setString(7, u.getFirstTime());
+            ps.setString(8, u.getSecondTime());
+            ps.setString(9, u.getStatus());
+            ps.setInt(10, u.getPatientNum());
+            status = ps.executeUpdate();
+            conn.close();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return status;
+    }
 
+    public static int deleteSchedule (Schedule u) {
+        int status = 0;
+        try {
+            conn = SqliteDBCon.Connector();
+            ps = conn.prepareStatement("delete from schedule_info where patientID = ?");
+            ps.setInt(1,u.getPatientNum());
+            status = ps.executeUpdate();
+            conn.close();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return status;
+    }
 
 }

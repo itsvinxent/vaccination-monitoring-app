@@ -11,13 +11,13 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.controllers.loginController">
+<BorderPane fx:id="main" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.frontend.controllers.loginController">
    <left>
       <AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #0e2a47;" BorderPane.alignment="CENTER">
          <children>
             <ImageView fx:id="brandingImageView" fitHeight="600.0" fitWidth="601.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../img/logo.png" />
+                  <Image url="@img/logo.png" />
                </image>
                <effect>
                   <DropShadow />

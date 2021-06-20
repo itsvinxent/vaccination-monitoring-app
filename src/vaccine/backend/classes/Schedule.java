@@ -1,4 +1,4 @@
-package vaccine.classes;
+package vaccine.backend.classes;
 
 public class Schedule {
 
@@ -12,6 +12,21 @@ public class Schedule {
                     String vaccineBrand, String firstDose, String secondDose,
                     String firstTime, String secondTime,String status) {
         this.patientNum = patientNum;
+        this.doctorName = doctorName;
+        this.patientName = patientLName + ", " + patientFName;
+        this.patientLName = patientLName;
+        this.patientFName = patientFName;
+        this.vaccineBrand = vaccineBrand;
+        this.firstDose = firstDose;
+        this.secondDose = secondDose;
+        this.firstTime = firstTime;
+        this.secondTime = secondTime;
+        this.status = status;
+    }
+
+    public Schedule(String doctorName, String patientLName, String patientFName,
+                    String vaccineBrand, String firstDose, String secondDose,
+                    String firstTime, String secondTime,String status) {
         this.doctorName = doctorName;
         this.patientName = patientLName + ", " + patientFName;
         this.patientLName = patientLName;

@@ -1,9 +1,9 @@
-package vaccine.dao;
+package vaccine.backend.dao;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import vaccine.classes.Vaccine;
-import vaccine.connect.SqliteDBCon;
+import vaccine.backend.classes.Vaccine;
+import vaccine.backend.util.SqliteDBCon;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

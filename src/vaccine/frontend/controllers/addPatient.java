@@ -1,4 +1,4 @@
-package vaccine.controllers;
+package vaccine.frontend.controllers;
 
 
 import javafx.collections.FXCollections;
@@ -13,19 +13,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import vaccine.classes.Schedule;
+import vaccine.backend.classes.Schedule;
 
-import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.ResourceBundle;
 
-import vaccine.classes.Vaccine;
-import vaccine.dao.*;
+import vaccine.backend.dao.*;
 
 public class addPatient implements Initializable {
     @FXML
@@ -85,7 +81,7 @@ public class addPatient implements Initializable {
                 schedule.getValue(),
                 "incomplete");
         // todo: system for setting the status
-        scheduleDAO.save(patient);
+        scheduleDAO.addSchedule(patient);
 
         Stage stage = (Stage) main.getScene().getWindow();
         stage.hide();

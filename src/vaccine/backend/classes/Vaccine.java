@@ -1,4 +1,4 @@
-package vaccine.classes;
+package vaccine.backend.classes;
 
 public class Vaccine {
     int vaccineID, storageAmount, doseInterval;;
@@ -10,6 +10,13 @@ public class Vaccine {
         this.storageAmount = storageAmount;
         this.doseInterval = doseInterval;
     }
+
+    public Vaccine(String vaccineBrand, int storageAmount, int doseInterval) {
+        this.vaccineBrand = vaccineBrand;
+        this.storageAmount = storageAmount;
+        this.doseInterval = doseInterval;
+    }
+
 
     public int getVaccineID() {
         return vaccineID;

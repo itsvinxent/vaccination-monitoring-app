@@ -1,24 +1,16 @@
-package vaccine.controllers;
+package vaccine.frontend.controllers;
 
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
-
-import java.util.List;
-import java.util.Objects;
 
 public class draw {
 
-    public static void screen(Parent parent, Stage stage, Scene scene, String css) {
+    public static void screen(Parent parent, Stage stage, Scene scene) {
         try {
-            if (css != null)
-                scene.getStylesheets().add(css);
-            Image logo = new Image("vaccine/img/GitHub.png");
+            Image logo = new Image("vaccine/frontend/gui/img/GitHub.png");
             stage.setTitle("Vaccine Monitoring App");
             stage.setResizable(false);
             stage.getIcons().add(logo);

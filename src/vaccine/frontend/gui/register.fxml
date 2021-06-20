@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="main" prefHeight="585.0" prefWidth="763.0" style="-fx-background-color: #0e2a47;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.controllers.registerController">
+<AnchorPane fx:id="main" prefHeight="585.0" prefWidth="763.0" style="-fx-background-color: #0e2a47;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.frontend.controllers.registerController">
    <children>
-      <Button alignment="CENTER" layoutX="144.0" layoutY="460.0" mnemonicParsing="false" onAction="#register" prefHeight="58.0" prefWidth="171.0" style="-fx-background-color: #48ffd5;" text="Register">
+      <Button fx:id="registerButton" alignment="CENTER" layoutX="144.0" layoutY="460.0" mnemonicParsing="false" onAction="#register" prefHeight="58.0" prefWidth="171.0" style="-fx-background-color: #48ffd5;" text="Register">
          <font>
             <Font name="Arial Rounded MT Bold" size="20.0" />
          </font>

@@ -1,4 +1,4 @@
-package vaccine.controllers;
+package vaccine.frontend.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

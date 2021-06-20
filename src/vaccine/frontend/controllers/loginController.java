@@ -1,4 +1,4 @@
-package vaccine.controllers;
+package vaccine.frontend.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,14 +10,14 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import vaccine.classes.Account;
+import vaccine.backend.classes.Account;
 
 import java.io.IOException;
 import java.util.Optional;
 
-import vaccine.dao.accountDAO;
-import vaccine.dao.doctorDAO;
-import vaccine.dao.staffDAO;
+import vaccine.backend.dao.accountDAO;
+import vaccine.backend.dao.doctorDAO;
+import vaccine.backend.dao.staffDAO;
 
 public class loginController {
 
@@ -57,7 +57,7 @@ public class loginController {
             patientTable patientTable = loader.getController();
             patientTable.displayName(id, name, usertype);
 
-            draw.screen(root, stage, scene, null);
+            draw.screen(root, stage, scene);
             Stage login = (Stage) main.getScene().getWindow();
             login.close();
         } else {

@@ -1,4 +1,4 @@
-package vaccine.controllers;
+package vaccine.frontend.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,17 +10,22 @@ import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import org.w3c.dom.Text;
-import vaccine.classes.Account;
-import vaccine.classes.Doctor;
-import vaccine.dao.accountDAO;
+import javafx.stage.WindowEvent;
+import vaccine.backend.classes.Account;
+import vaccine.backend.classes.Doctor;
+import vaccine.backend.dao.accountDAO;
+import vaccine.backend.dao.doctorDAO;
 
 public class registerController implements Initializable {
 
+    @FXML
+    private Button registerButton;
     @FXML
     private TextField username, password, cpassword;
     @FXML
@@ -48,28 +53,37 @@ public class registerController implements Initializable {
             String cpass = cpassword.getText();
             String fName = fname.getText();
             String lName = lname.getText();
+            String sched = schedule.getValue();
 
-
-            String usertype;
+            String usertype = null;
             if(doctor.isSelected())
-                usertype = doctor.getText();
+                usertype = doctor.getText().toLowerCase(Locale.ROOT);
             else if (medstaff.isSelected())
-                usertype = medstaff.getText();
+                usertype = medstaff.getText().toLowerCase(Locale.ROOT);
 
             if (!pass.equals(cpass)) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setContentText("Confirm Password must match Password.");
                 alert.show();
             } else {
-                Account account = new Account(0, user, pass, "");
-                int id = accountDAO.save(account);
-
-                System.out.println(id);
+                Account account = new Account(user, pass, usertype);
+                int id = accountDAO.addAccount(account);
+                if (Objects.requireNonNull(usertype).equals("medstaff")) {
+                    // DO MEDSTAFF ADD
+                } else {
+                    String fullname = lName + ", " + fName;
+                    Doctor doctor = new Doctor(id, fullname, sched);
+                    doctorDAO.addDoctor(doctor);
+                }
             }
-            System.out.println("register");
+
+            Stage stage = (Stage) main.getScene().getWindow();
+            stage.hide();
+
+            registerButton.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
 
         } catch (Exception exception) {
-            System.out.println(exception);
+            exception.printStackTrace();
         }
     }
 

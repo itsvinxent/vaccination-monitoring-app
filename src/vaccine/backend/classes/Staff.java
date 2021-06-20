@@ -1,4 +1,4 @@
-package vaccine.classes;
+package vaccine.backend.classes;
 
 public class Staff {
     int staffID;
@@ -8,6 +8,11 @@ public class Staff {
         this.staffID = staffID;
         this.staffName = staffName;
     }
+
+    public Staff(String staffName) {
+        this.staffName = staffName;
+    }
+
 
     public int getStaffID() {
         return staffID;

@@ -1,6 +1,6 @@
-package vaccine.dao;
+package vaccine.backend.dao;
 
-import vaccine.connect.SqliteDBCon;
+import vaccine.backend.util.SqliteDBCon;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,4 +26,5 @@ public class staffDAO {
         }
         return name;
     }
+
 }

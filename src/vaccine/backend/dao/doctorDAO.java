@@ -1,9 +1,9 @@
-package vaccine.dao;
+package vaccine.backend.dao;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import vaccine.classes.Doctor;
-import vaccine.connect.SqliteDBCon;
+import vaccine.backend.classes.Doctor;
+import vaccine.backend.util.SqliteDBCon;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,23 +14,37 @@ public class doctorDAO {
     static PreparedStatement ps = null;
     static ResultSet rs = null;
 
-    public static int createDoctor(Doctor d){
+    public static int addDoctor (Doctor d){
         int status = 0;
         try {
             conn = SqliteDBCon.Connector();
             ps = conn.prepareStatement("insert into doctor_info(userID, drName, schedule) VALUES (?,?,?)");
-            ps.setInt(1, d.getDoctorNum());
+            ps.setInt(1, d.getUserNum());
             ps.setString(2, d.getDoctorName());
-            ps.setInt(3, d.getSchedule());
+            ps.setString(3, d.getSchedule());
             status = ps.executeUpdate();
             conn.close();
         } catch (Exception exception) {
-            return 0; // TODO: show a messageBox for error message
+            exception.printStackTrace();
         }
         return status;
     }
 
-    public static int deleteDoctor(Doctor d) {
+    public static int updateDoctor (Doctor d) {
+        int status = 0;
+        try {
+            conn = SqliteDBCon.Connector();
+            ps = conn.prepareStatement("update doctor_info " +
+                    "set userID = ?, drName = ?, schedule = ? " +
+                    "where drID = ?");
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return status;
+    }
+
+    public static int deleteDoctor (Doctor d) {
         int status = 0;
         try {
             conn = SqliteDBCon.Connector();
@@ -39,7 +53,7 @@ public class doctorDAO {
             status = ps.executeUpdate();
             conn.close();
         } catch (Exception exception) {
-            return 0;
+            exception.printStackTrace();
         }
         return status;
     }
@@ -55,6 +69,7 @@ public class doctorDAO {
             }
             conn.close();
         } catch (Exception exception) {
+            exception.printStackTrace();
             return null;
         }
         return list;
@@ -72,6 +87,7 @@ public class doctorDAO {
             }
             conn.close();
         } catch (Exception exception) {
+            exception.printStackTrace();
             return null;
         }
         return name;
@@ -89,7 +105,7 @@ public class doctorDAO {
             }
             conn.close();
         } catch (Exception exception) {
-            return id;
+            exception.printStackTrace();
         }
         return id;
     }
