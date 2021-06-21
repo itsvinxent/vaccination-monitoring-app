@@ -21,6 +21,7 @@ import vaccine.backend.classes.Account;
 import vaccine.backend.classes.Doctor;
 import vaccine.backend.dao.accountDAO;
 import vaccine.backend.dao.doctorDAO;
+import vaccine.backend.util.AES256;
 
 public class registerController implements Initializable {
 
@@ -60,13 +61,15 @@ public class registerController implements Initializable {
                 usertype = doctor.getText().toLowerCase(Locale.ROOT);
             else if (medstaff.isSelected())
                 usertype = medstaff.getText().toLowerCase(Locale.ROOT);
+            String salt = AES256.generateSalt();
 
             if (!pass.equals(cpass)) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setContentText("Confirm Password must match Password.");
                 alert.show();
             } else {
-                Account account = new Account(user, pass, usertype);
+                pass = AES256.securePassword(pass, salt, true);
+                Account account = new Account(user, pass, usertype, salt);
                 int id = accountDAO.addAccount(account);
                 if (Objects.requireNonNull(usertype).equals("medstaff")) {
                     // DO MEDSTAFF ADD

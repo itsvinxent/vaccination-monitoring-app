@@ -2,7 +2,7 @@ package vaccine.backend.classes;
 
 public class Account {
     int userID;
-    String username, password, usertype;
+    String username, password, usertype, salt;
 
     public Account(int userID, String username, String password, String usertype) {
         this.userID = userID;
@@ -15,6 +15,13 @@ public class Account {
         this.username = username;
         this.password = password;
         this.usertype = usertype;
+    }
+
+    public Account(String username, String password, String usertype, String salt) {
+        this.username = username;
+        this.password = password;
+        this.usertype = usertype;
+        this.salt = salt;
     }
 
     public int getUserID() {
@@ -33,6 +40,10 @@ public class Account {
         return usertype;
     }
 
+    public String getSalt() {
+        return salt;
+    }
+
     public void setUserID(int userID) {
         this.userID = userID;
     }
@@ -47,5 +58,9 @@ public class Account {
 
     public void setUsertype(String usertype) {
         this.usertype = usertype;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 }
