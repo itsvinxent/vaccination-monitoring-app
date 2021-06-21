@@ -36,7 +36,7 @@ public class loginController {
         String username = usernameTextField.getText();
         String password = passwordTextField.getText();
 
-        Account details = new Account(0,username, password, "");
+        Account details = new Account(username, password, "");
         details = accountDAO.validate(details);
         String usertype = details.getUsertype();
 

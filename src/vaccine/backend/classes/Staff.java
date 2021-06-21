@@ -1,7 +1,7 @@
 package vaccine.backend.classes;
 
 public class Staff {
-    int staffID;
+    int userNum, staffID;
     String staffName;
 
     public Staff(int staffID, String staffName) {
@@ -9,10 +9,15 @@ public class Staff {
         this.staffName = staffName;
     }
 
-    public Staff(String staffName) {
+    public Staff(int userNum, int staffID, String staffName) {
+        this.userNum = userNum;
+        this.staffID = staffID;
         this.staffName = staffName;
     }
 
+    public int getUserNum() {
+        return userNum;
+    }
 
     public int getStaffID() {
         return staffID;
@@ -20,6 +25,10 @@ public class Staff {
 
     public String getStaffName() {
         return staffName;
+    }
+
+    public void setUserNum(int userNum) {
+        this.userNum = userNum;
     }
 
     public void setStaffID(int staffID) {

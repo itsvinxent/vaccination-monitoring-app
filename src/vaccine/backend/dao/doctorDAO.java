@@ -37,7 +37,12 @@ public class doctorDAO {
             ps = conn.prepareStatement("update doctor_info " +
                     "set userID = ?, drName = ?, schedule = ? " +
                     "where drID = ?");
-
+            ps.setInt(1, d.getUserNum());
+            ps.setString(2, d.getDoctorName());
+            ps.setString(3, d.getSchedule());
+            ps.setInt(4, d.getDoctorNum());
+            status = ps.executeUpdate();
+            conn.close();
         } catch (Exception exception) {
             exception.printStackTrace();
         }
