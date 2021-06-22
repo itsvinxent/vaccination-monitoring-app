@@ -64,18 +64,50 @@ public class vaccineDAO {
         return interval;
     }
 
-    public static int addVaccine(Vaccine u) {
+    public static int addVaccine (Vaccine v) {
         int status = 0;
         try {
             conn = SqliteDBCon.Connector();
             ps = conn.prepareStatement("insert into vaccine_info(vaccineBrand, storageAmount, doseInterval) values (?,?,?)");
-            ps.setString(1, u.getVaccineBrand());
-            ps.setInt(2, u.getStorageAmount());
-            ps.setInt(3, u.getDoseInterval());
+            ps.setString(1, v.getVaccineBrand());
+            ps.setInt(2, v.getStorageAmount());
+            ps.setInt(3, v.getDoseInterval());
             status = ps.executeUpdate();
             conn.close();
         } catch (Exception exception) {
             return -1;
+        }
+        return status;
+    }
+
+    public static int updateVaccine (Vaccine v) {
+        int status = 0;
+        try {
+            conn = SqliteDBCon.Connector();
+            ps = conn.prepareStatement("update vaccine_info " +
+                    "set vaccineBrand = ?, storageAmount = ?, doseInterval = ? where vaccineID = ?");
+            ps.setString(1, v.getVaccineBrand());
+            ps.setInt(2, v.getStorageAmount());
+            ps.setInt(3, v.getDoseInterval());
+            ps.setInt(4, v.getVaccineID());
+            status = ps.executeUpdate();
+            conn.close();
+        } catch (Exception exception) {
+            return -1;
+        }
+        return status;
+    }
+
+    public static int deleteVaccine (Vaccine v) {
+        int status = 0;
+        try {
+            conn = SqliteDBCon.Connector();
+            ps = conn.prepareStatement("delete from vaccine_info where vaccineID = ?");
+            ps.setInt(1, v.getVaccineID());
+            status = ps.executeUpdate();
+            conn.close();
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
         return status;
     }

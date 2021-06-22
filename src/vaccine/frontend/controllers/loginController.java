@@ -1,5 +1,7 @@
 package vaccine.frontend.controllers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,9 +17,8 @@ import vaccine.backend.classes.Account;
 import java.io.IOException;
 import java.util.Optional;
 
-import vaccine.backend.dao.accountDAO;
-import vaccine.backend.dao.doctorDAO;
-import vaccine.backend.dao.staffDAO;
+import vaccine.backend.classes.Schedule;
+import vaccine.backend.dao.*;
 
 public class loginController {
 
@@ -47,15 +48,20 @@ public class loginController {
             scene = new Scene(root);
 
             String name = null;
+            ObservableList<Schedule> patient = FXCollections.observableArrayList();
             int id = details.getUserID();
-            if (usertype.equals("doctor"))
-                name = doctorDAO.getDoctorNameByUserID(details.getUserID());
+            patient = scheduleDAO.getAllPatients();
+            if (usertype.equals("doctor")){
+                name = doctorDAO.getDoctorNameByUserID(id);
+                patient = scheduleDAO.getPatientByDoctor(id);
+            }
             else if (usertype.equals("medstaff"))
-                name = staffDAO.getStaffNameByID(details.getUserID());
+                name = staffDAO.getStaffNameByID(id);
             else
                 name = "Admin";
+
             patientTable patientTable = loader.getController();
-            patientTable.displayName(id, name, usertype);
+            patientTable.displayName(id, name, usertype, patient);
 
             draw.screen(root, stage, scene);
             Stage login = (Stage) main.getScene().getWindow();

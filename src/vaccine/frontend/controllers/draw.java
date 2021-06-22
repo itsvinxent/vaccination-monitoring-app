@@ -3,6 +3,7 @@ package vaccine.frontend.controllers;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -24,6 +25,7 @@ public class draw {
     public static void popUp(Parent parent, Stage stage, Scene scene) {
         stage.setScene(scene);
         stage.initStyle(StageStyle.UTILITY);
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
     }
 

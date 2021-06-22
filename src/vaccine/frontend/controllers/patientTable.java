@@ -25,7 +25,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import vaccine.backend.classes.Vaccine;
-import vaccine.backend.dao.scheduleDAO;
 
 public class patientTable implements Initializable {
     // Record Table
@@ -34,7 +33,7 @@ public class patientTable implements Initializable {
     @FXML
     private TableColumn<Schedule, Integer> patientNum;
     @FXML
-    private TableColumn<Schedule, String> doctorNum;
+    private TableColumn<Schedule, String> doctorName;
     @FXML
     private TableColumn<Schedule, String> patientName;
     @FXML
@@ -85,11 +84,12 @@ public class patientTable implements Initializable {
     private Label nameLabel, schedTitle, recordTitle, accountTitle, vaccineTitle;
 
     // Var
-    InnerShadow innerShadow = new InnerShadow();
-    ObservableList<String> filters = FXCollections.observableArrayList("Vaccine Brand", "Vaccination Status");
-    ObservableList<Schedule> patients;
-    String type;
-    int id;
+    static InnerShadow innerShadow = new InnerShadow();
+    static ObservableList<String> filters =
+            FXCollections.observableArrayList("Vaccine Brand", "Vaccination Status");
+    static ObservableList<Schedule> patients;
+    static String type;
+    static int id;
 
     // JAVA FX onAction Functions
     @Override
@@ -99,17 +99,13 @@ public class patientTable implements Initializable {
 
     public void reloadRecordTable() {
         patientNum.setCellValueFactory(new PropertyValueFactory<Schedule, Integer>("patientNum"));
-        doctorNum.setCellValueFactory(new PropertyValueFactory<Schedule, String>("doctorName"));
+        doctorName.setCellValueFactory(new PropertyValueFactory<Schedule, String>("doctorName"));
         patientName.setCellValueFactory(new PropertyValueFactory<Schedule, String>("patientName"));
         vaccineBrand.setCellValueFactory(new PropertyValueFactory<Schedule, String>("vaccineBrand"));
         firstDose.setCellValueFactory(new PropertyValueFactory<Schedule, String>("firstDose"));
         secondDose.setCellValueFactory(new PropertyValueFactory<Schedule, String>("secondDose"));
         patientStatus.setCellValueFactory(new PropertyValueFactory<Schedule, String>("status"));
 
-//        if (type.equals("doctor"))
-//            patients = scheduleDAO.getPatientByDoctor(id);
-//        else
-        patients = scheduleDAO.getAllPatients();
         patientT.setItems(patients);
         filterButton.setItems(filters);
         // set Row Color to complete, incomplete
@@ -137,8 +133,8 @@ public class patientTable implements Initializable {
 
     }
 
-    public void setScheduleTable(int usertype) {
-        if (usertype == 1) {
+    public void setTableColumnSizes(boolean displayAll) {
+        if (!displayAll) {
             // Set column sizes for Schedule Table when
             // logged in as a doctor
             dateCol.setPrefWidth(150);
@@ -147,6 +143,16 @@ public class patientTable implements Initializable {
             docNameCol.setVisible(false);
             vaccineCol.setPrefWidth(175);
             dosageCol.setPrefWidth(175);
+
+            patientT.setPrefWidth(900);
+            patientT.setLayoutX(65);
+            patientNum.setPrefWidth(125);
+            doctorName.setVisible(false);
+            patientName.setPrefWidth(175);
+            vaccineBrand.setPrefWidth(175);
+            firstDose.setPrefWidth(149);
+            secondDose.setPrefWidth(149);
+            patientStatus.setPrefWidth(124);
         }
         else {
             docNameCol.setVisible(true);
@@ -156,26 +162,42 @@ public class patientTable implements Initializable {
             docNameCol.setPrefWidth(175);
             vaccineCol.setPrefWidth(149);
             dosageCol.setPrefWidth(149);
+
+            patientT.setPrefWidth(980);
+            patientT.setLayoutX(25);
+            doctorName.setVisible(true);
+            patientNum.setPrefWidth(115);
+            doctorName.setPrefWidth(181);
+            patientName.setPrefWidth(181);
+            vaccineBrand.setPrefWidth(125);
+            firstDose.setPrefWidth(125);
+            secondDose.setPrefWidth(125);
+            patientStatus.setPrefWidth(125);
         }
     }
 
-    public void displayName(int ID, String name, String usertype) {
+    public void displayName(int ID, String name, String usertype, ObservableList<Schedule> patient) {
         String msg = null;
         type = usertype;
         id = ID;
-        switch (usertype) {
+        patients = patient;
+        switch (type) {
             case "doctor":
                 msg = "Welcome, Dr. " + name;
                 addPatientButton.setDisable(true);
                 addPatientButton.setOpacity(0);
-                setScheduleTable(1);
+                setTableColumnSizes(false);
+                searchBar.setLayoutX(65);
+                filterButton.setLayoutX(865);
+                reloadRecordTable();
                 break;
 
             case "medstaff":
                 msg = "Welcome, " + name;
                 vaccineInfoButton.setDisable(false);
                 vaccineInfoButton.setOpacity(1);
-                setScheduleTable(0);
+                setTableColumnSizes(true);
+                reloadRecordTable();
                 break;
 
             case "admin":
@@ -185,7 +207,8 @@ public class patientTable implements Initializable {
                 vaccineInfoButton.setDisable(false);
                 vaccineInfoButton.setOpacity(1);
                 vaccineInfoButton.setLayoutY(332);
-                setScheduleTable(0);
+                setTableColumnSizes(true);
+                reloadRecordTable();
                 break;
         }
 
@@ -314,8 +337,10 @@ public class patientTable implements Initializable {
 
         // Adjust other components
         searchBar.setPromptText("Search by Patient Name or Patient ID");
-        searchBar.setLayoutX(25);
-        filterButton.setLayoutX(900);
+        if (!type.equals("doctor")) {
+            searchBar.setLayoutX(25);
+            filterButton.setLayoutX(900);
+        }
     }
 
     public void switchtoAccountManagement(ActionEvent event) {

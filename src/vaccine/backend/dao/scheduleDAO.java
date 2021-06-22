@@ -120,6 +120,21 @@ public class scheduleDAO {
         return list;
     }
 
+    public static int getPatientCountBasedOnVaccineID(int vaccineID) {
+        int count = 0;
+        try {
+            conn = SqliteDBCon.Connector();
+            ps = conn.prepareStatement("SELECT SUM(CASE WHEN vacID = ? THEN 1 ELSE 0 END) AS [Total Patients] FROM schedule_info");
+            ps.setInt(1, vaccineID);
+            rs = ps.executeQuery();
+            count = rs.getInt("Total Patients");
+            conn.close();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return count;
+    }
+
     public static int addSchedule(Schedule u) {
         int status = 0;
         try {
