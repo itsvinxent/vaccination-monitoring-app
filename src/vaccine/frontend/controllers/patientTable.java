@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.InnerShadow;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -25,6 +26,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import vaccine.backend.classes.Vaccine;
+import vaccine.backend.dao.scheduleDAO;
 
 public class patientTable implements Initializable {
     // Record Table
@@ -88,7 +90,7 @@ public class patientTable implements Initializable {
     static ObservableList<String> filters =
             FXCollections.observableArrayList("Vaccine Brand", "Vaccination Status");
     static ObservableList<Schedule> patients;
-    static String type;
+    static String type, _name;
     static int id;
 
     // JAVA FX onAction Functions
@@ -105,7 +107,7 @@ public class patientTable implements Initializable {
         firstDose.setCellValueFactory(new PropertyValueFactory<Schedule, String>("firstDose"));
         secondDose.setCellValueFactory(new PropertyValueFactory<Schedule, String>("secondDose"));
         patientStatus.setCellValueFactory(new PropertyValueFactory<Schedule, String>("status"));
-
+//        System.out.println(patients);
         patientT.setItems(patients);
         filterButton.setItems(filters);
         // set Row Color to complete, incomplete
@@ -176,11 +178,11 @@ public class patientTable implements Initializable {
         }
     }
 
-    public void displayName(int ID, String name, String usertype, ObservableList<Schedule> patient) {
+    public void displayName(int ID, String name, String usertype) {
         String msg = null;
+        _name = name;
         type = usertype;
         id = ID;
-        patients = patient;
         switch (type) {
             case "doctor":
                 msg = "Welcome, Dr. " + name;
@@ -189,7 +191,7 @@ public class patientTable implements Initializable {
                 setTableColumnSizes(false);
                 searchBar.setLayoutX(65);
                 filterButton.setLayoutX(865);
-                reloadRecordTable();
+                patients = scheduleDAO.getPatientByDoctor(id);
                 break;
 
             case "medstaff":
@@ -197,7 +199,7 @@ public class patientTable implements Initializable {
                 vaccineInfoButton.setDisable(false);
                 vaccineInfoButton.setOpacity(1);
                 setTableColumnSizes(true);
-                reloadRecordTable();
+                patients = scheduleDAO.getAllPatients();
                 break;
 
             case "admin":
@@ -208,11 +210,12 @@ public class patientTable implements Initializable {
                 vaccineInfoButton.setOpacity(1);
                 vaccineInfoButton.setLayoutY(332);
                 setTableColumnSizes(true);
-                reloadRecordTable();
+                patients = scheduleDAO.getAllPatients();
                 break;
         }
 
         nameLabel.setText(msg);
+        reloadRecordTable();
     }
 
     public void addPopUp(ActionEvent event) throws IOException {
@@ -228,12 +231,13 @@ public class patientTable implements Initializable {
             stage.setOnHidden(new EventHandler<WindowEvent>() {
                 public void handle(WindowEvent we) {
                     reloadRecordTable();
+                    displayName(id,_name,type);
                 }
             });
             stage.getOnHidden().handle(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
 
         } catch (IOException exception) {
-            System.out.println(exception);
+            exception.printStackTrace();
         }
     }
 
@@ -257,6 +261,33 @@ public class patientTable implements Initializable {
 
         draw.popUp(root, stage, scene);
 
+    }
+    public void updatePopUp(MouseEvent event) throws IOException {
+        try {
+            if (event.getClickCount() == 2){
+                FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("../gui/addPatient.fxml")));
+                Parent root = loader.load();
+                Scene scene = new Scene(root);
+                Stage stage = new Stage();
+                Stage current = (Stage) main.getScene().getWindow();
+                stage.initOwner(current);
+
+                draw.popUp(root, stage, scene);
+                addPatient addPatient = loader.getController();
+                addPatient.setFieldContent(patientT.getSelectionModel().getSelectedItem().getPatientNum());
+                stage.setOnHidden(new EventHandler<WindowEvent>() {
+                    public void handle(WindowEvent we) {
+                        reloadRecordTable();
+                        displayName(id,_name,type);
+                    }
+                });
+                stage.getOnHidden().handle(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+            }
+
+
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     public void switchtoSchedule(ActionEvent event) throws IOException {

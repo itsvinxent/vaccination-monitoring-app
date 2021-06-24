@@ -39,6 +39,8 @@ public class Schedule {
         this.status = status;
     }
 
+    public Schedule(){}
+
     public String getPatientLName() {
         return patientLName;
     }
@@ -100,7 +102,7 @@ public class Schedule {
         this.patientNum = patientNum;
     }
 
-    public void setDoctorNum(String doctorName) {
+    public void setDoctorName(String doctorName) {
         this.doctorName = doctorName;
     }
 

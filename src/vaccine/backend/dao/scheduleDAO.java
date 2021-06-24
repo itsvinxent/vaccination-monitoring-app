@@ -83,6 +83,42 @@ public class scheduleDAO {
         return list;
     }
 
+    public static Schedule getPatientByPatientID(int patientNum) {
+        Schedule schedule = null;
+        try {
+            conn = SqliteDBCon.Connector();
+            ps = conn.prepareStatement("SELECT * FROM schedule_info, vaccine_info, doctor_info " +
+                    "WHERE vacID = vaccineID " +
+                    "and schedule_info.doctorID = doctor_info.drID " +
+                    "and schedule_info.patientID = ?");
+            ps.setInt(1, patientNum);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                schedule = new Schedule(
+                        rs.getInt("patientID"),
+                        rs.getString("drName"),
+                        rs.getString("patientLName"),
+                        rs.getString("patientFName"),
+                        rs.getString("vaccineBrand"),
+                        rs.getString("firstDose"),
+                        rs.getString("secondDose"),
+                        rs.getString("firstTime"),
+                        rs.getString("secondTime"),
+                        rs.getString("status")
+                );
+            }
+            conn.close();
+        } catch(Exception exception) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error!");
+            alert.setHeaderText("An error occurred.");
+            alert.setContentText("Error: " + exception + "\nPlease contact the Administrator for more info.");
+            alert.showAndWait();
+            return null;
+        }
+        return schedule;
+    }
+
     public static ObservableList<Schedule> getCurrentSchedule(String date) {
         ObservableList<Schedule> list = FXCollections.observableArrayList();
         try {

@@ -6,10 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -19,6 +16,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import vaccine.backend.dao.*;
@@ -49,12 +47,13 @@ public class addPatient implements Initializable {
     private AnchorPane main;
 
     @FXML
-    private Button saveEntry;
+    private Button saveEntry, updateEntry, deleteEntry;
 
     int interval;
     String first_dose, second_dose;
     SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
     Calendar calendar = Calendar.getInstance();
+    Schedule patient = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -70,7 +69,7 @@ public class addPatient implements Initializable {
     }
 
     public void save(ActionEvent event) throws Exception {
-        Schedule patient = new Schedule(0,
+        patient = new Schedule(
                 drID.getValue(),
                 patientLName.getText(),
                 patientFName.getText(),
@@ -94,12 +93,48 @@ public class addPatient implements Initializable {
         popup.close();
     }
 
+    public void update(ActionEvent event) throws Exception {
+        Schedule updatedPatient = new Schedule(
+                patient.getPatientNum(),
+                drID.getValue(),
+                patientLName.getText(),
+                patientFName.getText(),
+                vaccineID.getValue(),
+                firstDose.getEditor().getText(),
+                secondDose.getEditor().getText(),
+                schedule.getValue(),
+                schedule.getValue(),
+                "incomplete");
+        scheduleDAO.updateSchedule(updatedPatient);
+        System.out.println(updatedPatient.getFirstDose());
+        Stage stage = (Stage) main.getScene().getWindow();
+        stage.hide();
+
+        updateEntry.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
+    }
+
+    public void delete(ActionEvent event) throws Exception {
+        try {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setContentText("Are you sure you want to delete this record?");
+            alert.setTitle("Confirm");
+            Optional<ButtonType> action = alert.showAndWait();
+
+            if (action.get() == ButtonType.OK) {
+                scheduleDAO.deleteSchedule(patient);
+                Stage stage = (Stage) main.getScene().getWindow();
+                stage.hide();
+
+                deleteEntry.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
+
     public void showSecondDose(ActionEvent event) {
         first_dose = firstDose.getEditor().getText();
         interval = vaccineDAO.getDosageIntervalsByBrand(vaccineID.getValue());
-        System.out.println(vaccineID.getValue());
-        System.out.println(interval);
-        System.out.println(first_dose);
         try {
             if (event.getSource() == firstDose)
                 calendar.setTime(format.parse(first_dose));
@@ -109,5 +144,26 @@ public class addPatient implements Initializable {
         calendar.add(Calendar.DAY_OF_MONTH, interval);
         second_dose = format.format(calendar.getTime());
         secondDose.getEditor().setText(second_dose);
+    }
+
+    public void setFieldContent(int patientID) {
+        patient = scheduleDAO.getPatientByPatientID(patientID);
+        drID.setValue(patient.getDoctorName());
+        patientFName.setText(patient.getPatientFName());
+        patientLName.setText(patient.getPatientLName());
+        vaccineID.setValue(patient.getVaccineBrand());
+        firstDose.getEditor().setText(patient.getFirstDose());
+        secondDose.getEditor().setText(patient.getSecondDose());
+        schedule.setValue(patient.getFirstTime());
+
+        updateEntry.setDisable(false);
+        updateEntry.setVisible(true);
+        updateEntry.setOpacity(1);
+        saveEntry.setDisable(true);
+        saveEntry.setVisible(false);
+        saveEntry.setOpacity(0);
+        deleteEntry.setDisable(false);
+        deleteEntry.setVisible(true);
+        deleteEntry.setOpacity(1);
     }
 }

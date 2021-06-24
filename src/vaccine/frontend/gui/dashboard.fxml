@@ -66,7 +66,7 @@
                   <TableColumn fx:id="dosageCol" minWidth="50.0" prefWidth="149.0" resizable="false" text="Dosage" />
                </columns>
             </TableView>
-            <TableView fx:id="patientT" layoutX="25.0" layoutY="180.0" prefHeight="500.0" prefWidth="980.0">
+            <TableView fx:id="patientT" layoutX="25.0" layoutY="180.0" onMouseClicked="#updatePopUp" prefHeight="500.0" prefWidth="980.0">
                <columns>
                   <TableColumn fx:id="patientNum" prefWidth="114.0" resizable="false" text="Patient #" />
                   <TableColumn fx:id="doctorName" prefWidth="181.0" resizable="false" text="Assigned Doctor" />
