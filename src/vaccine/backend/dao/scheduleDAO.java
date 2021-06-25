@@ -10,10 +10,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * Java Class that contains methods used for CRUD functionalities
+ * involving the schedule_info relation in the database.
+ */
 public class scheduleDAO {
     static Connection conn = null;
     static PreparedStatement ps = null;
     static ResultSet rs = null;
+
+    /**
+     * Method used for fetching all tuples from schedule_info table.
+     * @return ObservableList of Schedule Bean object/s.
+     * if null, the schedule_info table is empty or the query failed to execute.
+     */
     public static ObservableList<Schedule> getAllPatients() {
         ObservableList<Schedule> list= FXCollections.observableArrayList();
         try {
@@ -47,6 +57,13 @@ public class scheduleDAO {
         }
         return list;
     }
+
+    /**
+     * Method used for fetching all tuples that matches the given value of the doctorID attribute.
+     * @param doctorNum value to be checked in the doctorID attribute of each tuple.
+     * @return ObservableList of Schedule Bean object/s.
+     * if null, the schedule_info table is empty, the query failed to execute, or no match is found.
+     */
     public static ObservableList<Schedule> getPatientByDoctor(int doctorNum) {
         ObservableList<Schedule> list = FXCollections.observableArrayList();
         try {
@@ -83,6 +100,12 @@ public class scheduleDAO {
         return list;
     }
 
+    /**
+     * Method used for fetching a specific tuple containing record information of a given patientID.
+     * @param patientNum value to be checked in the patientID attribute of each tuple.
+     * @return Schedule Bean object.
+     * if null, the schedule_info table is empty, the query failed to execute, or no match is found.
+     */
     public static Schedule getPatientByPatientID(int patientNum) {
         Schedule schedule = null;
         try {
@@ -119,6 +142,11 @@ public class scheduleDAO {
         return schedule;
     }
 
+    /**
+     * Method used for fetching all tuples that matches the given value of the doctorID attribute.
+     * @param date value to be checked in the firstTime/secondTime attribute of each tuple. (Current Date)
+     * @return ObservableList of Schedule Bean object/s.
+     */
     public static ObservableList<Schedule> getCurrentSchedule(String date) {
         ObservableList<Schedule> list = FXCollections.observableArrayList();
         try {
@@ -156,6 +184,11 @@ public class scheduleDAO {
         return list;
     }
 
+    /**
+     * Method used to determine the number of patients that will be administered with the given vaccine.
+     * @param vaccineID vaccineID of the Vaccine Brand used (getVaccineIDByBrand method in vaccineDAO class)
+     * @return total count of patients
+     */
     public static int getPatientCountBasedOnVaccineID(int vaccineID) {
         int count = 0;
         try {
@@ -171,6 +204,11 @@ public class scheduleDAO {
         return count;
     }
 
+    /**
+     * Inserts a new tuple in schedule_info table.
+     * @param u Schedule Bean object
+     * @return status - If status > 0, SQL query is successful.
+     */
     public static int addSchedule(Schedule u) {
         int status = 0;
         try {
@@ -196,6 +234,11 @@ public class scheduleDAO {
         return status;
     }
 
+    /**
+     * Updates attributes of an existing tuple in schedule_info table.
+     * @param u Schedule Bean object
+     * @return status - If status > 0, SQL query is successful.
+     */
     public static int updateSchedule (Schedule u) {
         int status = 0;
         try {
@@ -224,6 +267,11 @@ public class scheduleDAO {
         return status;
     }
 
+    /**
+     * Deletes a tuple in schedule_info table.
+     * @param u Schedule Bean object
+     * @return status - If status > 0, SQL query is successful.
+     */
     public static int deleteSchedule (Schedule u) {
         int status = 0;
         try {

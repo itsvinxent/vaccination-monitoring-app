@@ -7,11 +7,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * Java Class that contains methods used for CRUD functionalities
+ * involving the staff_info relation in the database.
+ */
 public class staffDAO {
     static Connection conn = null;
     static PreparedStatement ps = null;
     static ResultSet rs = null;
 
+    /**
+     * Method that fetches the staffName attribute of a tuple that matches the given userID
+     * @param userID
+     * @return String - contains the name associated with the given userID
+     */
     public static String getStaffNameByID(int userID) {
         String name = null;
         try {
@@ -28,6 +37,11 @@ public class staffDAO {
         return name;
     }
 
+    /**
+     * Inserts a new tuple in staff_info table.
+     * @param s Staff Bean object
+     * @return status - If status > 0, SQL query is successful.
+     */
     public static int addStaff (Staff s){
         int status = 0;
         try {
@@ -43,6 +57,11 @@ public class staffDAO {
         return status;
     }
 
+    /**
+     * Updates attributes of an existing tuple in staff_info table.
+     * @param s Staff Bean Object
+     * @return status - If status > 0, SQL query is successful.
+     */
     public static int updateStaff(Staff s) {
         int status = 0;
         try {
@@ -61,12 +80,17 @@ public class staffDAO {
         return status;
     }
 
-    public static int deleteStaff (Staff d) {
+    /**
+     * Deletes a tuple from staff_info table.
+     * @param s Staff Bean object
+     * @return status - If status > 0, SQL query is successful.
+     */
+    public static int deleteStaff (Staff s) {
         int status = 0;
         try {
             conn = SqliteDBCon.Connector();
             ps = conn.prepareStatement("delete from staff_info where staffID=?");
-            ps.setInt(1, d.getStaffID());
+            ps.setInt(1, s.getStaffID());
             status = ps.executeUpdate();
             conn.close();
         } catch (Exception exception) {

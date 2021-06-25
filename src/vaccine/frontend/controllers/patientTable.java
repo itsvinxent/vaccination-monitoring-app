@@ -28,6 +28,9 @@ import java.util.ResourceBundle;
 import vaccine.backend.classes.Vaccine;
 import vaccine.backend.dao.scheduleDAO;
 
+/**
+ * JavaFx Class Controller for dashboard.fxml
+ */
 public class patientTable implements Initializable {
     // Record Table
     @FXML
@@ -99,7 +102,12 @@ public class patientTable implements Initializable {
         reloadRecordTable();
     }
 
+    /**
+     * Reloads the Patient Records table.
+     * Sorts the values and the row colors based on the status.
+     */
     public void reloadRecordTable() {
+        // Initializes the data source for each column
         patientNum.setCellValueFactory(new PropertyValueFactory<Schedule, Integer>("patientNum"));
         doctorName.setCellValueFactory(new PropertyValueFactory<Schedule, String>("doctorName"));
         patientName.setCellValueFactory(new PropertyValueFactory<Schedule, String>("patientName"));
@@ -107,7 +115,7 @@ public class patientTable implements Initializable {
         firstDose.setCellValueFactory(new PropertyValueFactory<Schedule, String>("firstDose"));
         secondDose.setCellValueFactory(new PropertyValueFactory<Schedule, String>("secondDose"));
         patientStatus.setCellValueFactory(new PropertyValueFactory<Schedule, String>("status"));
-//        System.out.println(patients);
+        // Sets the ObservableList that contains the records.
         patientT.setItems(patients);
         filterButton.setItems(filters);
         // set Row Color to complete, incomplete
@@ -135,10 +143,14 @@ public class patientTable implements Initializable {
 
     }
 
+    /**
+     * Sets the visibility of the Assigned Doctor column.
+     * @param displayAll If set to True, displays all columns of the table.
+     *                   If False, hides the Assigned Doctor column.
+     *                   Set to True if the usertype of the person logged-in is a Doctor.
+     */
     public void setTableColumnSizes(boolean displayAll) {
         if (!displayAll) {
-            // Set column sizes for Schedule Table when
-            // logged in as a doctor
             dateCol.setPrefWidth(150);
             timeCol.setPrefWidth(150);
             patientNameCol.setPrefWidth(250);
@@ -178,6 +190,12 @@ public class patientTable implements Initializable {
         }
     }
 
+    /**
+     * Initializes the contents of all the UI Components based on the usertype.
+     * @param ID userID of the user (int)
+     * @param name Full name of the user (String)
+     * @param usertype Usertype of the user (String)
+     */
     public void displayName(int ID, String name, String usertype) {
         String msg = null;
         _name = name;
@@ -213,11 +231,16 @@ public class patientTable implements Initializable {
                 patients = scheduleDAO.getAllPatients();
                 break;
         }
-
         nameLabel.setText(msg);
         reloadRecordTable();
     }
 
+    /**
+     * Draws the pop-up window used for creating new Patient records
+     * USAGE: Click the +Add Patient button in the Patient Records tab.
+     * @param event
+     * @throws IOException
+     */
     public void addPopUp(ActionEvent event) throws IOException {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../gui/addPatient.fxml")));
@@ -241,6 +264,12 @@ public class patientTable implements Initializable {
         }
     }
 
+    /**
+     * Draws the pop-up window used for creating new User Accounts
+     * USAGE: Click the +Add Account button in the Account Management tab.
+     * @param event
+     * @throws IOException
+     */
     public void registerPopUp(ActionEvent event) throws  IOException {
         Parent root = FXMLLoader.load(getClass().getResource("../gui/register.fxml"));
         Stage stage = new Stage();
@@ -252,6 +281,12 @@ public class patientTable implements Initializable {
 
     }
 
+    /**
+     * Draws the pop-up window used for creating new Vaccine records
+     * USAGE: Click the +Add Vaccine button in the Vaccine Information tab.
+     * @param event
+     * @throws IOException
+     */
     public void vaccinePopUp(ActionEvent event) throws  IOException {
         Parent root = FXMLLoader.load(getClass().getResource("../gui/addVaccine.fxml"));
         Stage stage = new Stage();
@@ -262,6 +297,13 @@ public class patientTable implements Initializable {
         draw.popUp(root, stage, scene);
 
     }
+
+    /**
+     * Draws the pop-up window used for updating existing Patient Records in the table.
+     * USAGE: Double-Click a row inside the Patient Records Table.
+     * @param event
+     * @throws IOException
+     */
     public void updatePopUp(MouseEvent event) throws IOException {
         try {
             if (event.getClickCount() == 2){
@@ -286,6 +328,33 @@ public class patientTable implements Initializable {
 
 
         } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    /**
+     * Logs out the user by closing the Main Interface and drawing the Login Interface
+     * @throws IOException
+     */
+    public void logout() throws IOException {
+        try {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setContentText("Are you sure you want to logout?");
+            alert.setTitle("Confirm");
+            Optional <ButtonType> action = alert.showAndWait();
+
+            if (action.get() == ButtonType.OK) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/login.fxml"));
+                Parent root = loader.load();
+                Stage stage = new Stage();
+                Scene scene = new Scene(root);
+
+                draw.screen(root, stage, scene);
+
+                Stage current = (Stage) main.getScene().getWindow();
+                current.close();
+            }
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
     }
@@ -446,29 +515,6 @@ public class patientTable implements Initializable {
         searchBar.setLayoutX(65);
         filterButton.setLayoutX(865);
 
-    }
-
-    public void logout() throws IOException {
-        try {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setContentText("Are you sure you want to logout?");
-            alert.setTitle("Confirm");
-            Optional <ButtonType> action = alert.showAndWait();
-
-            if (action.get() == ButtonType.OK) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/login.fxml"));
-                Parent root = loader.load();
-                Stage stage = new Stage();
-                Scene scene = new Scene(root);
-
-                draw.screen(root, stage, scene);
-
-                Stage current = (Stage) main.getScene().getWindow();
-                current.close();
-            }
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
     }
 
 //    public void search(ActionEvent event) {

@@ -67,7 +67,6 @@ public class loginController {
             Stage login = (Stage) main.getScene().getWindow();
             login.close();
         } else {
-            System.out.println("Wrong Pass");
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("Incorrect Username or Password.");
             alert.show();

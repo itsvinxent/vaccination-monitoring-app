@@ -9,11 +9,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * Java Class that contains methods used for CRUD functionalities
+ * involving the vaccine_info relation in the database.
+ */
 public class vaccineDAO {
     static Connection conn = null;
     static PreparedStatement ps = null;
     static ResultSet rs = null;
 
+    /**
+     * Method used for fetching all vaccineBrand from vaccine_info table.
+     * @return ObservableList of Vaccine Bean object/s.
+     * if null, the vaccine_info table is empty or the query failed to execute.
+     */
     public static ObservableList<String> getAllVaccineBrand() {
         ObservableList<String> list = FXCollections.observableArrayList();
         try {
@@ -30,6 +39,11 @@ public class vaccineDAO {
         return list;
     }
 
+    /**
+     * Method used to fetch the vaccineID of a given vaccineBrand
+     * @param vaccineBrand
+     * @return int - contains vaccineID associated to the given vaccineBrand
+     */
     public static int getVaccineIDByBrand(String vaccineBrand) {
         int vaccineID = 0;
         try {
@@ -47,6 +61,11 @@ public class vaccineDAO {
         return vaccineID;
     }
 
+    /**
+     * Method used to fetch the doseInterval of a given vaccineBrand
+     * @param vaccineBrand
+     * @return int - contains the intervals of each dosage of the vaccines in days
+     */
     public static int getDosageIntervalsByBrand(String vaccineBrand) {
         int interval = 0;
         try {
@@ -64,6 +83,11 @@ public class vaccineDAO {
         return interval;
     }
 
+    /**
+     * Inserts a new tuple in vaccine_info table.
+     * @param v Vaccine Bean object
+     * @return status - If status > 0, SQL query is successful.
+     */
     public static int addVaccine (Vaccine v) {
         int status = 0;
         try {
@@ -80,6 +104,11 @@ public class vaccineDAO {
         return status;
     }
 
+    /**
+     * Updates attributes of an existing tuple in staff_info table.
+     * @param v Vaccine Bean Object
+     * @return status - If status > 0, SQL query is successful.
+     */
     public static int updateVaccine (Vaccine v) {
         int status = 0;
         try {
@@ -98,6 +127,11 @@ public class vaccineDAO {
         return status;
     }
 
+    /**
+     * Deletes a tuple from vaccine_info table.
+     * @param v Vaccine Bean object
+     * @return status - If status > 0, SQL query is successful.
+     */
     public static int deleteVaccine (Vaccine v) {
         int status = 0;
         try {

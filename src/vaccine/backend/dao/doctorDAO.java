@@ -9,11 +9,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+/**
+ * Java Class that contains methods used for CRUD functionalities
+ * involving the doctor_info relation in the database.
+ */
 public class doctorDAO {
     static Connection conn = null;
     static PreparedStatement ps = null;
     static ResultSet rs = null;
 
+    /**
+     * Inserts a new tuple in doctor_info table.
+     * @param d Doctor Bean object
+     * @return status - If status > 0, SQL query is successful.
+     */
     public static int addDoctor (Doctor d){
         int status = 0;
         try {
@@ -30,6 +39,11 @@ public class doctorDAO {
         return status;
     }
 
+    /**
+     * Updates attributes of an existing tuple in doctor_info table.
+     * @param d Doctor Bean Object
+     * @return status - If status > 0, SQL query is successful.
+     */
     public static int updateDoctor (Doctor d) {
         int status = 0;
         try {
@@ -49,6 +63,11 @@ public class doctorDAO {
         return status;
     }
 
+    /**
+     * Deletes a tuple from doctor_info table.
+     * @param d Doctor Bean object
+     * @return status - If status > 0, SQL query is successful.
+     */
     public static int deleteDoctor (Doctor d) {
         int status = 0;
         try {
@@ -63,6 +82,10 @@ public class doctorDAO {
         return status;
     }
 
+    /**
+     * Method used to fetch all doctor's names in doctor_info table.
+     * @return ObservableList of Doctor Bean object/s.
+     */
     public static ObservableList<String> getAllDoctorsByName() {
         ObservableList<String> list = FXCollections.observableArrayList();
         try {
@@ -80,6 +103,11 @@ public class doctorDAO {
         return list;
     }
 
+    /**
+     * Method used to get a Doctor's Name based on the given userID
+     * @param userID
+     * @return String - contains the doctor's name
+     */
     public static String getDoctorNameByUserID(int userID) {
         String name = null;
         try {
@@ -98,6 +126,11 @@ public class doctorDAO {
         return name;
     }
 
+    /**
+     * Method used to get a drID value based on a given name
+     * @param drName
+     * @return int - contains the drID
+     */
     public static int getDoctorIDByDoctorName(String drName) {
         int id = 0;
         try {
