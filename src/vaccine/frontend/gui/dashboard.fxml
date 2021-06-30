@@ -56,21 +56,21 @@
         </AnchorPane>
         <AnchorPane fx:id="recordBody" layoutX="250.0" prefHeight="720.0" prefWidth="1030.0" style="-fx-background-color: #0e2a47;">
             <children>
-            <TableView fx:id="schedT" disable="true" layoutX="65.0" layoutY="180.0" opacity="0.0" prefHeight="500.0" prefWidth="900.0">
+            <TableView fx:id="schedT" layoutX="65.0" layoutY="180.0" prefHeight="500.0" prefWidth="900.0">
                <columns>
-                  <TableColumn fx:id="dateCol" minWidth="40.0" prefWidth="125.0" resizable="false" text="Date" />
-                  <TableColumn fx:id="timeCol" minWidth="40.0" prefWidth="125.0" resizable="false" text="Time" />
-                  <TableColumn fx:id="patientNameCol" minWidth="100.0" prefWidth="175.0" resizable="false" text="Patient Name" />
-                  <TableColumn fx:id="docNameCol" minWidth="100.0" prefWidth="175.0" resizable="false" text="Assigned Doctor" visible="false" />
-                  <TableColumn fx:id="vaccineCol" minWidth="50.0" prefWidth="149.0" resizable="false" text="Vaccine" />
-                  <TableColumn fx:id="dosageCol" minWidth="50.0" prefWidth="149.0" resizable="false" text="Dosage" />
+                  <TableColumn fx:id="timeCol" minWidth="40.0" prefWidth="150.0" resizable="false" text="Time" />
+                  <TableColumn fx:id="patientNameCol" minWidth="100.0" prefWidth="200.0" resizable="false" text="Patient Name" />
+                  <TableColumn fx:id="docNameCol" minWidth="100.0" prefWidth="200.0" resizable="false" text="Assigned Doctor" visible="false" />
+                  <TableColumn fx:id="vaccineCol" minWidth="50.0" prefWidth="175.0" resizable="false" text="Vaccine" />
+                  <TableColumn fx:id="dosageCol" minWidth="50.0" prefWidth="175.0" resizable="false" text="Dosage" />
                </columns>
             </TableView>
             <TableView fx:id="patientT" layoutX="25.0" layoutY="180.0" onMouseClicked="#updatePopUp" prefHeight="500.0" prefWidth="980.0">
                <columns>
-                  <TableColumn fx:id="patientNum" prefWidth="114.0" resizable="false" text="Patient #" />
-                  <TableColumn fx:id="doctorName" prefWidth="181.0" resizable="false" text="Assigned Doctor" />
-                  <TableColumn fx:id="patientName" prefWidth="181.0" resizable="false" text="Name" />
+                  <TableColumn fx:id="patientNum" prefWidth="75.0" resizable="false" text="Patient #" />
+                  <TableColumn fx:id="doctorName" prefWidth="150.0" resizable="false" text="Assigned Doctor" />
+                  <TableColumn fx:id="patientName" prefWidth="150.0" resizable="false" text="Name" />
+                  <TableColumn fx:id="cityAddress" prefWidth="100.0" resizable="false" text="City" />
                   <TableColumn fx:id="vaccineBrand" prefWidth="125.0" resizable="false" text="Vaccine" />
                   <TableColumn fx:id="firstDose" prefWidth="125.0" resizable="false" text="1st Dose" />
                   <TableColumn fx:id="secondDose" prefWidth="125.0" resizable="false" text="2nd Dose" />
@@ -95,7 +95,7 @@
                </columns>
             </TableView>
                 <ComboBox fx:id="filterButton" layoutX="900.0" layoutY="145.0" prefHeight="25.0" prefWidth="100.0" promptText="Filter By:" style="-fx-background-color: #48ffd5;" visibleRowCount="3" />
-                <TextField fx:id="searchBar" layoutX="25.0" layoutY="140.0" prefHeight="30.0" prefWidth="350.0" promptText="Search by Patient Name or Patient ID #...">
+                <TextField fx:id="searchBar" layoutX="25.0" layoutY="140.0" onKeyPressed="#search" prefHeight="30.0" prefWidth="350.0" promptText="Search by Patient Name or Patient ID #...">
                     <font>
                         <Font name="Arial Rounded MT Bold" size="15.0" />
                     </font>

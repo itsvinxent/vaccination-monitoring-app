@@ -4,13 +4,13 @@ public class Schedule {
 
     int patientNum;
     String doctorName, patientName;
-    String patientLName, patientFName;
+    String patientLName, patientFName, city;
     String vaccineBrand, firstDose, secondDose, firstTime, secondTime, status;
 
     // Constructor
     public Schedule(int patientNum, String doctorName, String patientLName, String patientFName,
                     String vaccineBrand, String firstDose, String secondDose,
-                    String firstTime, String secondTime,String status) {
+                    String firstTime, String secondTime, String status, String city) {
         this.patientNum = patientNum;
         this.doctorName = doctorName;
         this.patientName = patientLName + ", " + patientFName;
@@ -22,11 +22,12 @@ public class Schedule {
         this.firstTime = firstTime;
         this.secondTime = secondTime;
         this.status = status;
+        this.city = city;
     }
 
     public Schedule(String doctorName, String patientLName, String patientFName,
                     String vaccineBrand, String firstDose, String secondDose,
-                    String firstTime, String secondTime,String status) {
+                    String firstTime, String secondTime, String status, String city) {
         this.doctorName = doctorName;
         this.patientName = patientLName + ", " + patientFName;
         this.patientLName = patientLName;
@@ -37,9 +38,11 @@ public class Schedule {
         this.firstTime = firstTime;
         this.secondTime = secondTime;
         this.status = status;
+        this.city = city;
     }
 
-    public Schedule(){}
+    public Schedule() {
+    }
 
     public String getPatientLName() {
         return patientLName;
@@ -85,6 +88,9 @@ public class Schedule {
         return status;
     }
 
+    public String getCity() {
+        return city;
+    }
 
     public void setPatientLName(String patientLName) {
         this.patientLName = patientLName;
@@ -129,4 +135,9 @@ public class Schedule {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
 }

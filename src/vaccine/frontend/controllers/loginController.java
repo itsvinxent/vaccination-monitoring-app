@@ -48,9 +48,7 @@ public class loginController {
             scene = new Scene(root);
 
             String name = null;
-            ObservableList<Schedule> patient = FXCollections.observableArrayList();
             int id = details.getUserID();
-
             if (usertype.equals("doctor")){
                 name = doctorDAO.getDoctorNameByUserID(id);
             }
@@ -61,7 +59,6 @@ public class loginController {
 
             patientTable patientTable = loader.getController();
             patientTable.displayName(id, name, usertype);
-            patientTable.reloadRecordTable();
 
             draw.screen(root, stage, scene);
             Stage login = (Stage) main.getScene().getWindow();

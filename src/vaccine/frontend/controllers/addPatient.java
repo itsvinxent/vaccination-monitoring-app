@@ -15,9 +15,7 @@ import vaccine.backend.classes.Schedule;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import vaccine.backend.dao.*;
 
@@ -27,6 +25,9 @@ public class addPatient implements Initializable {
 
     @FXML
     private TextField patientFName;
+
+    @FXML
+    private TextField cityAddress;
 
     @FXML
     private DatePicker firstDose;
@@ -52,7 +53,7 @@ public class addPatient implements Initializable {
     int interval;
     String first_dose, second_dose;
     SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-    Calendar calendar = Calendar.getInstance();
+    Calendar calendar = GregorianCalendar.getInstance();
     Schedule patient = null;
 
     @Override
@@ -78,7 +79,8 @@ public class addPatient implements Initializable {
                 second_dose,
                 schedule.getValue(),
                 schedule.getValue(),
-                "incomplete");
+                "incomplete",
+                capitalize(cityAddress.getText()));
         // todo: system for setting the status
         scheduleDAO.addSchedule(patient);
 
@@ -100,11 +102,12 @@ public class addPatient implements Initializable {
                 patientLName.getText(),
                 patientFName.getText(),
                 vaccineID.getValue(),
-                firstDose.getEditor().getText(),
-                secondDose.getEditor().getText(),
+                format.format(firstDose.getEditor().getText()),
+                format.format(secondDose.getEditor().getText()),
                 schedule.getValue(),
                 schedule.getValue(),
-                "incomplete");
+                "incomplete",
+                capitalize(cityAddress.getText()));
         scheduleDAO.updateSchedule(updatedPatient);
         System.out.println(updatedPatient.getFirstDose());
         Stage stage = (Stage) main.getScene().getWindow();
@@ -144,6 +147,9 @@ public class addPatient implements Initializable {
         calendar.add(Calendar.DAY_OF_MONTH, interval);
         second_dose = format.format(calendar.getTime());
         secondDose.getEditor().setText(second_dose);
+        calendar.add(Calendar.DAY_OF_MONTH, -interval);
+        first_dose = format.format(calendar.getTime());
+        firstDose.getEditor().setText(first_dose);
     }
 
     public void setFieldContent(int patientID) {
@@ -155,6 +161,7 @@ public class addPatient implements Initializable {
         firstDose.getEditor().setText(patient.getFirstDose());
         secondDose.getEditor().setText(patient.getSecondDose());
         schedule.setValue(patient.getFirstTime());
+        cityAddress.setText(patient.getCity());
 
         updateEntry.setDisable(false);
         updateEntry.setVisible(true);
@@ -165,5 +172,13 @@ public class addPatient implements Initializable {
         deleteEntry.setDisable(false);
         deleteEntry.setVisible(true);
         deleteEntry.setOpacity(1);
+    }
+
+    public static String capitalize(String str) {
+        if(str == null || str.isEmpty()) {
+            return str;
+        }
+
+        return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
     }
 }

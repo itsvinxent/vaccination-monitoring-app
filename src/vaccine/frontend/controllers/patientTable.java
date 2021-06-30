@@ -2,6 +2,8 @@ package vaccine.frontend.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -12,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.InnerShadow;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -21,9 +24,8 @@ import vaccine.backend.classes.Schedule;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import vaccine.backend.classes.Vaccine;
 import vaccine.backend.dao.scheduleDAO;
@@ -49,12 +51,12 @@ public class patientTable implements Initializable {
     private TableColumn<Schedule, String> secondDose;
     @FXML
     private TableColumn<Schedule, String> patientStatus;
+    @FXML
+    private TableColumn<Schedule, String> cityAddress;
 
     // Schedule Table
     @FXML
     private TableView<Schedule> schedT;
-    @FXML
-    private TableColumn<Schedule, String> dateCol;
     @FXML
     private TableColumn<Schedule, String> timeCol;
     @FXML
@@ -93,13 +95,19 @@ public class patientTable implements Initializable {
     static ObservableList<String> filters =
             FXCollections.observableArrayList("Vaccine Brand", "Vaccination Status");
     static ObservableList<Schedule> patients;
+    static ObservableList<Schedule> schedules;
     static String type, _name;
     static int id;
+
+    static SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+    static Calendar calendar = GregorianCalendar.getInstance();
+    static String currentDate = sdf.format(calendar.getTime());
 
     // JAVA FX onAction Functions
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         reloadRecordTable();
+        reloadScheduleTable();
     }
 
     /**
@@ -115,6 +123,7 @@ public class patientTable implements Initializable {
         firstDose.setCellValueFactory(new PropertyValueFactory<Schedule, String>("firstDose"));
         secondDose.setCellValueFactory(new PropertyValueFactory<Schedule, String>("secondDose"));
         patientStatus.setCellValueFactory(new PropertyValueFactory<Schedule, String>("status"));
+        cityAddress.setCellValueFactory(new PropertyValueFactory<Schedule, String>("city"));
         // Sets the ObservableList that contains the records.
         patientT.setItems(patients);
         filterButton.setItems(filters);
@@ -134,13 +143,24 @@ public class patientTable implements Initializable {
             }
         });
         // by default, the table is sorted by status when it is loaded
-        patientStatus.setSortType(TableColumn.SortType.DESCENDING);
-        patientT.getSortOrder().add(patientStatus);
-        patientT.sort();
+        sortTable(patientT, patientStatus);
     }
 
     public void reloadScheduleTable() {
+        timeCol.setCellValueFactory(new PropertyValueFactory<Schedule, String>("firstTime"));
+        patientNameCol.setCellValueFactory(new PropertyValueFactory<Schedule, String>("patientName"));
+        docNameCol.setCellValueFactory(new PropertyValueFactory<Schedule, String>("doctorName"));
+        vaccineCol.setCellValueFactory(new PropertyValueFactory<Schedule, String>("vaccineBrand"));
+        dosageCol.setCellValueFactory(new PropertyValueFactory<Schedule, String>("status"));
 
+        schedT.setItems(schedules);
+        sortTable(schedT, dosageCol);
+    }
+
+    public void sortTable(TableView<Schedule> t, TableColumn<Schedule, String> c) {
+        c.setSortType(TableColumn.SortType.DESCENDING);
+        t.getSortOrder().add(c);
+        t.sort();
     }
 
     /**
@@ -151,38 +171,40 @@ public class patientTable implements Initializable {
      */
     public void setTableColumnSizes(boolean displayAll) {
         if (!displayAll) {
-            dateCol.setPrefWidth(150);
-            timeCol.setPrefWidth(150);
+
+            timeCol.setPrefWidth(200);
             patientNameCol.setPrefWidth(250);
             docNameCol.setVisible(false);
-            vaccineCol.setPrefWidth(175);
-            dosageCol.setPrefWidth(175);
+            vaccineCol.setPrefWidth(200);
+            dosageCol.setPrefWidth(200);
 
             patientT.setPrefWidth(900);
             patientT.setLayoutX(65);
-            patientNum.setPrefWidth(125);
+            patientNum.setPrefWidth(100);
             doctorName.setVisible(false);
-            patientName.setPrefWidth(175);
-            vaccineBrand.setPrefWidth(175);
+            cityAddress.setPrefWidth(74);
+            patientName.setPrefWidth(150);
+            vaccineBrand.setPrefWidth(150);
             firstDose.setPrefWidth(149);
             secondDose.setPrefWidth(149);
             patientStatus.setPrefWidth(124);
         }
         else {
             docNameCol.setVisible(true);
-            dateCol.setPrefWidth(125);
-            timeCol.setPrefWidth(125);
-            patientNameCol.setPrefWidth(175);
-            docNameCol.setPrefWidth(175);
-            vaccineCol.setPrefWidth(149);
-            dosageCol.setPrefWidth(149);
+
+            timeCol.setPrefWidth(150);
+            patientNameCol.setPrefWidth(200);
+            docNameCol.setPrefWidth(200);
+            vaccineCol.setPrefWidth(174);
+            dosageCol.setPrefWidth(174);
 
             patientT.setPrefWidth(980);
             patientT.setLayoutX(25);
             doctorName.setVisible(true);
-            patientNum.setPrefWidth(115);
-            doctorName.setPrefWidth(181);
-            patientName.setPrefWidth(181);
+            patientNum.setPrefWidth(75);
+            doctorName.setPrefWidth(150);
+            patientName.setPrefWidth(150);
+            cityAddress.setPrefWidth(100);
             vaccineBrand.setPrefWidth(125);
             firstDose.setPrefWidth(125);
             secondDose.setPrefWidth(125);
@@ -210,6 +232,7 @@ public class patientTable implements Initializable {
                 searchBar.setLayoutX(65);
                 filterButton.setLayoutX(865);
                 patients = scheduleDAO.getPatientByDoctor(id);
+                schedules = scheduleDAO.getCurrentScheduleByDoctor(currentDate, id);
                 break;
 
             case "medstaff":
@@ -218,9 +241,10 @@ public class patientTable implements Initializable {
                 vaccineInfoButton.setOpacity(1);
                 setTableColumnSizes(true);
                 patients = scheduleDAO.getAllPatients();
+                schedules = scheduleDAO.getCurrentSchedule(currentDate);
                 break;
 
-            case "admin":
+            default:
                 msg = "Welcome, Admin!";
                 accountMButton.setDisable(false);
                 accountMButton.setOpacity(1);
@@ -229,10 +253,12 @@ public class patientTable implements Initializable {
                 vaccineInfoButton.setLayoutY(332);
                 setTableColumnSizes(true);
                 patients = scheduleDAO.getAllPatients();
+                schedules = scheduleDAO.getCurrentSchedule(currentDate);
                 break;
         }
         nameLabel.setText(msg);
         reloadRecordTable();
+        reloadScheduleTable();
     }
 
     /**
@@ -253,7 +279,7 @@ public class patientTable implements Initializable {
 
             stage.setOnHidden(new EventHandler<WindowEvent>() {
                 public void handle(WindowEvent we) {
-                    reloadRecordTable();
+                    //reloadRecordTable();
                     displayName(id,_name,type);
                 }
             });
@@ -319,7 +345,7 @@ public class patientTable implements Initializable {
                 addPatient.setFieldContent(patientT.getSelectionModel().getSelectedItem().getPatientNum());
                 stage.setOnHidden(new EventHandler<WindowEvent>() {
                     public void handle(WindowEvent we) {
-                        reloadRecordTable();
+                        //reloadRecordTable();
                         displayName(id,_name,type);
                     }
                 });
@@ -393,6 +419,7 @@ public class patientTable implements Initializable {
         // Adjust other components
         searchBar.setPromptText("Search by Patient Name or Patient ID");
         searchBar.setLayoutX(65);
+        searchBar.clear();
         updatePatientButton.setLayoutX(755);
         filterButton.setLayoutX(865);
     }
@@ -437,6 +464,7 @@ public class patientTable implements Initializable {
 
         // Adjust other components
         searchBar.setPromptText("Search by Patient Name or Patient ID");
+        searchBar.clear();
         if (!type.equals("doctor")) {
             searchBar.setLayoutX(25);
             filterButton.setLayoutX(900);
@@ -476,6 +504,7 @@ public class patientTable implements Initializable {
 
         searchBar.setPromptText("Search by Username or User ID");
         searchBar.setLayoutX(65);
+        searchBar.clear();
         filterButton.setLayoutX(865);
 
     }
@@ -513,39 +542,33 @@ public class patientTable implements Initializable {
 
         searchBar.setPromptText("Search by Username or User ID");
         searchBar.setLayoutX(65);
+        searchBar.clear();
         filterButton.setLayoutX(865);
 
     }
 
-//    public void search(ActionEvent event) {
-//
-//        ObservableList<Schedule> temp = FXCollections.observableArrayList();
-//        patients.forEach((rec) -> {
-//            String name = rec.getPatientName();
-//            String input = searchBar.getText();
-//            System.out.println(name);
-//            System.out.println(input);
-//
-//            if (name.contains(input))
-//                temp.add(rec);
-//        });
-//        patients.removeAll();
-//        patients = temp;
-//        patientT.getItems().clear();
-//        reloadTable();
-//        searchButton.setOpacity(0);
-//        searchButton.setDisable(true);
-//        clear.setOpacity(1);
-//        clear.setDisable(false);
-//    }
-//
-//    public void clear(ActionEvent event) {
-//        patientT.getItems().clear();
-//        reloadTable();
-//        searchButton.setOpacity(1);
-//        searchButton.setDisable(false);
-//        clear.setOpacity(0);
-//        clear.setDisable(true);
-//    }
+    public void search(KeyEvent event) {
+        if (recordsButton.getEffect() != null) {
+            FilteredList<Schedule> filteredList = new FilteredList<>(patients, b->true);
+            searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+                filteredList.setPredicate(schedule -> {
+                    if(newValue == null || newValue.isEmpty()) {
+                        return true;
+                    }
+                    String lowercase = newValue.toLowerCase(Locale.ROOT);
+
+                    if(schedule.getPatientLName().toLowerCase(Locale.ROOT).contains(lowercase))
+                        return true;
+                    else return String.valueOf(schedule.getPatientNum()).contains(lowercase);
+                });
+            });
+
+            SortedList<Schedule> sortedList = new SortedList<>(filteredList);
+            sortedList.comparatorProperty().bind(patientT.comparatorProperty());
+            patientT.setItems(sortedList);
+        } else if (scheduleButton.getEffect() != null) {
+            // TODO: Search Schedule Table
+        }
+    }
 
 }

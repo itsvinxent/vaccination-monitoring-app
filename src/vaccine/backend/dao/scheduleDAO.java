@@ -43,7 +43,8 @@ public class scheduleDAO {
                                 rs.getString("secondDose"),
                                 rs.getString("firstTime"),
                                 rs.getString("secondTime"),
-                                rs.getString("status"))
+                                rs.getString("status"),
+                                rs.getString("city"))
                 );
             }
             conn.close();
@@ -60,19 +61,19 @@ public class scheduleDAO {
 
     /**
      * Method used for fetching all tuples that matches the given value of the doctorID attribute.
-     * @param doctorNum value to be checked in the doctorID attribute of each tuple.
+     * @param userID value to be checked in the doctorID attribute of each tuple.
      * @return ObservableList of Schedule Bean object/s.
      * if null, the schedule_info table is empty, the query failed to execute, or no match is found.
      */
-    public static ObservableList<Schedule> getPatientByDoctor(int doctorNum) {
+    public static ObservableList<Schedule> getPatientByDoctor(int userID) {
         ObservableList<Schedule> list = FXCollections.observableArrayList();
         try {
             conn = SqliteDBCon.Connector();
             ps = conn.prepareStatement("SELECT * FROM schedule_info, vaccine_info, doctor_info " +
                     "WHERE vacID = vaccineID " +
                     "and schedule_info.doctorID = doctor_info.drID " +
-                    "and schedule_info.doctorID = ?");
-            ps.setInt(1, doctorNum);
+                    "and doctor_info.userID = ?");
+            ps.setInt(1, userID);
             rs = ps.executeQuery();
             while(rs.next()) {
                 list.add(
@@ -85,7 +86,8 @@ public class scheduleDAO {
                                 rs.getString("secondDose"),
                                 rs.getString("firstTime"),
                                 rs.getString("secondTime"),
-                                rs.getString("status"))
+                                rs.getString("status"),
+                                rs.getString("city"))
                 );
             }
             conn.close();
@@ -127,7 +129,8 @@ public class scheduleDAO {
                         rs.getString("secondDose"),
                         rs.getString("firstTime"),
                         rs.getString("secondTime"),
-                        rs.getString("status")
+                        rs.getString("status"),
+                        rs.getString("city")
                 );
             }
             conn.close();
@@ -143,7 +146,7 @@ public class scheduleDAO {
     }
 
     /**
-     * Method used for fetching all tuples that matches the given value of the doctorID attribute.
+     * Method used for fetching all tuples that matches the given date to firstDose or secondDose attribute.
      * @param date value to be checked in the firstTime/secondTime attribute of each tuple. (Current Date)
      * @return ObservableList of Schedule Bean object/s.
      */
@@ -151,12 +154,56 @@ public class scheduleDAO {
         ObservableList<Schedule> list = FXCollections.observableArrayList();
         try {
             conn = SqliteDBCon.Connector();
+            ps = conn.prepareStatement("SELECT * FROM schedule_info" +
+                    "WHERE firstDose = ? or secondDose = ?");
+            ps.setString(1, date);
+            ps.setString(2, date);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                list.add(
+                        new Schedule(rs.getInt("patientID"),
+                                rs.getString("doctorID"),
+                                rs.getString("patientLName"),
+                                rs.getString("patientFName"),
+                                rs.getString("vaccineBrand"),
+                                rs.getString("firstDose"),
+                                rs.getString("secondDose"),
+                                rs.getString("firstTime"),
+                                rs.getString("secondTime"),
+                                rs.getString("status"),
+                                rs.getString("city"))
+                );
+            }
+            conn.close();
+        } catch (Exception exception) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error!");
+            alert.setHeaderText("An error occurred.");
+            alert.setContentText("Error: " + exception + "\nPlease contact the Administrator for more info.");
+            alert.showAndWait();
+            return null;
+        }
+        return list;
+    }
+
+    /**
+     * Method used for fetching all tuples that matches the given date and id to firstDose or secondDose attribute
+     * and the doctorID.
+     * @param date value to be checked in the firstTime/secondTime attribute of each tuple. (Current Date)
+     * @param id value to be checked in the userID attribute of each tuple.
+     * @return
+     */
+    public static ObservableList<Schedule> getCurrentScheduleByDoctor(String date, int id) {
+        ObservableList<Schedule> list = FXCollections.observableArrayList();
+        try {
+            conn = SqliteDBCon.Connector();
             ps = conn.prepareStatement("SELECT * FROM schedule_info, vaccine_info, doctor_info  " +
                     "WHERE vacID = vaccineID " +
                     "and schedule_info.doctorID = doctor_info.drID " +
-                    "and firstTime = ? or secondTime = ?");
-            ps.setString(1,date);
-            ps.setString(2,date);
+                    "and firstDose = ? or secondDose = ? " +
+                    "and doctor_info.userID = ?");
+            ps.setString(1, date);
+            ps.setString(2, date);
             rs = ps.executeQuery();
             while(rs.next()) {
                 list.add(
@@ -169,7 +216,8 @@ public class scheduleDAO {
                                 rs.getString("secondDose"),
                                 rs.getString("firstTime"),
                                 rs.getString("secondTime"),
-                                rs.getString("status"))
+                                rs.getString("status"),
+                                rs.getString("city"))
                 );
             }
             conn.close();
@@ -215,8 +263,8 @@ public class scheduleDAO {
             conn = SqliteDBCon.Connector();
             ps = conn.prepareStatement("insert into schedule_info " +
                     "(doctorID, vacID, patientLName, patientFName, " +
-                    "firstDose, secondDose, firstTime, secondTime, status) " +
-                    "values (?,?,?,?,?,?,?,?,?)");
+                    "firstDose, secondDose, firstTime, secondTime, status, city) " +
+                    "values (?,?,?,?,?,?,?,?,?,?)");
             ps.setInt(1, doctorDAO.getDoctorIDByDoctorName(u.getDoctorName()));
             ps.setInt(2, vaccineDAO.getVaccineIDByBrand(u.getVaccineBrand()));
             ps.setString(3, u.getPatientLName());
@@ -226,6 +274,7 @@ public class scheduleDAO {
             ps.setString(7, u.getFirstTime());
             ps.setString(8, u.getSecondTime());
             ps.setString(9, u.getStatus());
+            ps.setString(10, u.getCity());
             status = ps.executeUpdate();
             conn.close();
         } catch (Exception e) {
@@ -247,7 +296,7 @@ public class scheduleDAO {
                     "set doctorID = ?, vacID = ?, " +
                     "patientLName = ?, patientFName =?, " +
                     "firstDose = ?, secondDose = ?, " +
-                    "firstTime = ?, secondTime = ?, status = ? " +
+                    "firstTime = ?, secondTime = ?, status = ?, city = ?" +
                     "where patientID = ?");
             ps.setInt(1, doctorDAO.getDoctorIDByDoctorName(u.getDoctorName()));
             ps.setInt(2, vaccineDAO.getVaccineIDByBrand(u.getVaccineBrand()));
@@ -258,7 +307,8 @@ public class scheduleDAO {
             ps.setString(7, u.getFirstTime());
             ps.setString(8, u.getSecondTime());
             ps.setString(9, u.getStatus());
-            ps.setInt(10, u.getPatientNum());
+            ps.setString(10, u.getCity());
+            ps.setInt(11, u.getPatientNum());
             status = ps.executeUpdate();
             conn.close();
         } catch (Exception exception) {
