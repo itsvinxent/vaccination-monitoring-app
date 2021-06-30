@@ -4,8 +4,8 @@ public class Staff {
     int userNum, staffID;
     String staffName;
 
-    public Staff(int staffID, String staffName) {
-        this.staffID = staffID;
+    public Staff(int userNum, String staffName) {
+        this.userNum = userNum;
         this.staffName = staffName;
     }
 

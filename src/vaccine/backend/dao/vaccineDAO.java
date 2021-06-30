@@ -2,6 +2,8 @@ package vaccine.backend.dao;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import vaccine.backend.classes.Schedule;
 import vaccine.backend.classes.Vaccine;
 import vaccine.backend.util.SqliteDBCon;
 
@@ -23,6 +25,27 @@ public class vaccineDAO {
      * @return ObservableList of Vaccine Bean object/s.
      * if null, the vaccine_info table is empty or the query failed to execute.
      */
+
+    public static ObservableList<Vaccine> getAllVaccine() {
+        ObservableList<Vaccine> list = FXCollections.observableArrayList();
+        try {
+            conn = SqliteDBCon.Connector();
+            ps = conn.prepareStatement("select * from vaccine_info");
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                list.add(new Vaccine(rs.getInt("vaccineID"),
+                        rs.getString("vaccineBrand"),
+                        rs.getInt("storageAmount"),
+                        rs.getInt("doseInterval"))
+                );
+            }
+            conn.close();
+        } catch (Exception exception) {
+            return null;
+        }
+        return list;
+    }
+
     public static ObservableList<String> getAllVaccineBrand() {
         ObservableList<String> list = FXCollections.observableArrayList();
         try {
@@ -81,6 +104,33 @@ public class vaccineDAO {
             return -1;
         }
         return interval;
+    }
+
+    public static Vaccine getVaccineByVaccineID(int vaccineID) {
+        Vaccine vaccine = null;
+        try {
+            conn = SqliteDBCon.Connector();
+            ps = conn.prepareStatement("SELECT * FROM vaccine_info WHERE vaccine_info.vaccineID = ? ");
+            ps.setInt(1, vaccineID);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                vaccine = new Vaccine(
+                        rs.getInt("vaccineID"),
+                        rs.getString("vaccineBrand"),
+                        rs.getInt("storageAmount"),
+                        rs.getInt("doseInterval")
+                );
+            }
+            conn.close();
+        } catch(Exception exception) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error!");
+            alert.setHeaderText("An error occurred.");
+            alert.setContentText("Error: " + exception + "\nPlease contact the Administrator for more info.");
+            alert.showAndWait();
+            return null;
+        }
+        return vaccine;
     }
 
     /**

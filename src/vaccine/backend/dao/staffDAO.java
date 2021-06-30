@@ -1,6 +1,9 @@
 package vaccine.backend.dao;
 
+import javafx.scene.control.Alert;
+import vaccine.backend.classes.Account;
 import vaccine.backend.classes.Staff;
+import vaccine.backend.classes.Vaccine;
 import vaccine.backend.util.SqliteDBCon;
 
 import java.sql.Connection;
@@ -35,6 +38,32 @@ public class staffDAO {
             return null;
         }
         return name;
+    }
+
+    public static Staff getStaffByUserID(int userID) {
+        Staff staff = null;
+        try {
+            conn = SqliteDBCon.Connector();
+            ps = conn.prepareStatement("SELECT * FROM staff_info WHERE staff_info.userID = ? ");
+            ps.setInt(1, userID);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                staff = new Staff(
+                        rs.getInt("userID"),
+                        rs.getInt("staffID"),
+                        rs.getString("staffName")
+                );
+            }
+            conn.close();
+        } catch(Exception exception) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error!");
+            alert.setHeaderText("An error occurred.");
+            alert.setContentText("Error: " + exception + "\nPlease contact the Administrator for more info.");
+            alert.showAndWait();
+            return null;
+        }
+        return staff;
     }
 
     /**
