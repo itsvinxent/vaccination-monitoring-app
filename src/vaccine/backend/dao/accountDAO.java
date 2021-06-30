@@ -2,6 +2,8 @@ package vaccine.backend.dao;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import vaccine.backend.classes.Staff;
 import vaccine.backend.util.SqliteDBCon;
 
 import java.sql.Connection;
@@ -42,6 +44,8 @@ public class accountDAO {
         return id;
     }
 
+
+
     /**
      * Updates attributes of an existing tuple in user_info table.
      * @param u Account Bean object
@@ -52,10 +56,10 @@ public class accountDAO {
         try {
             conn = SqliteDBCon.Connector();
             ps = conn.prepareStatement("update user_info set username = ?, password = ?, usertype = ? where userID = ?");
-            ps.setString(1, u.getUsername());
-            ps.setString(2, u.getPassword());
-            ps.setString(3, u.getUsertype());
-            ps.setInt(4, u.getUserID());
+            ps.setInt(1, u.getUserID());
+            ps.setString(2, u.getUsername());
+            ps.setString(3, u.getPassword());
+            ps.setString(4, u.getUsertype());
             status = ps.executeUpdate();
             conn.close();
         } catch (Exception exception) {
@@ -138,6 +142,33 @@ public class accountDAO {
         }
         return id;
 
+    }
+
+    public static Account getAccountByUserID(int userID) {
+        Account account = null;
+        try {
+            conn = SqliteDBCon.Connector();
+            ps = conn.prepareStatement("SELECT * FROM user_info WHERE user_info.userID = ? ");
+            ps.setInt(1, userID);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                account = new Account(
+                        rs.getInt("userID"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("usertype")
+                );
+            }
+            conn.close();
+        } catch(Exception exception) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error!");
+            alert.setHeaderText("An error occurred.");
+            alert.setContentText("Error: " + exception + "\nPlease contact the Administrator for more info.");
+            alert.showAndWait();
+            return null;
+        }
+        return account;
     }
 
     /**

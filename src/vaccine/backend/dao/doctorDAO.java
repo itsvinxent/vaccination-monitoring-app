@@ -2,7 +2,9 @@ package vaccine.backend.dao;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import vaccine.backend.classes.Doctor;
+import vaccine.backend.classes.Staff;
 import vaccine.backend.util.SqliteDBCon;
 
 import java.sql.Connection;
@@ -146,5 +148,32 @@ public class doctorDAO {
             exception.printStackTrace();
         }
         return id;
+    }
+
+    public static Doctor getDoctorByUserID(int userID) {
+        Doctor doctor = null;
+        try {
+            conn = SqliteDBCon.Connector();
+            ps = conn.prepareStatement("SELECT * FROM doctor_info WHERE doctor_info.userID = ? ");
+            ps.setInt(1, userID);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                doctor = new Doctor(
+                        rs.getInt("userID"),
+                        rs.getInt("drID"),
+                        rs.getString("drName"),
+                        rs.getString("schedule")
+                );
+            }
+            conn.close();
+        } catch(Exception exception) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error!");
+            alert.setHeaderText("An error occurred.");
+            alert.setContentText("Error: " + exception + "\nPlease contact the Administrator for more info.");
+            alert.showAndWait();
+            return null;
+        }
+        return doctor;
     }
 }

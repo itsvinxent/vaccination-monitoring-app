@@ -19,13 +19,17 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import vaccine.backend.classes.Account;
 import vaccine.backend.classes.Doctor;
+import vaccine.backend.classes.Staff;
 import vaccine.backend.dao.accountDAO;
 import vaccine.backend.dao.doctorDAO;
+import vaccine.backend.dao.staffDAO;
+import vaccine.backend.dao.vaccineDAO;
+
 
 public class registerController implements Initializable {
     // Initialize UI components
     @FXML
-    private Button registerButton;
+    private Button registerButton, deleteButton, updateButton;
     @FXML
     private TextField username, password, cpassword;
     @FXML
@@ -41,6 +45,10 @@ public class registerController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeComboBoxes();
     }
+
+    Account account = null;
+    Doctor doctors = null;
+    Staff staff = null;
 
     /**
      * Creates an ObservableList that contains the combo box input options for schedule
@@ -83,11 +91,13 @@ public class registerController implements Initializable {
                 // Checks if the record is inserted
                 if (id == -1) throw new IOException("Error");
 
-                // Use the returned ID as a foreign key
-                // for creating a new doctor_info or staff_info
+                    // Use the returned ID as a foreign key
+                    // for creating a new doctor_info or staff_info
                 else {
-                    if (Objects.requireNonNull(usertype).equals("medstaff")) {
-                        // TODO: CODE FOR ADDING A MEDICAL STAFF
+                    if (medstaff.isSelected()) {
+                        String fullname = lName + ", " + fName;
+                        Staff staff = new Staff(id, fullname);
+                        staffDAO.addStaff(staff);
                     } else {
                         String fullname = lName + ", " + fName;
                         Doctor doctor = new Doctor(id, fullname, sched);
@@ -112,5 +122,39 @@ public class registerController implements Initializable {
         reg.close();
     }
 
+    public void med (ActionEvent event) throws IOException {
+        schedule.setDisable(true);
+        schedule.getSelectionModel().clearSelection();
+    }
 
+    public void doc (ActionEvent event) throws IOException {
+        schedule.setDisable(false);
+    }
+
+    public void setFieldContent(int staffID) {
+        account = accountDAO.getAccountByUserID(staffID);
+        username.setText(account.getUsername());
+        password.setText(account.getPassword());
+        if(account.getUsertype().equals("medstaff")||account.getUsertype().equals("medical staff")){
+            staff = staffDAO.getStaffByUserID(staffID);
+            medstaff.setSelected(true);
+            schedule.setDisable(true);
+            schedule.getSelectionModel().clearSelection();
+            fname.setText(staff.getStaffName());
+        }else{
+            doctors = doctorDAO.getDoctorByUserID(staffID);
+            doctor.setSelected(true);
+            schedule.setDisable(false);
+            schedule.setValue(doctors.getSchedule());
+            fname.setText(doctors.getDoctorName());
+        }
+
+
+        updateButton.setDisable(false);
+        updateButton.setVisible(true);
+        registerButton.setDisable(true);
+        registerButton.setVisible(false);
+        deleteButton.setDisable(false);
+        deleteButton.setVisible(true);
+    }
 }

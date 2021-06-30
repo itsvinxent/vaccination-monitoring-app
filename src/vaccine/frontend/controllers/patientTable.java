@@ -29,6 +29,9 @@ import java.util.*;
 
 import vaccine.backend.classes.Vaccine;
 import vaccine.backend.dao.scheduleDAO;
+import vaccine.backend.dao.vaccineDAO;
+import vaccine.backend.dao.accountDAO;
+
 
 /**
  * JavaFx Class Controller for dashboard.fxml
@@ -71,10 +74,26 @@ public class patientTable implements Initializable {
     // Account Management Table
     @FXML
     private TableView<Account> accountT;
+    @FXML
+    private TableColumn<Account, String> userIDCol;
+    @FXML
+    private TableColumn<Account, String> usernameCol;
+    @FXML
+    private TableColumn<Account, String> passwordCol;
+    @FXML
+    private TableColumn<Account, String> usertypeCol;
 
     // Vaccine Management Table
     @FXML
     private TableView<Vaccine> vaccineT;
+    @FXML
+    private TableColumn<Vaccine, String> vaccineIDCol;
+    @FXML
+    private TableColumn<Vaccine, String> vaccineBrandCol;
+    @FXML
+    private TableColumn<Vaccine, String> storageAmountCol;
+    @FXML
+    private TableColumn<Vaccine, String> doseIntervalCol;
 
     // Components
     @FXML
@@ -96,6 +115,8 @@ public class patientTable implements Initializable {
             FXCollections.observableArrayList("Vaccine Brand", "Vaccination Status");
     static ObservableList<Schedule> patients;
     static ObservableList<Schedule> schedules;
+    static ObservableList<Vaccine> vaccines;
+    static ObservableList<Account> accounts;
     static String type, _name;
     static int id;
 
@@ -108,6 +129,8 @@ public class patientTable implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         reloadRecordTable();
         reloadScheduleTable();
+        reloadVaccineTable();
+        reloadStaffTable();
     }
 
     /**
@@ -146,6 +169,40 @@ public class patientTable implements Initializable {
         sortTable(patientT, patientStatus);
     }
 
+    public void reloadVaccineTable() {
+        // Initializes the data source for each column
+        vaccineIDCol.setCellValueFactory(new PropertyValueFactory<Vaccine, String>("vaccineID"));
+        vaccineBrandCol.setCellValueFactory(new PropertyValueFactory<Vaccine, String>("vaccineBrand"));
+        storageAmountCol.setCellValueFactory(new PropertyValueFactory<Vaccine, String>("storageAmount"));
+        doseIntervalCol.setCellValueFactory(new PropertyValueFactory<Vaccine, String>("doseInterval"));
+        // Sets the ObservableList that contains the records.
+        vaccines = vaccineDAO.getAllVaccine();
+        vaccineT.setItems(vaccines);
+        filterButton.setItems(filters);
+        // by default, the table is sorted by status when it is loaded
+        vaccineIDCol.setSortType(TableColumn.SortType.ASCENDING);
+        vaccineT.getSortOrder().add(vaccineIDCol);
+        vaccineT.sort();
+    }
+
+    public void reloadStaffTable() {
+        // Initializes the data source for each column
+        userIDCol.setCellValueFactory(new PropertyValueFactory<Account, String>("userID"));
+        usernameCol.setCellValueFactory(new PropertyValueFactory<Account, String>("username"));
+        passwordCol.setCellValueFactory(new PropertyValueFactory<Account, String>("password"));
+        usertypeCol.setCellValueFactory(new PropertyValueFactory<Account, String>("usertype"));
+        // Sets the ObservableList that contains the records.
+        accounts = accountDAO.getAllAccounts();
+        accountT.setItems(accounts);
+        filterButton.setItems(filters);
+        // by default, the table is sorted by status when it is loaded
+        userIDCol.setSortType(TableColumn.SortType.ASCENDING);
+        accountT.getSortOrder().add(userIDCol);
+        accountT.sort();
+    }
+
+
+
     public void reloadScheduleTable() {
         timeCol.setCellValueFactory(new PropertyValueFactory<Schedule, String>("firstTime"));
         patientNameCol.setCellValueFactory(new PropertyValueFactory<Schedule, String>("patientName"));
@@ -162,6 +219,8 @@ public class patientTable implements Initializable {
         t.getSortOrder().add(c);
         t.sort();
     }
+
+
 
     /**
      * Sets the visibility of the Assigned Doctor column.
@@ -305,6 +364,12 @@ public class patientTable implements Initializable {
 
         draw.popUp(root, stage, scene);
 
+        stage.setOnHidden(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                reloadStaffTable();
+            }
+        });
+
     }
 
     /**
@@ -321,6 +386,12 @@ public class patientTable implements Initializable {
         stage.initOwner(current);
 
         draw.popUp(root, stage, scene);
+
+        stage.setOnHidden(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                reloadVaccineTable();
+            }
+        });
 
     }
 
@@ -346,6 +417,64 @@ public class patientTable implements Initializable {
                 stage.setOnHidden(new EventHandler<WindowEvent>() {
                     public void handle(WindowEvent we) {
                         //reloadRecordTable();
+                        displayName(id,_name,type);
+                    }
+                });
+                stage.getOnHidden().handle(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+            }
+
+
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    public void vaccineUpdatePopUp(MouseEvent event) throws IOException {
+        try {
+            if (event.getClickCount() == 2){
+                FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("../gui/addVaccine.fxml")));
+                Parent root = loader.load();
+                Scene scene = new Scene(root);
+                Stage stage = new Stage();
+                Stage current = (Stage) main.getScene().getWindow();
+                stage.initOwner(current);
+
+                draw.popUp(root, stage, scene);
+                addVaccine addVaccine = loader.getController();
+                addVaccine.setFieldContent(vaccineT.getSelectionModel().getSelectedItem().getVaccineID());
+                stage.setOnHidden(new EventHandler<WindowEvent>() {
+                    public void handle(WindowEvent we) {
+                        System.out.println("nice");
+                        reloadVaccineTable();
+                        displayName(id,_name,type);
+                    }
+                });
+                stage.getOnHidden().handle(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+            }
+
+
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    public void staffUpdatePopUp(MouseEvent event) throws IOException {
+        try {
+            if (event.getClickCount() == 2){
+                FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("../gui/register.fxml")));
+                Parent root = loader.load();
+                Scene scene = new Scene(root);
+                Stage stage = new Stage();
+                Stage current = (Stage) main.getScene().getWindow();
+                stage.initOwner(current);
+
+                draw.popUp(root, stage, scene);
+                registerController registerController = loader.getController();
+                registerController.setFieldContent(accountT.getSelectionModel().getSelectedItem().getUserID());
+                stage.setOnHidden(new EventHandler<WindowEvent>() {
+                    public void handle(WindowEvent we) {
+                        System.out.println("nice");
+                        reloadVaccineTable();
                         displayName(id,_name,type);
                     }
                 });

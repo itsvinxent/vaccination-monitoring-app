@@ -1,6 +1,5 @@
 package vaccine.frontend.controllers;
 
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
