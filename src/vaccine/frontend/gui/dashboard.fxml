@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="main" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.frontend.controllers.patientTable">
+<AnchorPane fx:id="main" onMouseClicked="#clearRowSelection" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.frontend.controllers.patientTable">
     <children>
         <AnchorPane fx:id="menu" prefHeight="720.0" prefWidth="250.0" style="-fx-background-color: #0e2a47;">
             <effect>
@@ -50,7 +56,7 @@
         </AnchorPane>
         <AnchorPane fx:id="recordBody" layoutX="250.0" prefHeight="720.0" prefWidth="1030.0" style="-fx-background-color: #0e2a47;">
             <children>
-            <TableView fx:id="schedT" layoutX="65.0" layoutY="180.0" prefHeight="500.0" prefWidth="900.0">
+            <TableView fx:id="schedT" layoutX="65.0" layoutY="180.0" onMouseClicked="#getSchedule" prefHeight="500.0" prefWidth="900.0">
                <columns>
                   <TableColumn fx:id="timeCol" minWidth="40.0" prefWidth="150.0" resizable="false" text="Time" />
                   <TableColumn fx:id="patientNameCol" minWidth="100.0" prefWidth="200.0" resizable="false" text="Patient Name" />
@@ -124,7 +130,7 @@
                   <Font name="Arial Rounded MT Bold" size="12.0" />
                </font>
             </Button>
-            <Button fx:id="updatePatientButton" disable="true" layoutX="755.0" layoutY="145.0" mnemonicParsing="false" onAction="#addPopUp" opacity="0.0" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #48ffd5;" text="Update">
+            <Button fx:id="updatePatientButton" disable="true" layoutX="755.0" layoutY="145.0" mnemonicParsing="false" opacity="0.0" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #48ffd5;" text="Update">
                <font>
                   <Font name="Arial Rounded MT Bold" size="12.0" />
                </font>

@@ -10,7 +10,7 @@ public class Doctor {
         this.schedule = schedule;
     }
 
-    public Doctor(int doctorNum, int userNum, String doctorName, String schedule) {
+    public Doctor(int userNum, int doctorNum, String doctorName, String schedule) {
         this.doctorNum = doctorNum;
         this.userNum = userNum;
         this.doctorName = doctorName;

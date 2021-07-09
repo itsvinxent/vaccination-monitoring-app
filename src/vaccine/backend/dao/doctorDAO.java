@@ -107,15 +107,15 @@ public class doctorDAO {
 
     /**
      * Method used to get a Doctor's Name based on the given userID
-     * @param userID
+     * @param drID
      * @return String - contains the doctor's name
      */
-    public static String getDoctorNameByUserID(int userID) {
+    public static String getDoctorNameByDoctorID(int drID) {
         String name = null;
         try {
             conn = SqliteDBCon.Connector();
-            ps = conn.prepareStatement("select drName from doctor_info where userID = ?");
-            ps.setInt(1, userID);
+            ps = conn.prepareStatement("select drName from doctor_info where drID = ?");
+            ps.setInt(1, drID);
             rs = ps.executeQuery();
             while (rs.next()) {
                 name = rs.getString("drName");

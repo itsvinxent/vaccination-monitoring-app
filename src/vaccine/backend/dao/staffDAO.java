@@ -19,27 +19,6 @@ public class staffDAO {
     static PreparedStatement ps = null;
     static ResultSet rs = null;
 
-    /**
-     * Method that fetches the staffName attribute of a tuple that matches the given userID
-     * @param userID
-     * @return String - contains the name associated with the given userID
-     */
-    public static String getStaffNameByID(int userID) {
-        String name = null;
-        try {
-            conn = SqliteDBCon.Connector();
-            ps = conn.prepareStatement("select staffName from staff_info where userID = ?");
-            ps.setInt(1, userID);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                name = rs.getString("staffName");
-            }
-        } catch (Exception exception) {
-            return null;
-        }
-        return name;
-    }
-
     public static Staff getStaffByUserID(int userID) {
         Staff staff = null;
         try {

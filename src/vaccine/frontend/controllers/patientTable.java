@@ -9,6 +9,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -97,7 +98,7 @@ public class patientTable implements Initializable {
 
     // Components
     @FXML
-    private AnchorPane main, menu, recordBody;
+    private AnchorPane main;
     @FXML
     private TextField searchBar;
     @FXML
@@ -201,8 +202,6 @@ public class patientTable implements Initializable {
         accountT.sort();
     }
 
-
-
     public void reloadScheduleTable() {
         timeCol.setCellValueFactory(new PropertyValueFactory<Schedule, String>("firstTime"));
         patientNameCol.setCellValueFactory(new PropertyValueFactory<Schedule, String>("patientName"));
@@ -219,8 +218,6 @@ public class patientTable implements Initializable {
         t.getSortOrder().add(c);
         t.sort();
     }
-
-
 
     /**
      * Sets the visibility of the Assigned Doctor column.
@@ -300,6 +297,7 @@ public class patientTable implements Initializable {
                 vaccineInfoButton.setOpacity(1);
                 setTableColumnSizes(true);
                 patients = scheduleDAO.getAllPatients();
+                System.out.println("a");
                 schedules = scheduleDAO.getCurrentSchedule(currentDate);
                 break;
 
@@ -312,6 +310,7 @@ public class patientTable implements Initializable {
                 vaccineInfoButton.setLayoutY(332);
                 setTableColumnSizes(true);
                 patients = scheduleDAO.getAllPatients();
+                System.out.println("a");
                 schedules = scheduleDAO.getCurrentSchedule(currentDate);
                 break;
         }
@@ -328,13 +327,16 @@ public class patientTable implements Initializable {
      */
     public void addPopUp(ActionEvent event) throws IOException {
         try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../gui/addPatient.fxml")));
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("../gui/addPatient.fxml")));
+            Parent root = loader.load();
             Scene scene = new Scene(root);
             Stage stage = new Stage();
             Stage current = (Stage) main.getScene().getWindow();
             stage.initOwner(current);
 
             draw.popUp(root, stage, scene);
+            addPatient addPatient = loader.getController();
+            addPatient.setAnchorVisible(false);
 
             stage.setOnHidden(new EventHandler<WindowEvent>() {
                 public void handle(WindowEvent we) {
@@ -403,26 +405,27 @@ public class patientTable implements Initializable {
      */
     public void updatePopUp(MouseEvent event) throws IOException {
         try {
-            if (event.getClickCount() == 2){
-                FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("../gui/addPatient.fxml")));
-                Parent root = loader.load();
-                Scene scene = new Scene(root);
-                Stage stage = new Stage();
-                Stage current = (Stage) main.getScene().getWindow();
-                stage.initOwner(current);
+            if (patientT.getSelectionModel().getSelectedItem() != null) {
+                if (event.getClickCount() == 2 && (!type.equals("doctor"))) {
+                    FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("../gui/addPatient.fxml")));
+                    Parent root = loader.load();
+                    Scene scene = new Scene(root);
+                    Stage stage = new Stage();
+                    Stage current = (Stage) main.getScene().getWindow();
+                    stage.initOwner(current);
 
-                draw.popUp(root, stage, scene);
-                addPatient addPatient = loader.getController();
-                addPatient.setFieldContent(patientT.getSelectionModel().getSelectedItem().getPatientNum());
-                stage.setOnHidden(new EventHandler<WindowEvent>() {
-                    public void handle(WindowEvent we) {
-                        //reloadRecordTable();
-                        displayName(id,_name,type);
-                    }
-                });
-                stage.getOnHidden().handle(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+                    draw.popUp(root, stage, scene);
+                    addPatient addPatient = loader.getController();
+                    addPatient.setFieldContent(patientT.getSelectionModel().getSelectedItem().getPatientNum());
+                    stage.setOnHidden(new EventHandler<WindowEvent>() {
+                        public void handle(WindowEvent we) {
+                            //reloadRecordTable();
+                            displayName(id, _name, type);
+                        }
+                    });
+                    stage.getOnHidden().handle(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+                }
             }
-
 
         } catch (IOException exception) {
             exception.printStackTrace();
@@ -431,7 +434,7 @@ public class patientTable implements Initializable {
 
     public void vaccineUpdatePopUp(MouseEvent event) throws IOException {
         try {
-            if (event.getClickCount() == 2){
+            if (event.getClickCount() == 2 && vaccineT.getSelectionModel().getSelectedItem() != null){
                 FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("../gui/addVaccine.fxml")));
                 Parent root = loader.load();
                 Scene scene = new Scene(root);
@@ -460,7 +463,7 @@ public class patientTable implements Initializable {
 
     public void staffUpdatePopUp(MouseEvent event) throws IOException {
         try {
-            if (event.getClickCount() == 2){
+            if (event.getClickCount() == 2 && accountT.getSelectionModel().getSelectedItem() != null){
                 FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("../gui/register.fxml")));
                 Parent root = loader.load();
                 Scene scene = new Scene(root);
@@ -485,6 +488,75 @@ public class patientTable implements Initializable {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+    }
+
+    public void getSchedule(MouseEvent event) throws IOException {
+        if (schedT.getSelectionModel().getSelectedItem() != null) {
+            if (event.getClickCount() == 2 && (!type.equals("doctor"))) {
+                FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("../gui/addPatient.fxml")));
+                Parent root = loader.load();
+                Scene scene = new Scene(root);
+                Stage stage = new Stage();
+                Stage current = (Stage) main.getScene().getWindow();
+                stage.initOwner(current);
+
+                draw.popUp(root, stage, scene);
+                addPatient addPatient = loader.getController();
+                addPatient.setAnchorVisible(true);
+                stage.setOnHidden(new EventHandler<WindowEvent>() {
+                    public void handle(WindowEvent we) {
+                        //reloadRecordTable();
+                        displayName(id,_name,type);
+                    }
+                });
+                stage.getOnHidden().handle(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+            } else {
+                if (type.equals("doctor")){
+                    Schedule schedule = scheduleDAO.getPatientByPatientID(
+                            schedT.getSelectionModel().getSelectedItem().getPatientNum()
+                    );
+                    System.out.println(schedule.toString());
+                    updatePatientButton.setOpacity(1);
+                    updatePatientButton.setDisable(false);
+                }
+            }
+        }
+
+
+    }
+
+    public void updateStatus(ActionEvent event) {
+
+    }
+
+    /**
+     * Clears all selected rows in all TableViews when a
+     * MouseEvent.MOUSE_CLICKED event occurred outside the bounds of the Table or when clicking an empty row.
+     * @param event
+     */
+    public void clearRowSelection(MouseEvent event) {
+        // Get access to the current scene
+        Scene scene = main.getScene();
+        // Add an EventFilter
+        scene.addEventFilter(MouseEvent.MOUSE_CLICKED, evt -> {
+            // Get the hierarchy
+            Node source = evt.getPickResult().getIntersectedNode();
+            // Climb up the hierarchy until the scene/ a TableRow is found
+            while (source != null && !(source instanceof TableRow)) {
+                source = source.getParent();
+            }
+            // Now that the source Node is the scene / TableRow, clear the SelectionModel of the tables/
+            if (source == null || (source instanceof TableRow && ((TableRow) source).isEmpty())) {
+                patientT.getSelectionModel().clearSelection();
+                schedT.getSelectionModel().clearSelection();
+                vaccineT.getSelectionModel().clearSelection();
+                accountT.getSelectionModel().clearSelection();
+                if (type.equals("doctor")){
+                    updatePatientButton.setOpacity(0);
+                    updatePatientButton.setDisable(true);
+                }
+            }
+        });
     }
 
     /**
@@ -534,8 +606,6 @@ public class patientTable implements Initializable {
         accountMButton.setEffect(null);
         vaccineInfoButton.setEffect(null);
 
-        updatePatientButton.setOpacity(1);
-        updatePatientButton.setDisable(false);
         addPatientButton.setOpacity(0);
         addPatientButton.setDisable(true);
         filterButton.setOpacity(1);

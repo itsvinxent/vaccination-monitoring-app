@@ -17,7 +17,8 @@ import vaccine.backend.classes.Account;
 import java.io.IOException;
 import java.util.Optional;
 
-import vaccine.backend.classes.Schedule;
+import vaccine.backend.classes.Doctor;
+import vaccine.backend.classes.Staff;
 import vaccine.backend.dao.*;
 
 public class loginController {
@@ -47,13 +48,16 @@ public class loginController {
             stage = new Stage();
             scene = new Scene(root);
 
-            String name = null;
+            String name;
             int id = details.getUserID();
             if (usertype.equals("doctor")){
-                name = doctorDAO.getDoctorNameByUserID(id);
+                Doctor doctor = doctorDAO.getDoctorByUserID(id);
+                name = doctor.getDoctorName();
             }
-            else if (usertype.equals("medstaff"))
-                name = staffDAO.getStaffNameByID(id);
+            else if (usertype.equals("medstaff")){
+                Staff staff = staffDAO.getStaffByUserID(id);
+                name = staff.getStaffName();
+            }
             else
                 name = "Admin";
 

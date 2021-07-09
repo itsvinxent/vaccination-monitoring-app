@@ -44,7 +44,7 @@ public class addPatient implements Initializable {
     private ComboBox<String> schedule;
 
     @FXML
-    private AnchorPane main;
+    private AnchorPane main, mainupd;
 
     @FXML
     private Button saveEntry, updateEntry, deleteEntry;
@@ -179,5 +179,20 @@ public class addPatient implements Initializable {
         }
 
         return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
+    }
+
+    public void setAnchorVisible(boolean setVisible){
+        if (setVisible){
+            mainupd.setDisable(false);
+            mainupd.setVisible(true);
+            main.setDisable(true);
+            main.setVisible(false);
+        } else {
+            mainupd.setDisable(true);
+            mainupd.setVisible(false);
+            main.setDisable(false);
+            main.setVisible(true);
+        }
+
     }
 }

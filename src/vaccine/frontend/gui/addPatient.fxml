@@ -1,66 +1,123 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="main" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #0e2a47;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.frontend.controllers.addPatient">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.frontend.controllers.addPatient">
    <children>
-      <TextField fx:id="patientLName" layoutX="197.0" layoutY="78.0" prefHeight="25.0" prefWidth="334.0" promptText="Last Name" />
-      <TextField fx:id="patientFName" layoutX="197.0" layoutY="39.0" prefHeight="25.0" prefWidth="334.0" promptText="First Name" />
-      <DatePicker fx:id="firstDose" layoutX="197.0" layoutY="246.0" onAction="#showSecondDose" promptText="First Dose" />
-      <DatePicker fx:id="secondDose" disable="true" editable="false" layoutX="196.0" layoutY="292.0" promptText="Second Dose" />
-      <ComboBox fx:id="drID" layoutX="197.0" layoutY="201.0" prefWidth="150.0" promptText="Doctor" style="-fx-background-color: #48ffd5;" />
-      <ComboBox fx:id="vaccineID" layoutX="197.0" layoutY="162.0" onAction="#showSecondDose" prefWidth="150.0" promptText="Vaccine Brand" style="-fx-background-color: #48ffd5;" />
-      <Label layoutX="36.0" layoutY="43.0" text="First Name:" textFill="#f5f4f4">
-         <font>
-            <Font name="Arial Rounded MT Bold" size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="37.0" layoutY="82.0" text="Last Name:" textFill="#f5f4f4">
-         <font>
-            <Font name="Arial Rounded MT Bold" size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="37.0" layoutY="166.0" text="Vaccine Brand:" textFill="#f5f4f4">
-         <font>
-            <Font name="Arial Rounded MT Bold" size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="37.0" layoutY="205.0" text="Doctor:" textFill="#f5f4f4">
-         <font>
-            <Font name="Arial Rounded MT Bold" size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="37.0" layoutY="250.0" text="Date of first Dose:" textFill="#f5f4f4">
-         <font>
-            <Font name="Arial Rounded MT Bold" size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="36.0" layoutY="296.0" text="Date of second Dose:" textFill="#f5f4f4">
-         <font>
-            <Font name="Arial Rounded MT Bold" size="14.0" />
-         </font>
-      </Label>
-      <ComboBox fx:id="schedule" layoutX="197.0" layoutY="337.0" prefWidth="150.0" promptText="Schedule Time" style="-fx-background-color: #48ffd5;" />
-      <Label layoutX="33.0" layoutY="337.0" text="Scheduled Time:" textFill="#f5f4f4">
-         <font>
-            <Font name="Arial Rounded MT Bold" size="14.0" />
-         </font>
-      </Label>
-      <Button fx:id="saveEntry" layoutX="458.0" layoutY="341.0" mnemonicParsing="false" onAction="#save" style="-fx-background-color: #48ffd5;" text="Add" />
-      <Button fx:id="cancel" cancelButton="true" layoutX="521.0" layoutY="341.0" mnemonicParsing="false" onAction="#cancel" style="-fx-background-color: #48ffd5;" text="Cancel" />
-      <Button fx:id="updateEntry" disable="true" layoutX="383.0" layoutY="341.0" mnemonicParsing="false" onAction="#update" style="-fx-background-color: #48ffd5;" text="Update" visible="false" />
-      <Button fx:id="deleteEntry" disable="true" layoutX="452.0" layoutY="341.0" mnemonicParsing="false" onAction="#delete" style="-fx-background-color: #48ffd5;" text="Delete" visible="false" />
-      <TextField fx:id="cityAddress" layoutX="197.0" layoutY="121.0" prefHeight="25.0" prefWidth="334.0" promptText="City" />
-      <Label layoutX="37.0" layoutY="125.0" text="City:" textFill="#f5f4f4">
-         <font>
-            <Font name="Arial Rounded MT Bold" size="14.0" />
-         </font>
-      </Label>
+      <AnchorPane fx:id="main" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #0e2a47;">
+         <children>
+            <TextField fx:id="patientLName" layoutX="197.0" layoutY="78.0" prefHeight="25.0" prefWidth="334.0" promptText="Last Name" />
+            <TextField fx:id="patientFName" layoutX="197.0" layoutY="39.0" prefHeight="25.0" prefWidth="334.0" promptText="First Name" />
+            <DatePicker fx:id="firstDose" layoutX="197.0" layoutY="246.0" onAction="#showSecondDose" promptText="First Dose" />
+            <DatePicker fx:id="secondDose" disable="true" editable="false" layoutX="196.0" layoutY="292.0" promptText="Second Dose" />
+            <ComboBox fx:id="drID" layoutX="197.0" layoutY="201.0" prefWidth="150.0" promptText="Doctor" style="-fx-background-color: #48ffd5;" />
+            <ComboBox fx:id="vaccineID" layoutX="197.0" layoutY="162.0" onAction="#showSecondDose" prefWidth="150.0" promptText="Vaccine Brand" style="-fx-background-color: #48ffd5;" />
+            <Label layoutX="36.0" layoutY="43.0" text="First Name:" textFill="#f5f4f4">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="37.0" layoutY="82.0" text="Last Name:" textFill="#f5f4f4">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="37.0" layoutY="166.0" text="Vaccine Brand:" textFill="#f5f4f4">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="37.0" layoutY="205.0" text="Doctor:" textFill="#f5f4f4">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="37.0" layoutY="250.0" text="Date of first Dose:" textFill="#f5f4f4">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="36.0" layoutY="296.0" text="Date of second Dose:" textFill="#f5f4f4">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="14.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="schedule" layoutX="197.0" layoutY="337.0" prefWidth="150.0" promptText="Schedule Time" style="-fx-background-color: #48ffd5;" />
+            <Label layoutX="33.0" layoutY="337.0" text="Scheduled Time:" textFill="#f5f4f4">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="14.0" />
+               </font>
+            </Label>
+            <Button fx:id="saveEntry" layoutX="458.0" layoutY="341.0" mnemonicParsing="false" onAction="#save" style="-fx-background-color: #48ffd5;" text="Add" />
+            <Button fx:id="cancel" cancelButton="true" layoutX="521.0" layoutY="341.0" mnemonicParsing="false" onAction="#cancel" style="-fx-background-color: #48ffd5;" text="Cancel" />
+            <Button fx:id="updateEntry" disable="true" layoutX="383.0" layoutY="341.0" mnemonicParsing="false" onAction="#update" style="-fx-background-color: #48ffd5;" text="Update" visible="false" />
+            <Button fx:id="deleteEntry" disable="true" layoutX="452.0" layoutY="341.0" mnemonicParsing="false" onAction="#delete" style="-fx-background-color: #48ffd5;" text="Delete" visible="false" />
+            <TextField fx:id="cityAddress" layoutX="197.0" layoutY="121.0" prefHeight="25.0" prefWidth="334.0" promptText="City" />
+            <Label layoutX="37.0" layoutY="125.0" text="City:" textFill="#f5f4f4">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="14.0" />
+               </font>
+            </Label>
+         </children>
+         <effect>
+            <DropShadow />
+         </effect>
+      </AnchorPane>
+      <AnchorPane fx:id="mainupd" disable="true" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #0e2a47;" visible="false">
+         <children>
+            <TextField fx:id="patientLName1" editable="false" layoutX="197.0" layoutY="147.0" prefHeight="25.0" prefWidth="334.0" promptText="Last Name" />
+            <TextField fx:id="patientFName1" editable="false" layoutX="197.0" layoutY="102.0" prefHeight="25.0" prefWidth="334.0" promptText="First Name" />
+            <Label layoutX="85.0" layoutY="106.0" text="First Name:" textFill="#f5f4f4">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="86.0" layoutY="151.0" text="Last Name:" textFill="#f5f4f4">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="14.0" />
+               </font>
+            </Label>
+            <Button fx:id="cancelupd" cancelButton="true" layoutX="521.0" layoutY="341.0" mnemonicParsing="false" onAction="#cancel" style="-fx-background-color: #48ffd5;" text="Cancel" />
+            <Button fx:id="updatestatus" layoutX="415.0" layoutY="341.0" mnemonicParsing="false" style="-fx-background-color: #48ffd5;" text="Update Status" />
+            <RadioButton fx:id="doctor" layoutX="130.0" layoutY="215.0" mnemonicParsing="false" text="First Dose" textAlignment="CENTER" textFill="#f5efef">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="14.0" />
+               </font>
+               <toggleGroup>
+                  <ToggleGroup fx:id="status" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="doctor1" layoutX="240.0" layoutY="215.0" mnemonicParsing="false" text="Second Dose" textAlignment="CENTER" textFill="#f5efef" toggleGroup="$status">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="14.0" />
+               </font>
+            </RadioButton>
+            <RadioButton fx:id="doctor2" layoutX="369.0" layoutY="215.0" mnemonicParsing="false" text="Incomplete" textAlignment="CENTER" textFill="#f5efef">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="14.0" />
+               </font>
+               <toggleGroup>
+                  <ToggleGroup fx:id="status1" />
+               </toggleGroup>
+            </RadioButton>
+            <Label fx:id="patientID" layoutX="47.0" layoutY="42.0" text="Patient #" textFill="#f5f4f4">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="20.0" />
+               </font>
+            </Label>
+         </children>
+         <effect>
+            <DropShadow />
+         </effect>
+      </AnchorPane>
    </children>
-   <effect>
-      <DropShadow />
-   </effect>
 </AnchorPane>

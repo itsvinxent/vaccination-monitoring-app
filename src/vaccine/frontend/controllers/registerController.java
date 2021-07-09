@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
@@ -23,11 +22,11 @@ import vaccine.backend.classes.Staff;
 import vaccine.backend.dao.accountDAO;
 import vaccine.backend.dao.doctorDAO;
 import vaccine.backend.dao.staffDAO;
-import vaccine.backend.dao.vaccineDAO;
 
-
-public class registerController implements Initializable {
+public class registerController {
     // Initialize UI components
+    @FXML
+    private Label cpasswordLabel;
     @FXML
     private Button registerButton, deleteButton, updateButton;
     @FXML
@@ -37,14 +36,9 @@ public class registerController implements Initializable {
     @FXML
     private RadioButton doctor, medstaff;
     @FXML
-    private ComboBox<String> schedule;
+    private CheckBox chkMon, chkTues, chkWed, chkThurs, chkFri, chkSat;
     @FXML
     private AnchorPane main;
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        initializeComboBoxes();
-    }
 
     Account account = null;
     Doctor doctors = null;
@@ -53,11 +47,15 @@ public class registerController implements Initializable {
     /**
      * Creates an ObservableList that contains the combo box input options for schedule
      */
-    public void initializeComboBoxes() {
-        ObservableList<String> sched = FXCollections.observableArrayList();
-        sched.add("M/W/F");
-        sched.add("T/TH/S");
-        schedule.setItems(sched);
+    public String getScheduleBoxes() {
+        String sched="";
+        if (chkMon.isSelected()) sched += "Monday,";
+        if (chkTues.isSelected()) sched += "Tuesday,";
+        if (chkWed.isSelected()) sched += "Wednesday,";
+        if (chkThurs.isSelected()) sched += "Thursday,";
+        if (chkFri.isSelected()) sched += "Friday,";
+        if (chkSat.isSelected()) sched += "Saturday";
+        return sched;
     }
 
     public void register(ActionEvent event) throws IOException {
@@ -69,7 +67,7 @@ public class registerController implements Initializable {
             String cpass = cpassword.getText();
             String fName = fname.getText();
             String lName = lname.getText();
-            String sched = schedule.getValue();
+            String sched = getScheduleBoxes();
 
             // Check for the selected usertype in the radio buttons.
             String usertype = null;
@@ -88,18 +86,17 @@ public class registerController implements Initializable {
                 Account account = new Account(user, pass, usertype);
                 int id = accountDAO.addAccount(account);
 
-                // Checks if the record is inserted
+                // Checks if the  recordis inserted
                 if (id == -1) throw new IOException("Error");
 
                     // Use the returned ID as a foreign key
                     // for creating a new doctor_info or staff_info
                 else {
+                    String fullname = lName + ", " + fName;
                     if (medstaff.isSelected()) {
-                        String fullname = lName + ", " + fName;
                         Staff staff = new Staff(id, fullname);
                         staffDAO.addStaff(staff);
                     } else {
-                        String fullname = lName + ", " + fName;
                         Doctor doctor = new Doctor(id, fullname, sched);
                         doctorDAO.addDoctor(doctor);
                     }
@@ -116,6 +113,14 @@ public class registerController implements Initializable {
         }
     }
 
+    public void updateRegister(ActionEvent event) throws IOException{
+        String user = username.getText();
+        String pass = password.getText();
+        String fName = fname.getText();
+        String lName = lname.getText();
+        String sched = getScheduleBoxes();
+    }
+
     public void cancel (ActionEvent event) throws IOException {
         // Closes the current window and restores focus to the main window.
         Stage reg = (Stage) main.getScene().getWindow();
@@ -123,33 +128,54 @@ public class registerController implements Initializable {
     }
 
     public void med (ActionEvent event) throws IOException {
-        schedule.setDisable(true);
-        schedule.getSelectionModel().clearSelection();
+        disableSchedule(true);
     }
 
     public void doc (ActionEvent event) throws IOException {
-        schedule.setDisable(false);
+        disableSchedule(false);
+    }
+
+    public void disableSchedule(boolean set) {
+        chkMon.setDisable(set);
+        chkTues.setDisable(set);
+        chkWed.setDisable(set);
+        chkThurs.setDisable(set);
+        chkFri.setDisable(set);
+        chkSat.setDisable(set);
     }
 
     public void setFieldContent(int staffID) {
         account = accountDAO.getAccountByUserID(staffID);
         username.setText(account.getUsername());
         password.setText(account.getPassword());
+
         if(account.getUsertype().equals("medstaff")||account.getUsertype().equals("medical staff")){
             staff = staffDAO.getStaffByUserID(staffID);
             medstaff.setSelected(true);
-            schedule.setDisable(true);
-            schedule.getSelectionModel().clearSelection();
-            fname.setText(staff.getStaffName());
+            disableSchedule(true);
+            String[] fullname = staff.getStaffName().split(",", -2);
+            lname.setText(fullname[0]);
+            fname.setText(fullname[1]);
         }else{
             doctors = doctorDAO.getDoctorByUserID(staffID);
             doctor.setSelected(true);
-            schedule.setDisable(false);
-            schedule.setValue(doctors.getSchedule());
-            fname.setText(doctors.getDoctorName());
+            disableSchedule(false);
+            String sched = doctors.getSchedule();
+            if (sched.contains("Monday")) chkMon.setSelected(true);
+            if (sched.contains("Tuesday")) chkTues.setSelected(true);
+            if (sched.contains("Wednesday")) chkWed.setSelected(true);
+            if (sched.contains("Thursday")) chkThurs.setSelected(true);
+            if (sched.contains("Friday")) chkFri.setSelected(true);
+            if (sched.contains("Staurday")) chkSat.setSelected(true);
+
+            String[] fullname = doctors.getDoctorName().split(",", -2);
+            lname.setText(fullname[0].strip());
+            fname.setText(fullname[1].strip());
         }
 
-
+        cpassword.setDisable(true);
+        cpassword.setVisible(false);
+        cpasswordLabel.setVisible(false);
         updateButton.setDisable(false);
         updateButton.setVisible(true);
         registerButton.setDisable(true);

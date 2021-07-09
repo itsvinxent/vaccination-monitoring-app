@@ -9,6 +9,7 @@ import vaccine.backend.util.SqliteDBCon;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Objects;
 
 /**
  * Java Class that contains methods used for CRUD functionalities
@@ -154,18 +155,17 @@ public class scheduleDAO {
         ObservableList<Schedule> list = FXCollections.observableArrayList();
         try {
             conn = SqliteDBCon.Connector();
-            ps = conn.prepareStatement("SELECT * FROM schedule_info" +
-                    "WHERE firstDose = ? or secondDose = ?");
+            ps = conn.prepareStatement("SELECT * FROM schedule_info WHERE firstDose = ? or secondDose = ?");
             ps.setString(1, date);
             ps.setString(2, date);
             rs = ps.executeQuery();
             while(rs.next()) {
                 list.add(
                         new Schedule(rs.getInt("patientID"),
-                                rs.getString("doctorID"),
+                                doctorDAO.getDoctorNameByDoctorID(rs.getInt("doctorID")),
                                 rs.getString("patientLName"),
                                 rs.getString("patientFName"),
-                                rs.getString("vaccineBrand"),
+                                vaccineDAO.getVaccineByVaccineID(rs.getInt("vacID")).getVaccineBrand(),
                                 rs.getString("firstDose"),
                                 rs.getString("secondDose"),
                                 rs.getString("firstTime"),
@@ -196,22 +196,21 @@ public class scheduleDAO {
     public static ObservableList<Schedule> getCurrentScheduleByDoctor(String date, int id) {
         ObservableList<Schedule> list = FXCollections.observableArrayList();
         try {
+            int doctorID = doctorDAO.getDoctorByUserID(id).getDoctorNum();
             conn = SqliteDBCon.Connector();
-            ps = conn.prepareStatement("SELECT * FROM schedule_info, vaccine_info, doctor_info  " +
-                    "WHERE vacID = vaccineID " +
-                    "and schedule_info.doctorID = doctor_info.drID " +
-                    "and firstDose = ? or secondDose = ? " +
-                    "and doctor_info.userID = ?");
-            ps.setString(1, date);
+            ps = conn.prepareStatement("SELECT * FROM schedule_info " +
+                    "WHERE doctorID = ? AND firstDose = ? OR secondDose = ?");
+            ps.setInt(1, doctorID);
             ps.setString(2, date);
+            ps.setString(3, date);
             rs = ps.executeQuery();
             while(rs.next()) {
                 list.add(
                         new Schedule(rs.getInt("patientID"),
-                                rs.getString("drName"),
+                                doctorDAO.getDoctorNameByDoctorID(rs.getInt("doctorID")),
                                 rs.getString("patientLName"),
                                 rs.getString("patientFName"),
-                                rs.getString("vaccineBrand"),
+                                vaccineDAO.getVaccineByVaccineID(rs.getInt("vacID")).getVaccineBrand(),
                                 rs.getString("firstDose"),
                                 rs.getString("secondDose"),
                                 rs.getString("firstTime"),
