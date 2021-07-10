@@ -76,12 +76,12 @@
             <Font name="Arial Rounded MT Bold" size="20.0" />
          </font>
       </Label>
-      <Button fx:id="updateButton" alignment="CENTER" disable="true" layoutX="284.0" layoutY="460.0" mnemonicParsing="false" onAction="#updateRegister" prefHeight="58.0" prefWidth="171.0" style="-fx-background-color: #48ffd5;" text="Update" visible="false">
+      <Button fx:id="updateButton" alignment="CENTER" disable="true" layoutX="284.0" layoutY="460.0" mnemonicParsing="false" onAction="#updateAccount" prefHeight="58.0" prefWidth="171.0" style="-fx-background-color: #48ffd5;" text="Update" visible="false">
          <font>
             <Font name="Arial Rounded MT Bold" size="20.0" />
          </font>
       </Button>
-      <Button fx:id="deleteButton" alignment="CENTER" disable="true" layoutX="71.0" layoutY="460.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="171.0" style="-fx-background-color: #48ffd5;" text="Delete" visible="false">
+      <Button fx:id="deleteButton" alignment="CENTER" disable="true" layoutX="71.0" layoutY="460.0" mnemonicParsing="false" onAction="#deleteAccount" prefHeight="58.0" prefWidth="171.0" style="-fx-background-color: #48ffd5;" text="Delete" visible="false">
          <font>
             <Font name="Arial Rounded MT Bold" size="20.0" />
          </font>

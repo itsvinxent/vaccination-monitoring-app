@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.scene.layout.AnchorPane;
@@ -21,6 +22,7 @@ import vaccine.backend.classes.Doctor;
 import vaccine.backend.classes.Staff;
 import vaccine.backend.dao.accountDAO;
 import vaccine.backend.dao.doctorDAO;
+import vaccine.backend.dao.scheduleDAO;
 import vaccine.backend.dao.staffDAO;
 
 public class registerController {
@@ -82,43 +84,108 @@ public class registerController {
                 alert.setContentText("Confirm Password must match Password.");
                 alert.show();
             } else {
-                // Creates an Account object, which is sent as a parameter in the addAccount method
-                Account account = new Account(user, pass, usertype);
-                int id = accountDAO.addAccount(account);
+                if (accountDAO.getUserIDByUsername(user) == 0) {
+                    // Creates an Account object, which is sent as a parameter in the addAccount method
+                    Account account = new Account(user, pass, usertype);
+                    int id = accountDAO.addAccount(account);
 
-                // Checks if the  recordis inserted
-                if (id == -1) throw new IOException("Error");
+                    // Checks if the record is inserted
+                    if (id == -1) throw new IOException("Error");
 
-                    // Use the returned ID as a foreign key
-                    // for creating a new doctor_info or staff_info
-                else {
-                    String fullname = lName + ", " + fName;
-                    if (medstaff.isSelected()) {
-                        Staff staff = new Staff(id, fullname);
-                        staffDAO.addStaff(staff);
-                    } else {
-                        Doctor doctor = new Doctor(id, fullname, sched);
-                        doctorDAO.addDoctor(doctor);
+                        // Use the returned ID as a foreign key
+                        // for creating a new doctor_info or staff_info
+                    else {
+                        String fullname = lName + ", " + fName;
+                        if (medstaff.isSelected()) {
+                            Staff staff = new Staff(id, fullname);
+                            staffDAO.addStaff(staff);
+                        } else {
+                            Doctor doctor = new Doctor(id, fullname, sched);
+                            doctorDAO.addDoctor(doctor);
+                        }
                     }
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Username already exists.");
+                    alert.show();
                 }
             }
-            // Closes the current window after processing.
-            Stage stage = (Stage) main.getScene().getWindow();
-            stage.hide();
-            // Reloads the table to see the inserted record.
-            registerButton.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
+                // Closes the current window after processing.
+                Stage stage = (Stage) main.getScene().getWindow();
+                stage.hide();
+                // Reloads the table to see the inserted record.
+                registerButton.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
 
         } catch (IOException exception) {
             exception.printStackTrace();
         }
     }
 
-    public void updateRegister(ActionEvent event) throws IOException{
+    public void updateAccount(ActionEvent event) {
+        // Get values of input fields.
+        // TODO: Input Validation for all fields. (Empty or Incorrect data type)
         String user = username.getText();
         String pass = password.getText();
         String fName = fname.getText();
         String lName = lname.getText();
         String sched = getScheduleBoxes();
+
+        // Check for the selected usertype in the radio buttons.
+        String usertype = null;
+        if(doctor.isSelected())
+            usertype = doctor.getText().toLowerCase(Locale.ROOT);
+        else if (medstaff.isSelected())
+            usertype = medstaff.getText().toLowerCase(Locale.ROOT);
+
+        if (accountDAO.getUserIDByUsername(user) == 0) {
+            // Creates an Account object, which is sent as a parameter in the updateAccount method
+            Account a = new Account(account.getUserID(), user, pass, usertype);
+            int id = accountDAO.updateAccount(a);
+
+            // Use the returned ID as a foreign key
+            // for updating the corresponding doctor_info or staff_info row
+            String fullname = lName + ", " + fName;
+            if (medstaff.isSelected()) {
+                Staff staff = new Staff(id, fullname);
+                staffDAO.updateStaff(staff);
+            } else {
+                Doctor doctor = new Doctor(id, fullname, sched);
+                doctorDAO.updateDoctor(doctor);
+            }
+        }
+
+
+        // Closes the current window after processing.
+        Stage stage = (Stage) main.getScene().getWindow();
+        stage.hide();
+        // Reloads the table to see the inserted record.
+        updateButton.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
+
+    }
+
+    public void deleteAccount(ActionEvent event) throws Exception {
+        try {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setContentText("Are you sure you want to delete this record?");
+            alert.setTitle("Confirm");
+            Optional<ButtonType> action = alert.showAndWait();
+
+            if (action.get() == ButtonType.OK) {
+                if (scheduleDAO.getPatientByDoctor(account.getUserID()) == null) {
+//                    accountDAO.deleteAccount(account);
+                    System.out.println("successful");
+                } else {
+                    System.out.println("unsuccessful");
+                }
+
+                Stage stage = (Stage) main.getScene().getWindow();
+                stage.hide();
+
+                deleteButton.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 
     public void cancel (ActionEvent event) throws IOException {
@@ -149,13 +216,13 @@ public class registerController {
         username.setText(account.getUsername());
         password.setText(account.getPassword());
 
-        if(account.getUsertype().equals("medstaff")||account.getUsertype().equals("medical staff")){
+        if(account.getUsertype().equals("medical staff")){
             staff = staffDAO.getStaffByUserID(staffID);
             medstaff.setSelected(true);
             disableSchedule(true);
             String[] fullname = staff.getStaffName().split(",", -2);
-            lname.setText(fullname[0]);
-            fname.setText(fullname[1]);
+            lname.setText(fullname[0].strip());
+            fname.setText(fullname[1].strip());
         }else{
             doctors = doctorDAO.getDoctorByUserID(staffID);
             doctor.setSelected(true);

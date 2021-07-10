@@ -56,11 +56,12 @@ public class accountDAO {
         try {
             conn = SqliteDBCon.Connector();
             ps = conn.prepareStatement("update user_info set username = ?, password = ?, usertype = ? where userID = ?");
-            ps.setInt(1, u.getUserID());
-            ps.setString(2, u.getUsername());
-            ps.setString(3, u.getPassword());
-            ps.setString(4, u.getUsertype());
-            status = ps.executeUpdate();
+            ps.setString(1, u.getUsername());
+            ps.setString(2, u.getPassword());
+            ps.setString(3, u.getUsertype());
+            ps.setInt(4, u.getUserID());
+            ps.executeUpdate();
+            status = u.getUserID();
             conn.close();
         } catch (Exception exception) {
             exception.printStackTrace();

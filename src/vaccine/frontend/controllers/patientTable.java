@@ -477,7 +477,7 @@ public class patientTable implements Initializable {
                 stage.setOnHidden(new EventHandler<WindowEvent>() {
                     public void handle(WindowEvent we) {
                         System.out.println("nice");
-                        reloadVaccineTable();
+                        reloadStaffTable();
                         displayName(id,_name,type);
                     }
                 });
