@@ -1,26 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.frontend.controllers.addPatient">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="560.0" prefWidth="679.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.frontend.controllers.addPatient">
    <children>
-      <AnchorPane fx:id="main" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #0e2a47;">
+      <AnchorPane fx:id="main" prefHeight="559.0" prefWidth="679.0" style="-fx-background-color: #0e2a47;">
          <children>
             <TextField fx:id="patientLName" layoutX="197.0" layoutY="78.0" prefHeight="25.0" prefWidth="334.0" promptText="Last Name" />
             <TextField fx:id="patientFName" layoutX="197.0" layoutY="39.0" prefHeight="25.0" prefWidth="334.0" promptText="First Name" />
-            <DatePicker fx:id="firstDose" layoutX="197.0" layoutY="246.0" onAction="#showSecondDose" promptText="First Dose" />
-            <DatePicker fx:id="secondDose" disable="true" editable="false" layoutX="196.0" layoutY="292.0" promptText="Second Dose" />
-            <ComboBox fx:id="drID" layoutX="197.0" layoutY="201.0" prefWidth="150.0" promptText="Doctor" style="-fx-background-color: #48ffd5;" />
-            <ComboBox fx:id="vaccineID" layoutX="197.0" layoutY="162.0" onAction="#showSecondDose" prefWidth="150.0" promptText="Vaccine Brand" style="-fx-background-color: #48ffd5;" />
+            <DatePicker fx:id="firstDose" layoutX="190.0" layoutY="310.0" onAction="#showSecondDose" promptText="First Dose" />
+            <DatePicker fx:id="secondDose" disable="true" editable="false" layoutX="189.0" layoutY="387.0" promptText="Second Dose" />
+            <ComboBox fx:id="drID" layoutX="190.0" layoutY="348.0" prefWidth="150.0" promptText="Vaccinator" style="-fx-background-color: #48ffd5;" />
+            <ComboBox fx:id="vaccineID" layoutX="192.0" layoutY="267.0" onAction="#showSecondDose" prefWidth="150.0" promptText="Vaccine Brand" style="-fx-background-color: #48ffd5;" />
             <Label layoutX="36.0" layoutY="43.0" text="First Name:" textFill="#f5f4f4">
                <font>
                   <Font name="Arial Rounded MT Bold" size="14.0" />
@@ -31,38 +25,56 @@
                   <Font name="Arial Rounded MT Bold" size="14.0" />
                </font>
             </Label>
-            <Label layoutX="37.0" layoutY="166.0" text="Vaccine Brand:" textFill="#f5f4f4">
+            <Label layoutX="32.0" layoutY="271.0" text="Vaccine Brand:" textFill="#f5f4f4">
                <font>
                   <Font name="Arial Rounded MT Bold" size="14.0" />
                </font>
             </Label>
-            <Label layoutX="37.0" layoutY="205.0" text="Doctor:" textFill="#f5f4f4">
+            <Label layoutX="30.0" layoutY="352.0" text="First Vaccinator:" textFill="#f5f4f4">
                <font>
                   <Font name="Arial Rounded MT Bold" size="14.0" />
                </font>
             </Label>
-            <Label layoutX="37.0" layoutY="250.0" text="Date of first Dose:" textFill="#f5f4f4">
+            <Label layoutX="30.0" layoutY="314.0" text="Date of first Dose:" textFill="#f5f4f4">
                <font>
                   <Font name="Arial Rounded MT Bold" size="14.0" />
                </font>
             </Label>
-            <Label layoutX="36.0" layoutY="296.0" text="Date of second Dose:" textFill="#f5f4f4">
+            <Label layoutX="32.0" layoutY="391.0" text="Date of second Dose:" textFill="#f5f4f4">
                <font>
                   <Font name="Arial Rounded MT Bold" size="14.0" />
                </font>
             </Label>
-            <ComboBox fx:id="schedule" layoutX="197.0" layoutY="337.0" prefWidth="150.0" promptText="Schedule Time" style="-fx-background-color: #48ffd5;" />
-            <Label layoutX="33.0" layoutY="337.0" text="Scheduled Time:" textFill="#f5f4f4">
+            <ComboBox fx:id="schedule" layoutX="190.0" layoutY="479.0" prefWidth="150.0" promptText="Schedule Time" style="-fx-background-color: #48ffd5;" />
+            <Label layoutX="30.0" layoutY="483.0" text="Scheduled Time:" textFill="#f5f4f4">
                <font>
                   <Font name="Arial Rounded MT Bold" size="14.0" />
                </font>
             </Label>
-            <Button fx:id="saveEntry" layoutX="458.0" layoutY="341.0" mnemonicParsing="false" onAction="#save" style="-fx-background-color: #48ffd5;" text="Add" />
-            <Button fx:id="cancel" cancelButton="true" layoutX="521.0" layoutY="341.0" mnemonicParsing="false" onAction="#cancel" style="-fx-background-color: #48ffd5;" text="Cancel" />
-            <Button fx:id="updateEntry" disable="true" layoutX="383.0" layoutY="341.0" mnemonicParsing="false" onAction="#update" style="-fx-background-color: #48ffd5;" text="Update" visible="false" />
-            <Button fx:id="deleteEntry" disable="true" layoutX="452.0" layoutY="341.0" mnemonicParsing="false" onAction="#delete" style="-fx-background-color: #48ffd5;" text="Delete" visible="false" />
+            <Button fx:id="saveEntry" layoutX="537.0" layoutY="504.0" mnemonicParsing="false" onAction="#save" style="-fx-background-color: #48ffd5;" text="Add" />
+            <Button fx:id="cancel" cancelButton="true" layoutX="600.0" layoutY="504.0" mnemonicParsing="false" onAction="#cancel" style="-fx-background-color: #48ffd5;" text="Cancel" />
+            <Button fx:id="updateEntry" disable="true" layoutX="462.0" layoutY="504.0" mnemonicParsing="false" onAction="#update" style="-fx-background-color: #48ffd5;" text="Update" visible="false" />
+            <Button fx:id="deleteEntry" disable="true" layoutX="531.0" layoutY="504.0" mnemonicParsing="false" onAction="#delete" style="-fx-background-color: #48ffd5;" text="Delete" visible="false" />
             <TextField fx:id="cityAddress" layoutX="197.0" layoutY="121.0" prefHeight="25.0" prefWidth="334.0" promptText="City" />
             <Label layoutX="37.0" layoutY="125.0" text="City:" textFill="#f5f4f4">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="14.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="drID2" layoutX="190.0" layoutY="434.0" prefWidth="150.0" promptText="Vaccinator" style="-fx-background-color: #48ffd5;" />
+            <Label layoutX="30.0" layoutY="438.0" text="Second Vaccinator:" textFill="#f5f4f4">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="age" layoutX="197.0" layoutY="165.0" prefHeight="25.0" prefWidth="70.0" promptText="Age" />
+            <Label layoutX="37.0" layoutY="169.0" text="Age:" textFill="#f5f4f4">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="sex" layoutX="385.0" layoutY="165.0" prefHeight="25.0" prefWidth="70.0" promptText="Sex" />
+            <Label layoutX="340.0" layoutY="169.0" text="Sex:" textFill="#f5f4f4">
                <font>
                   <Font name="Arial Rounded MT Bold" size="14.0" />
                </font>
@@ -72,7 +84,7 @@
             <DropShadow />
          </effect>
       </AnchorPane>
-      <AnchorPane fx:id="mainupd" disable="true" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #0e2a47;" visible="false">
+      <AnchorPane fx:id="mainupd" disable="true" prefHeight="559.0" prefWidth="679.0" style="-fx-background-color: #0e2a47;" visible="false">
          <children>
             <TextField fx:id="patientLName1" editable="false" layoutX="197.0" layoutY="147.0" prefHeight="25.0" prefWidth="334.0" promptText="Last Name" />
             <TextField fx:id="patientFName1" editable="false" layoutX="197.0" layoutY="102.0" prefHeight="25.0" prefWidth="334.0" promptText="First Name" />
