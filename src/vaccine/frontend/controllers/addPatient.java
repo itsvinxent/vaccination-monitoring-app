@@ -68,25 +68,40 @@ public class addPatient implements Initializable {
 
     }
 
+    public boolean errorChecker(){
+        if(patientFName.getText()==""||patientFName.getText().matches(".*[^a-z].*")||patientLName.getText()==""||
+        patientLName.getText().matches(".*[^a-z].*")||cityAddress.getText()==""||cityAddress.getText().matches(".*[^a-z].*")||
+        vaccineID.getValue()==null||drID.getValue()==null||schedule.getValue()==null){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Please Fill in all the details and correct format");
+            alert.show();
+        }else{
+            return true;
+        }
+        return false;
+    }
+
     public void save(ActionEvent event) throws Exception {
-        patient = new Schedule(
-                drID.getValue(),
-                patientLName.getText(),
-                patientFName.getText(),
-                vaccineID.getValue(),
-                first_dose,
-                second_dose,
-                schedule.getValue(),
-                schedule.getValue(),
-                "incomplete",
-                capitalize(cityAddress.getText()));
-        // todo: system for setting the status
-        scheduleDAO.addSchedule(patient);
+        if (errorChecker()){
+            patient = new Schedule(
+                    drID.getValue(),
+                    patientLName.getText(),
+                    patientFName.getText(),
+                    vaccineID.getValue(),
+                    first_dose,
+                    second_dose,
+                    schedule.getValue(),
+                    schedule.getValue(),
+                    "incomplete",
+                    capitalize(cityAddress.getText()));
+            // todo: system for setting the status
+            scheduleDAO.addSchedule(patient);
 
-        Stage stage = (Stage) main.getScene().getWindow();
-        stage.hide();
+            Stage stage = (Stage) main.getScene().getWindow();
+            stage.hide();
 
-        saveEntry.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
+            saveEntry.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
+        }
     }
 
     public void cancel(ActionEvent event)  {
@@ -95,24 +110,26 @@ public class addPatient implements Initializable {
     }
 
     public void update(ActionEvent event) throws Exception {
-        Schedule updatedPatient = new Schedule(
-                patient.getPatientNum(),
-                drID.getValue(),
-                patientLName.getText(),
-                patientFName.getText(),
-                vaccineID.getValue(),
-                format.format(firstDose.getEditor().getText()),
-                format.format(secondDose.getEditor().getText()),
-                schedule.getValue(),
-                schedule.getValue(),
-                "incomplete",
-                capitalize(cityAddress.getText()));
-        scheduleDAO.updateSchedule(updatedPatient);
-        System.out.println(updatedPatient.getFirstDose());
-        Stage stage = (Stage) main.getScene().getWindow();
-        stage.hide();
+        if (errorChecker()){
+            Schedule updatedPatient = new Schedule(
+                    patient.getPatientNum(),
+                    drID.getValue(),
+                    patientLName.getText(),
+                    patientFName.getText(),
+                    vaccineID.getValue(),
+                    format.format(firstDose.getEditor().getText()),
+                    format.format(secondDose.getEditor().getText()),
+                    schedule.getValue(),
+                    schedule.getValue(),
+                    "incomplete",
+                    capitalize(cityAddress.getText()));
+            scheduleDAO.updateSchedule(updatedPatient);
+            System.out.println(updatedPatient.getFirstDose());
+            Stage stage = (Stage) main.getScene().getWindow();
+            stage.hide();
 
-        updateEntry.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
+            updateEntry.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
+        }
     }
 
     public void delete(ActionEvent event) throws Exception {
