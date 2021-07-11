@@ -137,23 +137,21 @@ public class registerController {
         else if (medstaff.isSelected())
             usertype = medstaff.getText().toLowerCase(Locale.ROOT);
 
-        if (accountDAO.getUserIDByUsername(user) == 0) {
-            // Creates an Account object, which is sent as a parameter in the updateAccount method
-            Account a = new Account(account.getUserID(), user, pass, usertype);
-            int id = accountDAO.updateAccount(a);
+        // Creates an Account object, which is sent as a parameter in the updateAccount method
+        Account a = new Account(account.getUserID(), user, pass, usertype);
+        int id = accountDAO.updateAccount(a);
 
-            // Use the returned ID as a foreign key
-            // for updating the corresponding doctor_info or staff_info row
-            String fullname = lName + ", " + fName;
-            if (medstaff.isSelected()) {
-                Staff staff = new Staff(id, fullname);
-                staffDAO.updateStaff(staff);
-            } else {
-                Doctor doctor = new Doctor(id, fullname, sched);
-                doctorDAO.updateDoctor(doctor);
-            }
+        // Use the returned ID as a foreign key
+        // for updating the corresponding doctor_info or staff_info row
+        String fullname = lName + ", " + fName;
+        if (medstaff.isSelected()) {
+            staff.setStaffName(fullname);
+            staffDAO.updateStaff(staff);
+        } else {
+            doctors.setDoctorName(fullname);
+            doctors.setSchedule(sched);
+            doctorDAO.updateDoctor(doctors);
         }
-
 
         // Closes the current window after processing.
         Stage stage = (Stage) main.getScene().getWindow();
@@ -171,9 +169,8 @@ public class registerController {
             Optional<ButtonType> action = alert.showAndWait();
 
             if (action.get() == ButtonType.OK) {
-                if (scheduleDAO.getPatientByDoctor(account.getUserID()) == null) {
-//                    accountDAO.deleteAccount(account);
-                    System.out.println("successful");
+                if (scheduleDAO.getPatientByDoctor(account.getUserID()).isEmpty()) {
+                    accountDAO.deleteAccount(account);
                 } else {
                     System.out.println("unsuccessful");
                 }

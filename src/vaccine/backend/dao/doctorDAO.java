@@ -88,14 +88,15 @@ public class doctorDAO {
      * Method used to fetch all doctor's names in doctor_info table.
      * @return ObservableList of Doctor Bean object/s.
      */
-    public static ObservableList<String> getAllDoctorsByName() {
+    public static ObservableList<String> getAllDoctorsByName(String day) {
         ObservableList<String> list = FXCollections.observableArrayList();
         try {
             conn = SqliteDBCon.Connector();
-            ps = conn.prepareStatement("select drName from doctor_info");
+            ps = conn.prepareStatement("select * from doctor_info");
             rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(rs.getString("drName"));
+                if (rs.getString("schedule").contains(day))
+                    list.add(rs.getString("drName"));
             }
             conn.close();
         } catch (Exception exception) {

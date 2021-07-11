@@ -3,16 +3,18 @@ package vaccine.backend.classes;
 public class Schedule {
 
     int patientNum;
-    String doctorName, patientName;
-    String patientLName, patientFName, city;
+    String doctorName_1, doctorName_2;
+    String patientName, patientLName, patientFName, city, age, sex;
     String vaccineBrand, firstDose, secondDose, firstTime, secondTime, status;
 
     // Constructor
-    public Schedule(int patientNum, String doctorName, String patientLName, String patientFName,
+    public Schedule(int patientNum, String doctorName_1, String doctorName_2,
+                    String patientLName, String patientFName, String age, String sex, String city,
                     String vaccineBrand, String firstDose, String secondDose,
-                    String firstTime, String secondTime, String status, String city) {
+                    String firstTime, String secondTime, String status) {
         this.patientNum = patientNum;
-        this.doctorName = doctorName;
+        this.doctorName_1 = doctorName_1;
+        this.doctorName_2 = doctorName_2;
         this.patientName = patientLName + ", " + patientFName;
         this.patientLName = patientLName;
         this.patientFName = patientFName;
@@ -23,12 +25,16 @@ public class Schedule {
         this.secondTime = secondTime;
         this.status = status;
         this.city = city;
+        this.age = age;
+        this.sex = sex;
     }
 
-    public Schedule(String doctorName, String patientLName, String patientFName,
+    public Schedule(String doctorName_1, String doctorName_2,
+                    String patientLName, String patientFName, String age, String sex, String city,
                     String vaccineBrand, String firstDose, String secondDose,
-                    String firstTime, String secondTime, String status, String city) {
-        this.doctorName = doctorName;
+                    String firstTime, String secondTime, String status) {
+        this.doctorName_1 = doctorName_1;
+        this.doctorName_2 = doctorName_2;
         this.patientName = patientLName + ", " + patientFName;
         this.patientLName = patientLName;
         this.patientFName = patientFName;
@@ -39,9 +45,8 @@ public class Schedule {
         this.secondTime = secondTime;
         this.status = status;
         this.city = city;
-    }
-
-    public Schedule() {
+        this.age = age;
+        this.sex = sex;
     }
 
     public String getPatientLName() {
@@ -60,8 +65,12 @@ public class Schedule {
         return patientNum;
     }
 
-    public String getDoctorName() {
-        return doctorName;
+    public String getDoctorName_1() {
+        return doctorName_1;
+    }
+
+    public String getDoctorName_2() {
+        return doctorName_2;
     }
 
     public String getVaccineBrand() {
@@ -92,6 +101,14 @@ public class Schedule {
         return city;
     }
 
+    public String getAge() {
+        return age;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
     public void setPatientLName(String patientLName) {
         this.patientLName = patientLName;
     }
@@ -108,8 +125,12 @@ public class Schedule {
         this.patientNum = patientNum;
     }
 
-    public void setDoctorName(String doctorName) {
-        this.doctorName = doctorName;
+    public void setDoctorName_1(String doctorName_1) {
+        this.doctorName_1 = doctorName_1;
+    }
+
+    public void setDoctorName_2(String doctorName_2) {
+        this.doctorName_2 = doctorName_2;
     }
 
     public void setVaccineBrand(String vaccineBrand) {
@@ -140,4 +161,11 @@ public class Schedule {
         this.city = city;
     }
 
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
 }

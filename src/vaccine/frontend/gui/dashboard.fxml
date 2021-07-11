@@ -67,14 +67,14 @@
             </TableView>
             <TableView fx:id="patientT" layoutX="25.0" layoutY="180.0" onMouseClicked="#updatePopUp" prefHeight="500.0" prefWidth="980.0">
                <columns>
-                  <TableColumn fx:id="patientNum" prefWidth="75.0" resizable="false" text="Patient #" />
-                  <TableColumn fx:id="doctorName" prefWidth="150.0" resizable="false" text="Assigned Doctor" />
+                  <TableColumn fx:id="patientNum" prefWidth="40.0" resizable="false" text="PID" />
                   <TableColumn fx:id="patientName" prefWidth="150.0" resizable="false" text="Name" />
-                  <TableColumn fx:id="cityAddress" prefWidth="100.0" resizable="false" text="City" />
                   <TableColumn fx:id="vaccineBrand" prefWidth="125.0" resizable="false" text="Vaccine" />
                   <TableColumn fx:id="firstDose" prefWidth="125.0" resizable="false" text="1st Dose" />
+                  <TableColumn fx:id="doctorName" prefWidth="150.0" resizable="false" text="Assigned Doctor" />
                   <TableColumn fx:id="secondDose" prefWidth="125.0" resizable="false" text="2nd Dose" />
-                  <TableColumn fx:id="patientStatus" prefWidth="125.0" resizable="false" text="Status" />
+                  <TableColumn fx:id="doctorName1" prefWidth="150.0" resizable="false" text="Assigned Doctor" />
+                  <TableColumn fx:id="patientStatus" prefWidth="112.0" resizable="false" text="Status" />
                </columns>
             </TableView>
             <TableView fx:id="accountT" disable="true" layoutX="65.0" layoutY="180.0" onMouseClicked="#staffUpdatePopUp" opacity="0.0" prefHeight="500.0" prefWidth="900.0">

@@ -78,7 +78,15 @@ public class addVaccine implements Initializable {
             Optional<ButtonType> action = alert.showAndWait();
 
             if (action.get() == ButtonType.OK) {
-                vaccineDAO.deleteVaccine(vaccine);
+                if (scheduleDAO.getPatientCountBasedOnVaccineID(vaccine.getVaccineID()) == 0){
+                    vaccineDAO.deleteVaccine(vaccine);
+                } else {
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Error! You cannot delete vaccine records while Patient Records that uses the vaccine exists!");
+                    alert.setTitle("Error");
+                    alert.show();
+                }
+
                 Stage stage = (Stage) main.getScene().getWindow();
                 stage.hide();
 
