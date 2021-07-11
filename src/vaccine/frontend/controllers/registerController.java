@@ -60,13 +60,111 @@ public class registerController {
         return sched;
     }
 
+    public boolean errorChecker(){
+        int days = 0;
+        if (chkMon.isSelected()) days++;
+        if (chkTues.isSelected()) days++;
+        if (chkWed.isSelected()) days++;
+        if (chkThurs.isSelected()) days++;
+        if (chkFri.isSelected()) days++;
+        if (chkSat.isSelected()) days++;
+
+        if(doctor.isSelected()){
+            if(fname.getText()==""||lname.getText()==""||username.getText()==""||
+                    fname.getText().matches(".*[^a-zA-Z].*")||lname.getText().matches(".*[^a-zA-Z].*")||days<3){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Please Fill in all the details and correct format. Select at least three (3) days for the schedule");
+                alert.show();
+            }
+            else{
+                return true;
+            }
+        }
+        else if(medstaff.isSelected()){
+            if(fname.getText()==""||lname.getText()==""||username.getText()==""||
+                    fname.getText().matches(".*[^a-zA-Z].*")||lname.getText().matches(".*[^a-zA-Z].*")){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Please Fill in all the details and correct format");
+                alert.show();
+            }
+            else{
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     public void register(ActionEvent event) throws IOException {
         try {
-            // Get values of input fields.
-            // TODO: Input Validation for all fields. (Empty or Incorrect data type)
+            if(errorChecker()){
+                // Get values of input fields.
+                // TODO: Input Validation for all fields. (Empty or Incorrect data type)
+                String user = username.getText();
+                String pass = password.getText();
+                String cpass = cpassword.getText();
+                String fName = fname.getText();
+                String lName = lname.getText();
+                String sched = getScheduleBoxes();
+
+                // Check for the selected usertype in the radio buttons.
+                String usertype = null;
+                if(doctor.isSelected())
+                    usertype = doctor.getText().toLowerCase(Locale.ROOT);
+                else if (medstaff.isSelected())
+                    usertype = medstaff.getText().toLowerCase(Locale.ROOT);
+
+                // Checks if the Confirm Password field matches the Password Field.
+                if (!pass.equals(cpass)) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Confirm Password must match Password.");
+                    alert.show();
+                } else {
+                    if (accountDAO.getUserIDByUsername(user) == 0) {
+                        // Creates an Account object, which is sent as a parameter in the addAccount method
+                        Account account = new Account(user, pass, usertype);
+                        int id = accountDAO.addAccount(account);
+
+                        // Checks if the record is inserted
+                        if (id == -1) throw new IOException("Error");
+
+                            // Use the returned ID as a foreign key
+                            // for creating a new doctor_info or staff_info
+                        else {
+                            String fullname = lName + ", " + fName;
+                            if (medstaff.isSelected()) {
+                                Staff staff = new Staff(id, fullname);
+                                staffDAO.addStaff(staff);
+                            } else {
+                                Doctor doctor = new Doctor(id, fullname, sched);
+                                doctorDAO.addDoctor(doctor);
+                            }
+                        }
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setContentText("Username already exists.");
+                        alert.show();
+                    }
+                }
+                // Closes the current window after processing.
+                Stage stage = (Stage) main.getScene().getWindow();
+                stage.hide();
+                // Reloads the table to see the inserted record.
+                registerButton.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
+            }
+
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    public void updateAccount(ActionEvent event) {
+        // Get values of input fields.
+        // TODO: Input Validation for all fields. (Empty or Incorrect data type)
+
+        if(errorChecker()){
             String user = username.getText();
             String pass = password.getText();
-            String cpass = cpassword.getText();
             String fName = fname.getText();
             String lName = lname.getText();
             String sched = getScheduleBoxes();
@@ -78,87 +176,29 @@ public class registerController {
             else if (medstaff.isSelected())
                 usertype = medstaff.getText().toLowerCase(Locale.ROOT);
 
-            // Checks if the Confirm Password field matches the Password Field.
-            if (!pass.equals(cpass)) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setContentText("Confirm Password must match Password.");
-                alert.show();
+            // Creates an Account object, which is sent as a parameter in the updateAccount method
+            Account a = new Account(account.getUserID(), user, pass, usertype);
+            int id = accountDAO.updateAccount(a);
+
+            // Use the returned ID as a foreign key
+            // for updating the corresponding doctor_info or staff_info row
+            String fullname = lName + ", " + fName;
+            if (medstaff.isSelected()) {
+                staff.setStaffName(fullname);
+                staffDAO.updateStaff(staff);
             } else {
-                if (accountDAO.getUserIDByUsername(user) == 0) {
-                    // Creates an Account object, which is sent as a parameter in the addAccount method
-                    Account account = new Account(user, pass, usertype);
-                    int id = accountDAO.addAccount(account);
-
-                    // Checks if the record is inserted
-                    if (id == -1) throw new IOException("Error");
-
-                        // Use the returned ID as a foreign key
-                        // for creating a new doctor_info or staff_info
-                    else {
-                        String fullname = lName + ", " + fName;
-                        if (medstaff.isSelected()) {
-                            Staff staff = new Staff(id, fullname);
-                            staffDAO.addStaff(staff);
-                        } else {
-                            Doctor doctor = new Doctor(id, fullname, sched);
-                            doctorDAO.addDoctor(doctor);
-                        }
-                    }
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setContentText("Username already exists.");
-                    alert.show();
-                }
+                doctors.setDoctorName(fullname);
+                doctors.setSchedule(sched);
+                doctorDAO.updateDoctor(doctors);
             }
-                // Closes the current window after processing.
-                Stage stage = (Stage) main.getScene().getWindow();
-                stage.hide();
-                // Reloads the table to see the inserted record.
-                registerButton.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
 
-        } catch (IOException exception) {
-            exception.printStackTrace();
+
+            // Closes the current window after processing.
+            Stage stage = (Stage) main.getScene().getWindow();
+            stage.hide();
+            // Reloads the table to see the inserted record.
+            updateButton.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
         }
-    }
-
-    public void updateAccount(ActionEvent event) {
-        // Get values of input fields.
-        // TODO: Input Validation for all fields. (Empty or Incorrect data type)
-        String user = username.getText();
-        String pass = password.getText();
-        String fName = fname.getText();
-        String lName = lname.getText();
-        String sched = getScheduleBoxes();
-
-        // Check for the selected usertype in the radio buttons.
-        String usertype = null;
-        if(doctor.isSelected())
-            usertype = doctor.getText().toLowerCase(Locale.ROOT);
-        else if (medstaff.isSelected())
-            usertype = medstaff.getText().toLowerCase(Locale.ROOT);
-
-        // Creates an Account object, which is sent as a parameter in the updateAccount method
-        Account a = new Account(account.getUserID(), user, pass, usertype);
-        int id = accountDAO.updateAccount(a);
-
-        // Use the returned ID as a foreign key
-        // for updating the corresponding doctor_info or staff_info row
-        String fullname = lName + ", " + fName;
-        if (medstaff.isSelected()) {
-            staff.setStaffName(fullname);
-            staffDAO.updateStaff(staff);
-        } else {
-            doctors.setDoctorName(fullname);
-            doctors.setSchedule(sched);
-            doctorDAO.updateDoctor(doctors);
-        }
-
-        // Closes the current window after processing.
-        Stage stage = (Stage) main.getScene().getWindow();
-        stage.hide();
-        // Reloads the table to see the inserted record.
-        updateButton.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
-
     }
 
     public void deleteAccount(ActionEvent event) throws Exception {

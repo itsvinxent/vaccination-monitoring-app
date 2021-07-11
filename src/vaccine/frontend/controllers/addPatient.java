@@ -59,6 +59,20 @@ public class addPatient implements Initializable {
 
     }
 
+    public boolean errorChecker(){
+        if(patientFName.getText()==""||patientFName.getText().matches(".*[^a-zA-Z].*")||patientLName.getText()==""||
+        patientLName.getText().matches(".*[^a-zA-Z].*")||cityAddress.getText()==""||cityAddress.getText().matches(".*[^a-zA-Z].*")||
+        vaccineID.getValue()==null||drID.getValue()==null||schedule.getValue()==null||age.getText()==""||
+        !age.getText().matches(".*[^a-zA-Z].*")||sex.getText()==""||sex.getText().matches(".*[^a-zA-Z].*")||
+        drID2.getValue()==null){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Please Fill in all the details and correct format");
+            alert.show();
+        }else{
+            return true;
+        }
+        return false;
+    }
     public static String capitalize(String str) {
         if(str == null || str.isEmpty()) {
             return str;
@@ -87,29 +101,32 @@ public class addPatient implements Initializable {
     }
 
     public void save(ActionEvent event) throws Exception {
-        patient = new Schedule(
-                drID.getValue(),
-                drID2.getValue(),
-                patientLName.getText(),
-                patientFName.getText(),
-                age.getText(),
-                sex.getText(),
-                capitalize(cityAddress.getText()),
-                vaccineID.getValue(),
-                first_dose,
-                second_dose,
-                schedule.getValue(),
-                schedule.getValue(),
-                "incomplete"
-                );
-        // todo: system for setting the status
-        scheduleDAO.addSchedule(patient);
-        vaccineDAO.updateStorageAmount(vaccineDAO.getVaccineIDByBrand(patient.getVaccineBrand()), 1);
+        if (errorChecker()){
+            patient = new Schedule(
+                    drID.getValue(),
+                    drID2.getValue(),
+                    patientLName.getText(),
+                    patientFName.getText(),
+                    age.getText(),
+                    sex.getText(),
+                    capitalize(cityAddress.getText()),
+                    vaccineID.getValue(),
+                    first_dose,
+                    second_dose,
+                    schedule.getValue(),
+                    schedule.getValue(),
+                    "incomplete"
+            );
+            // todo: system for setting the status
+            scheduleDAO.addSchedule(patient);
+            vaccineDAO.updateStorageAmount(vaccineDAO.getVaccineIDByBrand(patient.getVaccineBrand()), 1);
 
-        Stage stage = (Stage) main.getScene().getWindow();
-        stage.hide();
 
-        saveEntry.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
+            Stage stage = (Stage) main.getScene().getWindow();
+            stage.hide();
+
+            saveEntry.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
+        }
     }
 
     public void cancel(ActionEvent event)  {
@@ -118,32 +135,34 @@ public class addPatient implements Initializable {
     }
 
     public void update(ActionEvent event) throws Exception {
-        Schedule updatedPatient = new Schedule(
-                patient.getPatientNum(),
-                drID.getValue(),
-                drID2.getValue(),
-                patientLName.getText(),
-                patientFName.getText(),
-                age.getText(),
-                sex.getText(),
-                capitalize(cityAddress.getText()),
-                vaccineID.getValue(),
-                firstDose.getEditor().getText(),
-                secondDose.getEditor().getText(),
-                schedule.getValue(),
-                schedule.getValue(),
-                patient.getStatus()
-        );
-        scheduleDAO.updateSchedule(updatedPatient);
-        if (!patient.getVaccineBrand().equals(updatedPatient.getVaccineBrand())){
-            vaccineDAO.updateStorageAmount(vaccineDAO.getVaccineIDByBrand(patient.getVaccineBrand()), -1);
-            vaccineDAO.updateStorageAmount(vaccineDAO.getVaccineIDByBrand(updatedPatient.getVaccineBrand()), 1);
+        if (errorChecker()){
+            Schedule updatedPatient = new Schedule(
+                    patient.getPatientNum(),
+                    drID.getValue(),
+                    drID2.getValue(),
+                    patientLName.getText(),
+                    patientFName.getText(),
+                    age.getText(),
+                    sex.getText(),
+                    capitalize(cityAddress.getText()),
+                    vaccineID.getValue(),
+                    firstDose.getEditor().getText(),
+                    secondDose.getEditor().getText(),
+                    schedule.getValue(),
+                    schedule.getValue(),
+                    patient.getStatus()
+            );
+            scheduleDAO.updateSchedule(updatedPatient);
+            if (!patient.getVaccineBrand().equals(updatedPatient.getVaccineBrand())){
+                vaccineDAO.updateStorageAmount(vaccineDAO.getVaccineIDByBrand(patient.getVaccineBrand()), -1);
+                vaccineDAO.updateStorageAmount(vaccineDAO.getVaccineIDByBrand(updatedPatient.getVaccineBrand()), 1);
+            }
+            System.out.println(updatedPatient.getFirstDose());
+            Stage stage = (Stage) main.getScene().getWindow();
+            stage.hide();
+
+            updateEntry.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
         }
-
-        Stage stage = (Stage) main.getScene().getWindow();
-        stage.hide();
-
-        updateEntry.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
     }
 
     public void delete(ActionEvent event) throws Exception {

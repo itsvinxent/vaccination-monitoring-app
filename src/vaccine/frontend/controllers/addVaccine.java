@@ -1,5 +1,6 @@
 package vaccine.frontend.controllers;
 
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -42,32 +43,52 @@ public class addVaccine implements Initializable {
     }
 
     public void saveVaccine(ActionEvent event) throws Exception {
-        vaccine = new Vaccine(
-                vaccineBrand.getText(),
-                Integer.parseInt(dosageStock.getText()),
-                Integer.parseInt(dosageInterval.getText())
-        );
-        vaccineDAO.addVaccine(vaccine);
+        //if(vaccineBrand.getText().matches(".*[^a-z].*"))
+        if(vaccineBrand.getText()==""||dosageStock.getText()==""||dosageInterval.getText()==""||
+                vaccineBrand.getText().matches(".*[^a-zA-Z].*")||!dosageStock.getText().matches(".*[^a-zA-Z].*")||
+                !dosageInterval.getText().matches(".*[^a-zA-Z].*")){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Please Fill in all the details and correct format.");
+            alert.show();
+        }
+        else{
+            vaccine = new Vaccine(
+                    vaccineBrand.getText(),
+                    Integer.parseInt(dosageStock.getText()),
+                    Integer.parseInt(dosageInterval.getText())
+            );
+            vaccineDAO.addVaccine(vaccine);
 
-        Stage stage = (Stage) main.getScene().getWindow();
-        stage.hide();
+            Stage stage = (Stage) main.getScene().getWindow();
+            stage.hide();
 
-        vaccineEntry.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
+            vaccineEntry.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
+        }
+
     }
 
     public void updateVaccine(ActionEvent event) throws Exception {
-        Vaccine updatedvaccine = new Vaccine(
-                vaccine.getVaccineID(),
-                vaccineBrand.getText(),
-                Integer.parseInt(dosageStock.getText()),
-                Integer.parseInt(dosageInterval.getText())
-        );
-        vaccineDAO.updateVaccine(updatedvaccine);
+        if(vaccineBrand.getText()==""||dosageStock.getText()==""||dosageInterval.getText()==""||
+                vaccineBrand.getText().matches(".*[^a-zA-Z].*")||!dosageStock.getText().matches(".*[^a-zA-Z].*")||
+                !dosageInterval.getText().matches(".*[^a-zA-Z].*")){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Please Fill in all the details and correct format.");
+            alert.show();
+        }
+        else{
+            Vaccine updatedvaccine = new Vaccine(
+                    vaccine.getVaccineID(),
+                    vaccineBrand.getText(),
+                    Integer.parseInt(dosageStock.getText()),
+                    Integer.parseInt(dosageInterval.getText())
+            );
+            vaccineDAO.updateVaccine(updatedvaccine);
 
-        Stage stage = (Stage) main.getScene().getWindow();
-        stage.hide();
+            Stage stage = (Stage) main.getScene().getWindow();
+            stage.hide();
 
-        vaccineEntry.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
+            vaccineEntry.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
+        }
     }
 
     public void deleteVaccine(ActionEvent event) throws Exception {
