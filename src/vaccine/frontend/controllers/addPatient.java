@@ -32,7 +32,15 @@ public class addPatient implements Initializable {
     private AnchorPane main, mainupd;
 
     @FXML
-    private Button saveEntry, updateEntry, deleteEntry;
+    private Button saveEntry, updateEntry, deleteEntry, updatestatus;
+
+    @FXML
+    private Label upatientFName, upatientLName, upatientage, upatientsex;
+
+    @FXML
+    private RadioButton ufirstdose, useconddose, uincomplete;
+
+
 
     int interval;
     String first_dose, second_dose;
@@ -49,6 +57,14 @@ public class addPatient implements Initializable {
         vaccineID.setItems(vaccines);
         schedule.setItems(sched);
 
+    }
+
+    public static String capitalize(String str) {
+        if(str == null || str.isEmpty()) {
+            return str;
+        }
+
+        return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
     }
 
     public ObservableList<String> getAvailableVaccinators(String date) throws ParseException {
@@ -170,6 +186,35 @@ public class addPatient implements Initializable {
         }
     }
 
+    public void updateStatus(ActionEvent event) {
+        String new_status = null;
+        if (ufirstdose.isSelected())
+            new_status = "partial";
+        else if (useconddose.isSelected())
+            new_status = "full";
+        else if (uincomplete.isSelected())
+            new_status = "incomplete";
+
+        if (!patient.getStatus().equals(new_status)) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setContentText("Are you sure you want to update the status of this record from "
+                    + capitalize(patient.getStatus()) +" to "+ capitalize(new_status) +"?");
+            alert.setTitle("Confirm");
+            Optional<ButtonType> action = alert.showAndWait();
+
+            if (action.get() == ButtonType.OK) {
+                patient.setStatus(new_status);
+                scheduleDAO.updateSchedule(patient);
+            }
+        }
+
+        Stage stage = (Stage) mainupd.getScene().getWindow();
+        stage.hide();
+
+        updatestatus.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
+
+    }
+
     public void setFieldContent(int patientID) {
         patient = scheduleDAO.getPatientByPatientID(patientID);
         drID.setValue(patient.getDoctorName_1());
@@ -195,14 +240,6 @@ public class addPatient implements Initializable {
         deleteEntry.setOpacity(1);
     }
 
-    public static String capitalize(String str) {
-        if(str == null || str.isEmpty()) {
-            return str;
-        }
-
-        return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
-    }
-
     public void setAnchorVisible(boolean setVisible){
         if (setVisible){
             mainupd.setDisable(false);
@@ -216,5 +253,16 @@ public class addPatient implements Initializable {
             main.setVisible(true);
         }
 
+    }
+
+    public void setUpdateStatusFields(int patientID) {
+        patient = scheduleDAO.getPatientByPatientID(patientID);
+        upatientFName.setText(patient.getPatientFName());
+        upatientLName.setText(patient.getPatientLName());
+        upatientage.setText(patient.getAge());
+        upatientsex.setText(patient.getSex());
+        if (patient.getStatus().equals("incomplete")) uincomplete.setSelected(true);
+        else if (patient.getStatus().equals("partial")) ufirstdose.setSelected(true);
+        else useconddose.setSelected(true);
     }
 }

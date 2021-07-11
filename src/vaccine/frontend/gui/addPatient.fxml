@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="560.0" prefWidth="679.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.frontend.controllers.addPatient">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="560.0" prefWidth="679.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.frontend.controllers.addPatient">
    <children>
-      <AnchorPane fx:id="main" prefHeight="559.0" prefWidth="679.0" style="-fx-background-color: #0e2a47;">
+      <AnchorPane fx:id="main" prefHeight="559.0" prefWidth="679.0" style="-fx-background-color: #0e2a47;" visible="false">
          <children>
             <TextField fx:id="patientLName" layoutX="197.0" layoutY="78.0" prefHeight="25.0" prefWidth="334.0" promptText="Last Name" />
             <TextField fx:id="patientFName" layoutX="197.0" layoutY="39.0" prefHeight="25.0" prefWidth="334.0" promptText="First Name" />
@@ -84,23 +90,21 @@
             <DropShadow />
          </effect>
       </AnchorPane>
-      <AnchorPane fx:id="mainupd" disable="true" prefHeight="559.0" prefWidth="679.0" style="-fx-background-color: #0e2a47;" visible="false">
+      <AnchorPane fx:id="mainupd" prefHeight="559.0" prefWidth="679.0" style="-fx-background-color: #0e2a47;">
          <children>
-            <TextField fx:id="patientLName1" editable="false" layoutX="197.0" layoutY="147.0" prefHeight="25.0" prefWidth="334.0" promptText="Last Name" />
-            <TextField fx:id="patientFName1" editable="false" layoutX="197.0" layoutY="102.0" prefHeight="25.0" prefWidth="334.0" promptText="First Name" />
             <Label layoutX="85.0" layoutY="106.0" text="First Name:" textFill="#f5f4f4">
                <font>
-                  <Font name="Arial Rounded MT Bold" size="14.0" />
+                  <Font name="Arial Rounded MT Bold" size="17.0" />
                </font>
             </Label>
             <Label layoutX="86.0" layoutY="151.0" text="Last Name:" textFill="#f5f4f4">
                <font>
-                  <Font name="Arial Rounded MT Bold" size="14.0" />
+                  <Font name="Arial Rounded MT Bold" size="17.0" />
                </font>
             </Label>
             <Button fx:id="cancelupd" cancelButton="true" layoutX="521.0" layoutY="341.0" mnemonicParsing="false" onAction="#cancel" style="-fx-background-color: #48ffd5;" text="Cancel" />
-            <Button fx:id="updatestatus" layoutX="415.0" layoutY="341.0" mnemonicParsing="false" style="-fx-background-color: #48ffd5;" text="Update Status" />
-            <RadioButton fx:id="doctor" layoutX="130.0" layoutY="215.0" mnemonicParsing="false" text="First Dose" textAlignment="CENTER" textFill="#f5efef">
+            <Button fx:id="updatestatus" layoutX="415.0" layoutY="341.0" mnemonicParsing="false" onAction="#updateStatus" style="-fx-background-color: #48ffd5;" text="Update Status" />
+            <RadioButton fx:id="ufirstdose" layoutX="169.0" layoutY="214.0" mnemonicParsing="false" text="First Dose" textAlignment="CENTER" textFill="#f5efef">
                <font>
                   <Font name="Arial Rounded MT Bold" size="14.0" />
                </font>
@@ -108,22 +112,49 @@
                   <ToggleGroup fx:id="status" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton fx:id="doctor1" layoutX="240.0" layoutY="215.0" mnemonicParsing="false" text="Second Dose" textAlignment="CENTER" textFill="#f5efef" toggleGroup="$status">
+            <RadioButton fx:id="useconddose" layoutX="279.0" layoutY="214.0" mnemonicParsing="false" text="Second Dose" textAlignment="CENTER" textFill="#f5efef" toggleGroup="$status">
                <font>
                   <Font name="Arial Rounded MT Bold" size="14.0" />
                </font>
             </RadioButton>
-            <RadioButton fx:id="doctor2" layoutX="369.0" layoutY="215.0" mnemonicParsing="false" text="Incomplete" textAlignment="CENTER" textFill="#f5efef">
+            <RadioButton fx:id="uincomplete" layoutX="408.0" layoutY="214.0" mnemonicParsing="false" text="Incomplete" textAlignment="CENTER" textFill="#f5efef" toggleGroup="$status">
                <font>
                   <Font name="Arial Rounded MT Bold" size="14.0" />
                </font>
-               <toggleGroup>
-                  <ToggleGroup fx:id="status1" />
-               </toggleGroup>
             </RadioButton>
             <Label fx:id="patientID" layoutX="47.0" layoutY="42.0" text="Patient #" textFill="#f5f4f4">
                <font>
-                  <Font name="Arial Rounded MT Bold" size="20.0" />
+                  <Font name="Arial Rounded MT Bold" size="25.0" />
+               </font>
+            </Label>
+            <Label fx:id="upatientFName" layoutX="186.0" layoutY="106.0" text="Juan " textFill="#f5f4f4">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="17.0" />
+               </font>
+            </Label>
+            <Label fx:id="upatientLName" layoutX="186.0" layoutY="151.0" text="Dela Cruz" textFill="#f5f4f4">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="17.0" />
+               </font>
+            </Label>
+            <Label layoutX="340.0" layoutY="106.0" text="Age:" textFill="#f5f4f4">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="17.0" />
+               </font>
+            </Label>
+            <Label layoutX="340.0" layoutY="151.0" text="Sex:" textFill="#f5f4f4">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="17.0" />
+               </font>
+            </Label>
+            <Label fx:id="upatientage" layoutX="390.0" layoutY="106.0" text="18" textFill="#f5f4f4">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="17.0" />
+               </font>
+            </Label>
+            <Label fx:id="upatientsex" layoutX="390.0" layoutY="151.0" text="M" textFill="#f5f4f4">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="17.0" />
                </font>
             </Label>
          </children>

@@ -161,7 +161,8 @@ public class scheduleDAO {
         ObservableList<Schedule> list = FXCollections.observableArrayList();
         try {
             conn = SqliteDBCon.Connector();
-            ps = conn.prepareStatement("SELECT * FROM schedule_info WHERE firstDose = ? or secondDose = ?");
+            ps = conn.prepareStatement("SELECT * FROM schedule_info " +
+                    "WHERE firstDose = ? and status = 'incomplete' or secondDose = ? and status = 'partial'");
             ps.setString(1, date);
             ps.setString(2, date);
             rs = ps.executeQuery();
@@ -210,7 +211,8 @@ public class scheduleDAO {
             int doctorID = doctorDAO.getDoctorByUserID(id).getDoctorNum();
             System.out.println(date);
             conn = SqliteDBCon.Connector();
-            ps = conn.prepareStatement("SELECT * FROM (SELECT * FROM schedule_info WHERE firstDose = ? or secondDose = ?) " +
+            ps = conn.prepareStatement("SELECT * FROM " +
+                    "(SELECT * FROM schedule_info WHERE firstDose = ? and status = 'incomplete' or secondDose = ? and status = 'partial') " +
                     "WHERE doctor1ID = ? or doctor2ID = ?");
             ps.setString(1, date);
             ps.setString(2, date);

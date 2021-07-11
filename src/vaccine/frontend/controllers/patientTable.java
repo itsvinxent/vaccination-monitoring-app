@@ -120,6 +120,7 @@ public class patientTable implements Initializable {
     static ObservableList<Account> accounts;
     static String type, _name;
     static int id;
+    static Schedule selectedSchedule;
 
     static SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
     static Calendar calendar = GregorianCalendar.getInstance();
@@ -158,10 +159,12 @@ public class patientTable implements Initializable {
                 super.updateItem(item, empty);
                 if (item == null || item.getStatus() == null)
                     setStyle("");
-                else if (item.getStatus().equals("complete"))
+                else if (item.getStatus().equals("full"))
                     setStyle("-fx-background-color: palegreen;");
                 else if (item.getStatus().equals("incomplete"))
                     setStyle("-fx-background-color: palevioletred;");
+                else if (item.getStatus().equals("partial"))
+                    setStyle("-fx-background-color: #79A8D8");
                 else
                     setStyle("");
             }
@@ -507,6 +510,7 @@ public class patientTable implements Initializable {
                 draw.popUp(root, stage, scene);
                 addPatient addPatient = loader.getController();
                 addPatient.setAnchorVisible(true);
+                addPatient.setUpdateStatusFields(schedT.getSelectionModel().getSelectedItem().getPatientNum());
                 stage.setOnHidden(new EventHandler<WindowEvent>() {
                     public void handle(WindowEvent we) {
                         //reloadRecordTable();
@@ -516,10 +520,9 @@ public class patientTable implements Initializable {
                 stage.getOnHidden().handle(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
             } else {
                 if (type.equals("doctor")){
-                    Schedule schedule = scheduleDAO.getPatientByPatientID(
+                    selectedSchedule = scheduleDAO.getPatientByPatientID(
                             schedT.getSelectionModel().getSelectedItem().getPatientNum()
                     );
-                    System.out.println(schedule.toString());
                     updatePatientButton.setOpacity(1);
                     updatePatientButton.setDisable(false);
                 }
@@ -530,7 +533,23 @@ public class patientTable implements Initializable {
     }
 
     public void updateStatus(ActionEvent event) {
+        String status = selectedSchedule.getStatus();
+        String new_status = null;
+        if (status.equals("incomplete"))
+            new_status = "partial";
+        else if (status.equals("partial"))
+            new_status = "full";
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("Are you sure you want to update the status of this record from "
+                + addPatient.capitalize(status) +" to "+ addPatient.capitalize(new_status) +"?");
+        alert.setTitle("Confirm");
+        Optional<ButtonType> action = alert.showAndWait();
 
+        if (action.get() == ButtonType.OK) {
+            selectedSchedule.setStatus(new_status);
+            scheduleDAO.updateSchedule(selectedSchedule);
+            displayName(id,_name,type);
+        }
     }
 
     /**

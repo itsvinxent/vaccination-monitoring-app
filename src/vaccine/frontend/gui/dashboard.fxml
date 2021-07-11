@@ -130,7 +130,7 @@
                   <Font name="Arial Rounded MT Bold" size="12.0" />
                </font>
             </Button>
-            <Button fx:id="updatePatientButton" disable="true" layoutX="755.0" layoutY="145.0" mnemonicParsing="false" opacity="0.0" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #48ffd5;" text="Update">
+            <Button fx:id="updatePatientButton" disable="true" layoutX="755.0" layoutY="145.0" mnemonicParsing="false" onAction="#updateStatus" opacity="0.0" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #48ffd5;" text="Update">
                <font>
                   <Font name="Arial Rounded MT Bold" size="12.0" />
                </font>
