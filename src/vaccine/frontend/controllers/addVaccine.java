@@ -45,8 +45,8 @@ public class addVaccine implements Initializable {
     public void saveVaccine(ActionEvent event) throws Exception {
         //if(vaccineBrand.getText().matches(".*[^a-z].*"))
         if(vaccineBrand.getText()==""||dosageStock.getText()==""||dosageInterval.getText()==""||
-                vaccineBrand.getText().matches(".*[^a-z].*")||!dosageStock.getText().matches(".*[^a-z].*")||
-                !dosageInterval.getText().matches(".*[^a-z].*")){
+                vaccineBrand.getText().matches(".*[^a-zA-Z].*")||!dosageStock.getText().matches(".*[^a-zA-Z].*")||
+                !dosageInterval.getText().matches(".*[^a-zA-Z].*")){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("Please Fill in all the details and correct format.");
             alert.show();
@@ -69,8 +69,8 @@ public class addVaccine implements Initializable {
 
     public void updateVaccine(ActionEvent event) throws Exception {
         if(vaccineBrand.getText()==""||dosageStock.getText()==""||dosageInterval.getText()==""||
-                vaccineBrand.getText().matches(".*[^a-z].*")||!dosageStock.getText().matches(".*[^a-z].*")||
-                !dosageInterval.getText().matches(".*[^a-z].*")){
+                vaccineBrand.getText().matches(".*[^a-zA-Z].*")||!dosageStock.getText().matches(".*[^a-zA-Z].*")||
+                !dosageInterval.getText().matches(".*[^a-zA-Z].*")){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("Please Fill in all the details and correct format.");
             alert.show();

@@ -71,7 +71,7 @@ public class registerController {
 
         if(doctor.isSelected()){
             if(fname.getText()==""||lname.getText()==""||username.getText()==""||
-                    fname.getText().matches(".*[^a-z].*")||lname.getText().matches(".*[^a-z].*")||days<3){
+                    fname.getText().matches(".*[^a-zA-Z].*")||lname.getText().matches(".*[^a-zA-Z].*")||days<3){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setContentText("Please Fill in all the details and correct format. Select at least three (3) days for the schedule");
                 alert.show();
@@ -82,7 +82,7 @@ public class registerController {
         }
         else if(medstaff.isSelected()){
             if(fname.getText()==""||lname.getText()==""||username.getText()==""||
-                    fname.getText().matches(".*[^a-z].*")||lname.getText().matches(".*[^a-z].*")){
+                    fname.getText().matches(".*[^a-zA-Z].*")||lname.getText().matches(".*[^a-zA-Z].*")){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setContentText("Please Fill in all the details and correct format");
                 alert.show();
@@ -176,37 +176,22 @@ public class registerController {
             else if (medstaff.isSelected())
                 usertype = medstaff.getText().toLowerCase(Locale.ROOT);
 
-            if (accountDAO.getUserIDByUsername(user) == 0) {
-                // Creates an Account object, which is sent as a parameter in the updateAccount method
-                Account a = new Account(account.getUserID(), user, pass, usertype);
-                int id = accountDAO.updateAccount(a);
-        // Creates an Account object, which is sent as a parameter in the updateAccount method
-        Account a = new Account(account.getUserID(), user, pass, usertype);
-        int id = accountDAO.updateAccount(a);
+            // Creates an Account object, which is sent as a parameter in the updateAccount method
+            Account a = new Account(account.getUserID(), user, pass, usertype);
+            int id = accountDAO.updateAccount(a);
 
-                // Use the returned ID as a foreign key
-                // for updating the corresponding doctor_info or staff_info row
-                String fullname = lName + ", " + fName;
-                if (medstaff.isSelected()) {
-                    Staff staff = new Staff(id, fullname);
-                    staffDAO.updateStaff(staff);
-                } else {
-                    Doctor doctor = new Doctor(id, fullname, sched);
-                    doctorDAO.updateDoctor(doctor);
-                }
+            // Use the returned ID as a foreign key
+            // for updating the corresponding doctor_info or staff_info row
+            String fullname = lName + ", " + fName;
+            if (medstaff.isSelected()) {
+                staff.setStaffName(fullname);
+                staffDAO.updateStaff(staff);
+            } else {
+                doctors.setDoctorName(fullname);
+                doctors.setSchedule(sched);
+                doctorDAO.updateDoctor(doctors);
             }
 
-        // Use the returned ID as a foreign key
-        // for updating the corresponding doctor_info or staff_info row
-        String fullname = lName + ", " + fName;
-        if (medstaff.isSelected()) {
-            staff.setStaffName(fullname);
-            staffDAO.updateStaff(staff);
-        } else {
-            doctors.setDoctorName(fullname);
-            doctors.setSchedule(sched);
-            doctorDAO.updateDoctor(doctors);
-        }
 
             // Closes the current window after processing.
             Stage stage = (Stage) main.getScene().getWindow();

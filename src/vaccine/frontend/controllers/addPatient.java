@@ -52,9 +52,11 @@ public class addPatient implements Initializable {
     }
 
     public boolean errorChecker(){
-        if(patientFName.getText()==""||patientFName.getText().matches(".*[^a-z].*")||patientLName.getText()==""||
-        patientLName.getText().matches(".*[^a-z].*")||cityAddress.getText()==""||cityAddress.getText().matches(".*[^a-z].*")||
-        vaccineID.getValue()==null||drID.getValue()==null||schedule.getValue()==null){
+        if(patientFName.getText()==""||patientFName.getText().matches(".*[^a-zA-Z].*")||patientLName.getText()==""||
+        patientLName.getText().matches(".*[^a-zA-Z].*")||cityAddress.getText()==""||cityAddress.getText().matches(".*[^a-zA-Z].*")||
+        vaccineID.getValue()==null||drID.getValue()==null||schedule.getValue()==null||age.getText()==""||
+        !age.getText().matches(".*[^a-zA-Z].*")||sex.getText()==""||sex.getText().matches(".*[^a-zA-Z].*")||
+        drID2.getValue()==null){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("Please Fill in all the details and correct format");
             alert.show();
