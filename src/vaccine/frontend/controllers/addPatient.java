@@ -20,28 +20,13 @@ import vaccine.backend.dao.*;
 
 public class addPatient implements Initializable {
     @FXML
-    private TextField patientLName;
+    private TextField patientLName, patientFName, cityAddress, age, sex;
 
     @FXML
-    private TextField patientFName;
+    private DatePicker firstDose, secondDose;
 
     @FXML
-    private TextField cityAddress;
-
-    @FXML
-    private DatePicker firstDose;
-
-    @FXML
-    private DatePicker secondDose;
-
-    @FXML
-    private ComboBox<String> drID;
-
-    @FXML
-    private ComboBox<String> vaccineID;
-
-    @FXML
-    private ComboBox<String> schedule;
+    private ComboBox<String> drID, drID2, vaccineID, schedule;
 
     @FXML
     private AnchorPane main, mainupd;
@@ -51,7 +36,7 @@ public class addPatient implements Initializable {
 
     int interval;
     String first_dose, second_dose;
-    SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
     Calendar calendar = GregorianCalendar.getInstance();
     Schedule patient = null;
 
@@ -59,11 +44,9 @@ public class addPatient implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Populate ComboBoxes with doctor names and vaccine brands
         ObservableList<String> vaccines = vaccineDAO.getAllVaccineBrand();
-        ObservableList<String> doctors = doctorDAO.getAllDoctorsByName();
-//        ObservableList<String> sched = FXCollections.observableArrayList("7:30AM", "10:30AM", "1:30PM", "4:30PM");
+
         ObservableList<String> sched = FXCollections.observableArrayList("AM", "PM");
         vaccineID.setItems(vaccines);
-        drID.setItems(doctors);
         schedule.setItems(sched);
 
     }
@@ -81,21 +64,46 @@ public class addPatient implements Initializable {
         return false;
     }
 
+    public ObservableList<String> getAvailableVaccinators(String date) throws ParseException {
+        try {
+            calendar.setTime(sdf.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String[] strDays = new String[]{
+                "Sunday",
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thusday",
+                "Friday",
+                "Saturday"
+        };
+
+        return doctorDAO.getAllDoctorsByName(strDays[calendar.get(Calendar.DAY_OF_WEEK) - 1]);
+    }
+
     public void save(ActionEvent event) throws Exception {
         if (errorChecker()){
             patient = new Schedule(
                     drID.getValue(),
+                    drID2.getValue(),
                     patientLName.getText(),
                     patientFName.getText(),
+                    age.getText(),
+                    sex.getText(),
+                    capitalize(cityAddress.getText()),
                     vaccineID.getValue(),
                     first_dose,
                     second_dose,
                     schedule.getValue(),
                     schedule.getValue(),
-                    "incomplete",
-                    capitalize(cityAddress.getText()));
+                    "incomplete"
+            );
             // todo: system for setting the status
             scheduleDAO.addSchedule(patient);
+            vaccineDAO.updateStorageAmount(vaccineDAO.getVaccineIDByBrand(patient.getVaccineBrand()), 1);
+
 
             Stage stage = (Stage) main.getScene().getWindow();
             stage.hide();
@@ -114,16 +122,24 @@ public class addPatient implements Initializable {
             Schedule updatedPatient = new Schedule(
                     patient.getPatientNum(),
                     drID.getValue(),
+                    drID2.getValue(),
                     patientLName.getText(),
                     patientFName.getText(),
+                    age.getText(),
+                    sex.getText(),
+                    capitalize(cityAddress.getText()),
                     vaccineID.getValue(),
-                    format.format(firstDose.getEditor().getText()),
-                    format.format(secondDose.getEditor().getText()),
+                    firstDose.getEditor().getText(),
+                    secondDose.getEditor().getText(),
                     schedule.getValue(),
                     schedule.getValue(),
-                    "incomplete",
-                    capitalize(cityAddress.getText()));
+                    patient.getStatus()
+            );
             scheduleDAO.updateSchedule(updatedPatient);
+            if (!patient.getVaccineBrand().equals(updatedPatient.getVaccineBrand())){
+                vaccineDAO.updateStorageAmount(vaccineDAO.getVaccineIDByBrand(patient.getVaccineBrand()), -1);
+                vaccineDAO.updateStorageAmount(vaccineDAO.getVaccineIDByBrand(updatedPatient.getVaccineBrand()), 1);
+            }
             System.out.println(updatedPatient.getFirstDose());
             Stage stage = (Stage) main.getScene().getWindow();
             stage.hide();
@@ -151,28 +167,35 @@ public class addPatient implements Initializable {
         }
     }
 
-    public void showSecondDose(ActionEvent event) {
+    public void showSecondDose(ActionEvent event) throws ParseException {
         first_dose = firstDose.getEditor().getText();
         interval = vaccineDAO.getDosageIntervalsByBrand(vaccineID.getValue());
         try {
             if (event.getSource() == firstDose)
-                calendar.setTime(format.parse(first_dose));
+                calendar.setTime(sdf.parse(first_dose));
+
+        calendar.add(Calendar.DAY_OF_MONTH, interval);
+        second_dose = sdf.format(calendar.getTime());
+        drID2.setItems(getAvailableVaccinators(second_dose));
+        secondDose.getEditor().setText(second_dose);
+
+        calendar.add(Calendar.DAY_OF_MONTH, -interval);
+        first_dose = sdf.format(calendar.getTime());
+        drID.setItems(getAvailableVaccinators(first_dose));
+        firstDose.getEditor().setText(first_dose);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        calendar.add(Calendar.DAY_OF_MONTH, interval);
-        second_dose = format.format(calendar.getTime());
-        secondDose.getEditor().setText(second_dose);
-        calendar.add(Calendar.DAY_OF_MONTH, -interval);
-        first_dose = format.format(calendar.getTime());
-        firstDose.getEditor().setText(first_dose);
     }
 
     public void setFieldContent(int patientID) {
         patient = scheduleDAO.getPatientByPatientID(patientID);
-        drID.setValue(patient.getDoctorName());
+        drID.setValue(patient.getDoctorName_1());
+        drID2.setValue(patient.getDoctorName_2());
         patientFName.setText(patient.getPatientFName());
         patientLName.setText(patient.getPatientLName());
+        age.setText(patient.getAge());
+        sex.setText(patient.getSex());
         vaccineID.setValue(patient.getVaccineBrand());
         firstDose.getEditor().setText(patient.getFirstDose());
         secondDose.getEditor().setText(patient.getSecondDose());

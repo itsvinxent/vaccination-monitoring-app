@@ -29,23 +29,26 @@ public class scheduleDAO {
         ObservableList<Schedule> list= FXCollections.observableArrayList();
         try {
             conn = SqliteDBCon.Connector();
-            ps = conn.prepareStatement("SELECT * FROM schedule_info, vaccine_info, doctor_info " +
-                    "WHERE vacID = vaccineID " +
-                    "and schedule_info.doctorID = doctor_info.drID");
+            ps = conn.prepareStatement("SELECT * FROM schedule_info");
             rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(
-                        new Schedule(rs.getInt("patientID"),
-                                rs.getString("drName"),
+                        new Schedule(
+                                rs.getInt("patientID"),
+                                doctorDAO.getDoctorNameByDoctorID(rs.getInt("doctor1ID")),
+                                doctorDAO.getDoctorNameByDoctorID(rs.getInt("doctor2ID")),
                                 rs.getString("patientLName"),
                                 rs.getString("patientFName"),
-                                rs.getString("vaccineBrand"),
+                                rs.getString("age"),
+                                rs.getString("sex"),
+                                rs.getString("city"),
+                                vaccineDAO.getVaccineByVaccineID(rs.getInt("vacID")).getVaccineBrand(),
                                 rs.getString("firstDose"),
                                 rs.getString("secondDose"),
                                 rs.getString("firstTime"),
                                 rs.getString("secondTime"),
-                                rs.getString("status"),
-                                rs.getString("city"))
+                                rs.getString("status")
+                        )
                 );
             }
             conn.close();
@@ -70,25 +73,28 @@ public class scheduleDAO {
         ObservableList<Schedule> list = FXCollections.observableArrayList();
         try {
             conn = SqliteDBCon.Connector();
-            ps = conn.prepareStatement("SELECT * FROM schedule_info, vaccine_info, doctor_info " +
-                    "WHERE vacID = vaccineID " +
-                    "and schedule_info.doctorID = doctor_info.drID " +
-                    "and doctor_info.userID = ?");
-            ps.setInt(1, userID);
+            ps = conn.prepareStatement("SELECT * FROM schedule_info WHERE doctor1ID = ? or doctor2ID = ?");
+            ps.setInt(1, doctorDAO.getDoctorByUserID(userID).getDoctorNum());
+            ps.setInt(2, doctorDAO.getDoctorByUserID(userID).getDoctorNum());
             rs = ps.executeQuery();
             while(rs.next()) {
                 list.add(
-                        new Schedule(rs.getInt("patientID"),
-                                rs.getString("drName"),
+                        new Schedule(
+                                rs.getInt("patientID"),
+                                doctorDAO.getDoctorNameByDoctorID(rs.getInt("doctor1ID")),
+                                doctorDAO.getDoctorNameByDoctorID(rs.getInt("doctor2ID")),
                                 rs.getString("patientLName"),
                                 rs.getString("patientFName"),
-                                rs.getString("vaccineBrand"),
+                                rs.getString("age"),
+                                rs.getString("sex"),
+                                rs.getString("city"),
+                                vaccineDAO.getVaccineByVaccineID(rs.getInt("vacID")).getVaccineBrand(),
                                 rs.getString("firstDose"),
                                 rs.getString("secondDose"),
                                 rs.getString("firstTime"),
                                 rs.getString("secondTime"),
-                                rs.getString("status"),
-                                rs.getString("city"))
+                                rs.getString("status")
+                        )
                 );
             }
             conn.close();
@@ -113,25 +119,25 @@ public class scheduleDAO {
         Schedule schedule = null;
         try {
             conn = SqliteDBCon.Connector();
-            ps = conn.prepareStatement("SELECT * FROM schedule_info, vaccine_info, doctor_info " +
-                    "WHERE vacID = vaccineID " +
-                    "and schedule_info.doctorID = doctor_info.drID " +
-                    "and schedule_info.patientID = ?");
+            ps = conn.prepareStatement("SELECT * FROM schedule_info WHERE patientID = ?");
             ps.setInt(1, patientNum);
             rs = ps.executeQuery();
             while(rs.next()) {
                 schedule = new Schedule(
                         rs.getInt("patientID"),
-                        rs.getString("drName"),
+                        doctorDAO.getDoctorNameByDoctorID(rs.getInt("doctor1ID")),
+                        doctorDAO.getDoctorNameByDoctorID(rs.getInt("doctor2ID")),
                         rs.getString("patientLName"),
                         rs.getString("patientFName"),
-                        rs.getString("vaccineBrand"),
+                        rs.getString("age"),
+                        rs.getString("sex"),
+                        rs.getString("city"),
+                        vaccineDAO.getVaccineByVaccineID(rs.getInt("vacID")).getVaccineBrand(),
                         rs.getString("firstDose"),
                         rs.getString("secondDose"),
                         rs.getString("firstTime"),
                         rs.getString("secondTime"),
-                        rs.getString("status"),
-                        rs.getString("city")
+                        rs.getString("status")
                 );
             }
             conn.close();
@@ -161,17 +167,22 @@ public class scheduleDAO {
             rs = ps.executeQuery();
             while(rs.next()) {
                 list.add(
-                        new Schedule(rs.getInt("patientID"),
-                                doctorDAO.getDoctorNameByDoctorID(rs.getInt("doctorID")),
+                        new Schedule(
+                                rs.getInt("patientID"),
+                                doctorDAO.getDoctorNameByDoctorID(rs.getInt("doctor1ID")),
+                                doctorDAO.getDoctorNameByDoctorID(rs.getInt("doctor2ID")),
                                 rs.getString("patientLName"),
                                 rs.getString("patientFName"),
+                                rs.getString("age"),
+                                rs.getString("sex"),
+                                rs.getString("city"),
                                 vaccineDAO.getVaccineByVaccineID(rs.getInt("vacID")).getVaccineBrand(),
                                 rs.getString("firstDose"),
                                 rs.getString("secondDose"),
                                 rs.getString("firstTime"),
                                 rs.getString("secondTime"),
-                                rs.getString("status"),
-                                rs.getString("city"))
+                                rs.getString("status")
+                        )
                 );
             }
             conn.close();
@@ -197,26 +208,34 @@ public class scheduleDAO {
         ObservableList<Schedule> list = FXCollections.observableArrayList();
         try {
             int doctorID = doctorDAO.getDoctorByUserID(id).getDoctorNum();
+            System.out.println(date);
             conn = SqliteDBCon.Connector();
-            ps = conn.prepareStatement("SELECT * FROM schedule_info " +
-                    "WHERE doctorID = ? AND firstDose = ? OR secondDose = ?");
-            ps.setInt(1, doctorID);
+            ps = conn.prepareStatement("SELECT * FROM (SELECT * FROM schedule_info WHERE firstDose = ? or secondDose = ?) " +
+                    "WHERE doctor1ID = ? or doctor2ID = ?");
+            ps.setString(1, date);
             ps.setString(2, date);
-            ps.setString(3, date);
+            ps.setInt(3, doctorID);
+            ps.setInt(4, doctorID);
+
             rs = ps.executeQuery();
             while(rs.next()) {
                 list.add(
-                        new Schedule(rs.getInt("patientID"),
-                                doctorDAO.getDoctorNameByDoctorID(rs.getInt("doctorID")),
+                        new Schedule(
+                                rs.getInt("patientID"),
+                                doctorDAO.getDoctorNameByDoctorID(rs.getInt("doctor1ID")),
+                                doctorDAO.getDoctorNameByDoctorID(rs.getInt("doctor2ID")),
                                 rs.getString("patientLName"),
                                 rs.getString("patientFName"),
+                                rs.getString("age"),
+                                rs.getString("sex"),
+                                rs.getString("city"),
                                 vaccineDAO.getVaccineByVaccineID(rs.getInt("vacID")).getVaccineBrand(),
                                 rs.getString("firstDose"),
                                 rs.getString("secondDose"),
                                 rs.getString("firstTime"),
                                 rs.getString("secondTime"),
-                                rs.getString("status"),
-                                rs.getString("city"))
+                                rs.getString("status")
+                        )
                 );
             }
             conn.close();
@@ -261,21 +280,25 @@ public class scheduleDAO {
         try {
             conn = SqliteDBCon.Connector();
             ps = conn.prepareStatement("insert into schedule_info " +
-                    "(doctorID, vacID, patientLName, patientFName, " +
+                    "(doctor1ID, doctor2ID, vacID, patientLName, patientFName, age, sex," +
                     "firstDose, secondDose, firstTime, secondTime, status, city) " +
-                    "values (?,?,?,?,?,?,?,?,?,?)");
-            ps.setInt(1, doctorDAO.getDoctorIDByDoctorName(u.getDoctorName()));
-            ps.setInt(2, vaccineDAO.getVaccineIDByBrand(u.getVaccineBrand()));
-            ps.setString(3, u.getPatientLName());
-            ps.setString(4, u.getPatientFName());
-            ps.setString(5, u.getFirstDose());
-            ps.setString(6, u.getSecondDose());
-            ps.setString(7, u.getFirstTime());
-            ps.setString(8, u.getSecondTime());
-            ps.setString(9, u.getStatus());
-            ps.setString(10, u.getCity());
+                    "values (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            ps.setInt(1, doctorDAO.getDoctorIDByDoctorName(u.getDoctorName_1()));
+            ps.setInt(2, doctorDAO.getDoctorIDByDoctorName(u.getDoctorName_2()));
+            ps.setInt(3, vaccineDAO.getVaccineIDByBrand(u.getVaccineBrand()));
+            ps.setString(4, u.getPatientLName());
+            ps.setString(5, u.getPatientFName());
+            ps.setString(6, u.getAge());
+            ps.setString(7, u.getSex());
+            ps.setString(8, u.getFirstDose());
+            ps.setString(9, u.getSecondDose());
+            ps.setString(10, u.getFirstTime());
+            ps.setString(11, u.getSecondTime());
+            ps.setString(12, u.getStatus());
+            ps.setString(13, u.getCity());
             status = ps.executeUpdate();
             conn.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -292,22 +315,26 @@ public class scheduleDAO {
         try {
             conn = SqliteDBCon.Connector();
             ps = conn.prepareStatement("update schedule_info " +
-                    "set doctorID = ?, vacID = ?, " +
+                    "set doctor1ID = ?, doctor2ID = ?, vacID = ?, " +
                     "patientLName = ?, patientFName =?, " +
+                    "age = ?, sex = ?," +
                     "firstDose = ?, secondDose = ?, " +
                     "firstTime = ?, secondTime = ?, status = ?, city = ?" +
                     "where patientID = ?");
-            ps.setInt(1, doctorDAO.getDoctorIDByDoctorName(u.getDoctorName()));
-            ps.setInt(2, vaccineDAO.getVaccineIDByBrand(u.getVaccineBrand()));
-            ps.setString(3, u.getPatientLName());
-            ps.setString(4, u.getPatientFName());
-            ps.setString(5, u.getFirstDose());
-            ps.setString(6, u.getSecondDose());
-            ps.setString(7, u.getFirstTime());
-            ps.setString(8, u.getSecondTime());
-            ps.setString(9, u.getStatus());
-            ps.setString(10, u.getCity());
-            ps.setInt(11, u.getPatientNum());
+            ps.setInt(1, doctorDAO.getDoctorIDByDoctorName(u.getDoctorName_1()));
+            ps.setInt(2, doctorDAO.getDoctorIDByDoctorName(u.getDoctorName_2()));
+            ps.setInt(3, vaccineDAO.getVaccineIDByBrand(u.getVaccineBrand()));
+            ps.setString(4, u.getPatientLName());
+            ps.setString(5, u.getPatientFName());
+            ps.setString(6, u.getAge());
+            ps.setString(7, u.getSex());
+            ps.setString(8, u.getFirstDose());
+            ps.setString(9, u.getSecondDose());
+            ps.setString(10, u.getFirstTime());
+            ps.setString(11, u.getSecondTime());
+            ps.setString(12, u.getStatus());
+            ps.setString(13, u.getCity());
+            ps.setInt(14, u.getPatientNum());
             status = ps.executeUpdate();
             conn.close();
         } catch (Exception exception) {

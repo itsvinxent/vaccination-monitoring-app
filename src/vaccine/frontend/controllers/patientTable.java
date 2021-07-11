@@ -46,6 +46,8 @@ public class patientTable implements Initializable {
     @FXML
     private TableColumn<Schedule, String> doctorName;
     @FXML
+    private TableColumn<Schedule, String> doctorName1;
+    @FXML
     private TableColumn<Schedule, String> patientName;
     @FXML
     private TableColumn<Schedule, String> vaccineBrand;
@@ -55,8 +57,6 @@ public class patientTable implements Initializable {
     private TableColumn<Schedule, String> secondDose;
     @FXML
     private TableColumn<Schedule, String> patientStatus;
-    @FXML
-    private TableColumn<Schedule, String> cityAddress;
 
     // Schedule Table
     @FXML
@@ -141,13 +141,13 @@ public class patientTable implements Initializable {
     public void reloadRecordTable() {
         // Initializes the data source for each column
         patientNum.setCellValueFactory(new PropertyValueFactory<Schedule, Integer>("patientNum"));
-        doctorName.setCellValueFactory(new PropertyValueFactory<Schedule, String>("doctorName"));
+        doctorName.setCellValueFactory(new PropertyValueFactory<Schedule, String>("doctorName_1"));
+        doctorName1.setCellValueFactory(new PropertyValueFactory<Schedule, String>("doctorName_2"));
         patientName.setCellValueFactory(new PropertyValueFactory<Schedule, String>("patientName"));
         vaccineBrand.setCellValueFactory(new PropertyValueFactory<Schedule, String>("vaccineBrand"));
         firstDose.setCellValueFactory(new PropertyValueFactory<Schedule, String>("firstDose"));
         secondDose.setCellValueFactory(new PropertyValueFactory<Schedule, String>("secondDose"));
         patientStatus.setCellValueFactory(new PropertyValueFactory<Schedule, String>("status"));
-        cityAddress.setCellValueFactory(new PropertyValueFactory<Schedule, String>("city"));
         // Sets the ObservableList that contains the records.
         patientT.setItems(patients);
         filterButton.setItems(filters);
@@ -205,7 +205,7 @@ public class patientTable implements Initializable {
     public void reloadScheduleTable() {
         timeCol.setCellValueFactory(new PropertyValueFactory<Schedule, String>("firstTime"));
         patientNameCol.setCellValueFactory(new PropertyValueFactory<Schedule, String>("patientName"));
-        docNameCol.setCellValueFactory(new PropertyValueFactory<Schedule, String>("doctorName"));
+        docNameCol.setCellValueFactory(new PropertyValueFactory<Schedule, String>("doctorName_1"));
         vaccineCol.setCellValueFactory(new PropertyValueFactory<Schedule, String>("vaccineBrand"));
         dosageCol.setCellValueFactory(new PropertyValueFactory<Schedule, String>("status"));
 
@@ -236,14 +236,14 @@ public class patientTable implements Initializable {
 
             patientT.setPrefWidth(900);
             patientT.setLayoutX(65);
-            patientNum.setPrefWidth(100);
+            patientNum.setPrefWidth(125);
             doctorName.setVisible(false);
-            cityAddress.setPrefWidth(74);
-            patientName.setPrefWidth(150);
+            doctorName1.setVisible(false);
+            patientName.setPrefWidth(175);
             vaccineBrand.setPrefWidth(150);
             firstDose.setPrefWidth(149);
             secondDose.setPrefWidth(149);
-            patientStatus.setPrefWidth(124);
+            patientStatus.setPrefWidth(149);
         }
         else {
             docNameCol.setVisible(true);
@@ -257,14 +257,16 @@ public class patientTable implements Initializable {
             patientT.setPrefWidth(980);
             patientT.setLayoutX(25);
             doctorName.setVisible(true);
-            patientNum.setPrefWidth(75);
+            doctorName1.setVisible(true);
+            patientNum.setPrefWidth(40);
             doctorName.setPrefWidth(150);
+            doctorName1.setPrefWidth(150);
             patientName.setPrefWidth(150);
-            cityAddress.setPrefWidth(100);
+
             vaccineBrand.setPrefWidth(125);
             firstDose.setPrefWidth(125);
             secondDose.setPrefWidth(125);
-            patientStatus.setPrefWidth(125);
+            patientStatus.setPrefWidth(112);
         }
     }
 
@@ -317,6 +319,8 @@ public class patientTable implements Initializable {
         nameLabel.setText(msg);
         reloadRecordTable();
         reloadScheduleTable();
+        reloadStaffTable();
+        reloadVaccineTable();
     }
 
     /**

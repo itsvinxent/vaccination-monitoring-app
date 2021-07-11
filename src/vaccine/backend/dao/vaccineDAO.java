@@ -30,7 +30,7 @@ public class vaccineDAO {
         ObservableList<Vaccine> list = FXCollections.observableArrayList();
         try {
             conn = SqliteDBCon.Connector();
-            ps = conn.prepareStatement("select * from vaccine_info");
+            ps = conn.prepareStatement("select * from vaccine_info where storageAmount != 0");
             rs = ps.executeQuery();
             while(rs.next()) {
                 list.add(new Vaccine(rs.getInt("vaccineID"),
@@ -188,6 +188,22 @@ public class vaccineDAO {
             conn = SqliteDBCon.Connector();
             ps = conn.prepareStatement("delete from vaccine_info where vaccineID = ?");
             ps.setInt(1, v.getVaccineID());
+            status = ps.executeUpdate();
+            conn.close();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return status;
+    }
+
+    public static int updateStorageAmount(int vaccineID, int amount) {
+        int status = 0;
+        try {
+            conn = SqliteDBCon.Connector();
+            ps = conn.prepareStatement("update vaccine_info set storageAmount = storageAmount - ? " +
+                    "where vaccineID = ?");
+            ps.setInt(1, amount);
+            ps.setInt(2, vaccineID);
             status = ps.executeUpdate();
             conn.close();
         } catch (Exception exception) {
