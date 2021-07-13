@@ -97,6 +97,10 @@ public class addPatient implements Initializable {
                 "Saturday"
         };
 
+        if (strDays[calendar.get(Calendar.DAY_OF_WEEK) - 1].equals("Sunday")){
+            return null;
+        }
+
         return doctorDAO.getAllDoctorsByName(strDays[calendar.get(Calendar.DAY_OF_WEEK) - 1]);
     }
 
@@ -191,15 +195,34 @@ public class addPatient implements Initializable {
             if (event.getSource() == firstDose)
                 calendar.setTime(sdf.parse(first_dose));
 
-        calendar.add(Calendar.DAY_OF_MONTH, interval);
-        second_dose = sdf.format(calendar.getTime());
-        drID2.setItems(getAvailableVaccinators(second_dose));
-        secondDose.getEditor().setText(second_dose);
+            first_dose = sdf.format(calendar.getTime());
+            ObservableList<String> vacc = getAvailableVaccinators(first_dose);
+            if (getAvailableVaccinators(first_dose) == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("First Dose Date");
+                alert.setContentText("Please select a working day.");
+                alert.show();
+                firstDose.getEditor().setText(null);
+                secondDose.getEditor().setText(null);
+                drID.setItems(null);
+                drID2.setItems(null);
+            } else {
+                drID.setItems(vacc);
+                firstDose.getEditor().setText(first_dose);
 
-        calendar.add(Calendar.DAY_OF_MONTH, -interval);
-        first_dose = sdf.format(calendar.getTime());
-        drID.setItems(getAvailableVaccinators(first_dose));
-        firstDose.getEditor().setText(first_dose);
+                calendar.add(Calendar.DAY_OF_MONTH, interval);
+                second_dose = sdf.format(calendar.getTime());
+                vacc = getAvailableVaccinators(second_dose);
+                if (vacc == null) {
+                    calendar.add(Calendar.DAY_OF_MONTH, 1);
+                    second_dose = sdf.format(calendar.getTime());
+                    drID2.setItems(getAvailableVaccinators(second_dose));
+                } else {
+                    drID2.setItems(vacc);
+                }
+                secondDose.getEditor().setText(second_dose);
+            }
+
         } catch (ParseException e) {
             e.printStackTrace();
         }

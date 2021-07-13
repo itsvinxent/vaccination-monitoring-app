@@ -13,7 +13,7 @@
 
 <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="560.0" prefWidth="679.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.frontend.controllers.addPatient">
    <children>
-      <AnchorPane fx:id="main" prefHeight="559.0" prefWidth="679.0" style="-fx-background-color: #0e2a47;" visible="false">
+      <AnchorPane fx:id="main" prefHeight="559.0" prefWidth="679.0" style="-fx-background-color: #0e2a47;">
          <children>
             <TextField fx:id="patientLName" layoutX="197.0" layoutY="78.0" prefHeight="25.0" prefWidth="334.0" promptText="Last Name" />
             <TextField fx:id="patientFName" layoutX="197.0" layoutY="39.0" prefHeight="25.0" prefWidth="334.0" promptText="First Name" />
@@ -90,7 +90,7 @@
             <DropShadow />
          </effect>
       </AnchorPane>
-      <AnchorPane fx:id="mainupd" prefHeight="559.0" prefWidth="679.0" style="-fx-background-color: #0e2a47;">
+      <AnchorPane fx:id="mainupd" prefHeight="559.0" prefWidth="679.0" style="-fx-background-color: #0e2a47;" visible="false">
          <children>
             <Label layoutX="85.0" layoutY="106.0" text="First Name:" textFill="#f5f4f4">
                <font>

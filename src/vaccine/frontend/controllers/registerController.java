@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
@@ -24,6 +25,7 @@ import vaccine.backend.dao.accountDAO;
 import vaccine.backend.dao.doctorDAO;
 import vaccine.backend.dao.scheduleDAO;
 import vaccine.backend.dao.staffDAO;
+import vaccine.backend.util.AES256;
 
 public class registerController {
     // Initialize UI components
@@ -45,6 +47,8 @@ public class registerController {
     Account account = null;
     Doctor doctors = null;
     Staff staff = null;
+
+    String decryptedPass;
 
     /**
      * Creates an ObservableList that contains the combo box input options for schedule
@@ -68,10 +72,11 @@ public class registerController {
         if (chkThurs.isSelected()) days++;
         if (chkFri.isSelected()) days++;
         if (chkSat.isSelected()) days++;
+        System.out.println(days);
 
         if(doctor.isSelected()){
             if(fname.getText()==""||lname.getText()==""||username.getText()==""||
-                    fname.getText().matches(".*[^a-zA-Z].*")||lname.getText().matches(".*[^a-zA-Z].*")||days<3){
+                    fname.getText().matches(".*[^a-z A-Z].*")||lname.getText().matches(".*[^a-z A-Z].*")||days<=2){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setContentText("Please Fill in all the details and correct format. Select at least three (3) days for the schedule");
                 alert.show();
@@ -82,7 +87,7 @@ public class registerController {
         }
         else if(medstaff.isSelected()){
             if(fname.getText()==""||lname.getText()==""||username.getText()==""||
-                    fname.getText().matches(".*[^a-zA-Z].*")||lname.getText().matches(".*[^a-zA-Z].*")){
+                    fname.getText().matches(".*[^a-z A-Z].*")||lname.getText().matches(".*[^a-z A-Z].*")){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setContentText("Please Fill in all the details and correct format");
                 alert.show();
@@ -114,6 +119,9 @@ public class registerController {
                 else if (medstaff.isSelected())
                     usertype = medstaff.getText().toLowerCase(Locale.ROOT);
 
+                // Generates a random salt
+                String salt = AES256.generateSalt();
+
                 // Checks if the Confirm Password field matches the Password Field.
                 if (!pass.equals(cpass)) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -121,8 +129,9 @@ public class registerController {
                     alert.show();
                 } else {
                     if (accountDAO.getUserIDByUsername(user) == 0) {
+                        pass = AES256.securePassword(pass, salt, true);
                         // Creates an Account object, which is sent as a parameter in the addAccount method
-                        Account account = new Account(user, pass, usertype);
+                        Account account = new Account(user, pass, usertype, salt);
                         int id = accountDAO.addAccount(account);
 
                         // Checks if the record is inserted
@@ -153,12 +162,12 @@ public class registerController {
                 registerButton.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
             }
 
-        } catch (IOException exception) {
+        } catch (IOException | NoSuchAlgorithmException exception) {
             exception.printStackTrace();
         }
     }
 
-    public void updateAccount(ActionEvent event) {
+    public void updateAccount(ActionEvent event) throws NoSuchAlgorithmException {
         // Get values of input fields.
         // TODO: Input Validation for all fields. (Empty or Incorrect data type)
 
@@ -177,18 +186,25 @@ public class registerController {
                 usertype = medstaff.getText().toLowerCase(Locale.ROOT);
 
             // Creates an Account object, which is sent as a parameter in the updateAccount method
-            Account a = new Account(account.getUserID(), user, pass, usertype);
+            String salt;
+            if (!(pass.equals(decryptedPass)) || account.getSalt() == null){
+                salt = AES256.generateSalt();
+            }else{
+                salt = account.getSalt();
+            }
+
+            pass = AES256.securePassword(pass,salt,true);
+            Account a = new Account(account.getUserID(), user, pass, usertype, salt);
             int id = accountDAO.updateAccount(a);
 
             // Use the returned ID as a foreign key
             // for updating the corresponding doctor_info or staff_info row
             String fullname = lName + ", " + fName;
             if (medstaff.isSelected()) {
-                staff.setStaffName(fullname);
+                staff = new Staff(id, staff.getStaffID(), fullname);
                 staffDAO.updateStaff(staff);
             } else {
-                doctors.setDoctorName(fullname);
-                doctors.setSchedule(sched);
+                doctors = new Doctor(id, doctors.getDoctorNum(), fullname, sched);
                 doctorDAO.updateDoctor(doctors);
             }
 
@@ -209,11 +225,21 @@ public class registerController {
             Optional<ButtonType> action = alert.showAndWait();
 
             if (action.get() == ButtonType.OK) {
-                if (scheduleDAO.getPatientByDoctor(account.getUserID()).isEmpty()) {
+                if (account.getUsertype().equals("doctor")){
+                    if (scheduleDAO.getPatientByDoctor(account.getUserID()).isEmpty()) {
+                        accountDAO.deleteAccount(account);
+                        doctorDAO.deleteDoctor(doctors);
+                    } else {
+                        alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setContentText("Error deleting this account. The selected vaccinator has pending patients.");
+                        alert.setTitle("Error");
+                        alert.show();
+                    }
+                } else if (account.getUsertype().equals("medical staff")){
                     accountDAO.deleteAccount(account);
-                } else {
-                    System.out.println("unsuccessful");
+                    staffDAO.deleteStaff(staff);
                 }
+
 
                 Stage stage = (Stage) main.getScene().getWindow();
                 stage.hide();
@@ -252,6 +278,11 @@ public class registerController {
         account = accountDAO.getAccountByUserID(staffID);
         username.setText(account.getUsername());
         password.setText(account.getPassword());
+        if (!account.getUsertype().equals("admin")){
+            String rawPass = account.getPassword();
+            decryptedPass = AES256.securePassword(rawPass, account.getSalt(), false);
+            password.setText(decryptedPass);
+        }
 
         if(account.getUsertype().equals("medical staff")){
             staff = staffDAO.getStaffByUserID(staffID);
@@ -260,7 +291,7 @@ public class registerController {
             String[] fullname = staff.getStaffName().split(",", -2);
             lname.setText(fullname[0].strip());
             fname.setText(fullname[1].strip());
-        }else{
+        }else if(account.getUsertype().equals("doctor")){
             doctors = doctorDAO.getDoctorByUserID(staffID);
             doctor.setSelected(true);
             disableSchedule(false);
@@ -270,11 +301,17 @@ public class registerController {
             if (sched.contains("Wednesday")) chkWed.setSelected(true);
             if (sched.contains("Thursday")) chkThurs.setSelected(true);
             if (sched.contains("Friday")) chkFri.setSelected(true);
-            if (sched.contains("Staurday")) chkSat.setSelected(true);
+            if (sched.contains("Saturday")) chkSat.setSelected(true);
 
             String[] fullname = doctors.getDoctorName().split(",", -2);
             lname.setText(fullname[0].strip());
             fname.setText(fullname[1].strip());
+        } else {
+            disableSchedule(true);
+            fname.setDisable(true);
+            lname.setDisable(true);
+            doctor.setDisable(true);
+            medstaff.setDisable(true);
         }
 
         cpassword.setDisable(true);

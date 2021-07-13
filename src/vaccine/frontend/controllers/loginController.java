@@ -38,17 +38,26 @@ public class loginController {
         String username = usernameTextField.getText();
         String password = passwordTextField.getText();
 
-        Account details = new Account(username, password, "");
+        Account details = new Account(username, password);
         details = accountDAO.validate(details);
-        String usertype = details.getUsertype();
 
-        if (!details.getUsertype().equals("")) {
+        if (details.getUserID() == -1) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Incorrect Password. Try Again");
+            alert.show();
+        } else if (details.getUserID() == 0) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Username does not exist. Contact your administrator to create an account.");
+            alert.show();
+        }
+        else {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/dashboard.fxml"));
             root = loader.load();
             stage = new Stage();
             scene = new Scene(root);
 
             String name;
+            String usertype = details.getUsertype();
             int id = details.getUserID();
             if (usertype.equals("doctor")){
                 Doctor doctor = doctorDAO.getDoctorByUserID(id);
@@ -67,10 +76,6 @@ public class loginController {
             draw.screen(root, stage, scene);
             Stage login = (Stage) main.getScene().getWindow();
             login.close();
-        } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Incorrect Username or Password.");
-            alert.show();
         }
     }
 
