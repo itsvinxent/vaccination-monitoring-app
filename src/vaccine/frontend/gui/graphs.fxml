@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="main" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.frontend.controllers.graphController">
+   <children>
+      <PieChart fx:id="statusG" layoutX="50.0" layoutY="50.0" maxHeight="400.0" maxWidth="500.0" minHeight="400.0" minWidth="500.0" prefHeight="400.0" prefWidth="500.0" />
+      <PieChart fx:id="vaccineG" layoutX="640.0" layoutY="50.0" maxHeight="400.0" maxWidth="500.0" minHeight="400.0" minWidth="500.0" prefHeight="400.0" prefWidth="500.0" />
+      <Label layoutX="542.0" layoutY="125.0" text="Total Patients">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="16.0" />
+         </font>
+      </Label>
+      <Label fx:id="incP" layoutX="254.0" layoutY="490.0" text="Incomplete: " visible="false">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="16.0" />
+         </font>
+      </Label>
+      <Label fx:id="firstP" layoutX="258.0" layoutY="520.0" text="First Dose: " visible="false">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="16.0" />
+         </font>
+      </Label>
+      <Label fx:id="secondP" layoutX="246.0" layoutY="550.0" text="Second Dose: " visible="false">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="16.0" />
+         </font>
+      </Label>
+      <Label fx:id="totalP" layoutX="580.0" layoutY="154.0" prefHeight="120.0" prefWidth="32.0" text="0" textAlignment="CENTER">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="50.0" />
+         </font>
+      </Label>
+      <Label fx:id="vaccineL" layoutX="842.0" layoutY="490.0">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="16.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

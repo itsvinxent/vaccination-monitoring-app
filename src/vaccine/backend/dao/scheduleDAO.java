@@ -253,26 +253,6 @@ public class scheduleDAO {
     }
 
     /**
-     * Method used to determine the number of patients that will be administered with the given vaccine.
-     * @param vaccineID vaccineID of the Vaccine Brand used (getVaccineIDByBrand method in vaccineDAO class)
-     * @return total count of patients
-     */
-    public static int getPatientCountBasedOnVaccineID(int vaccineID) {
-        int count = 0;
-        try {
-            conn = SqliteDBCon.Connector();
-            ps = conn.prepareStatement("SELECT SUM(CASE WHEN vacID = ? THEN 1 ELSE 0 END) AS [Total Patients] FROM schedule_info");
-            ps.setInt(1, vaccineID);
-            rs = ps.executeQuery();
-            count = rs.getInt("Total Patients");
-            conn.close();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-        return count;
-    }
-
-    /**
      * Inserts a new tuple in schedule_info table.
      * @param u Schedule Bean object
      * @return status - If status > 0, SQL query is successful.

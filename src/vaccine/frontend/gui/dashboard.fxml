@@ -47,6 +47,11 @@
                   <Font name="Arial Rounded MT Bold" size="18.0" />
                </font>
             </Button>
+            <Button fx:id="statisticsButton" layoutX="5.0" layoutY="615.0" mnemonicParsing="false" onAction="#graphs" prefHeight="39.0" prefWidth="240.0" style="-fx-background-color: #48ffd5;" text="Statistics" textAlignment="CENTER" textFill="#2f0101">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="18.0" />
+               </font>
+            </Button>
                 <Button layoutX="5.0" layoutY="660.0" mnemonicParsing="false" onAction="#logout" prefHeight="39.0" prefWidth="240.0" style="-fx-background-color: #48ffd5;" text="Logout" textAlignment="CENTER" textFill="#2f0101">
                     <font>
                         <Font name="Arial Rounded MT Bold" size="18.0" />

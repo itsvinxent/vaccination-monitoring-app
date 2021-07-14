@@ -170,7 +170,7 @@ public class patientTable implements Initializable {
             }
         });
         // by default, the table is sorted by status when it is loaded
-        sortTable(patientT, patientStatus);
+        sortTable(patientT, patientStatus, TableColumn.SortType.DESCENDING);
     }
 
     public void reloadVaccineTable() {
@@ -183,10 +183,8 @@ public class patientTable implements Initializable {
         vaccines = vaccineDAO.getAllVaccine();
         vaccineT.setItems(vaccines);
         filterButton.setItems(filters);
-        // by default, the table is sorted by status when it is loaded
-        vaccineIDCol.setSortType(TableColumn.SortType.ASCENDING);
-        vaccineT.getSortOrder().add(vaccineIDCol);
-        vaccineT.sort();
+
+        sortTable(vaccineT, vaccineIDCol, TableColumn.SortType.ASCENDING);
     }
 
     public void reloadStaffTable() {
@@ -199,10 +197,8 @@ public class patientTable implements Initializable {
         accounts = accountDAO.getAllAccounts();
         accountT.setItems(accounts);
         filterButton.setItems(filters);
-        // by default, the table is sorted by status when it is loaded
-        userIDCol.setSortType(TableColumn.SortType.ASCENDING);
-        accountT.getSortOrder().add(userIDCol);
-        accountT.sort();
+
+        sortTable(accountT, userIDCol, TableColumn.SortType.ASCENDING);
     }
 
     public void reloadScheduleTable() {
@@ -213,11 +209,11 @@ public class patientTable implements Initializable {
         dosageCol.setCellValueFactory(new PropertyValueFactory<Schedule, String>("status"));
 
         schedT.setItems(schedules);
-        sortTable(schedT, dosageCol);
+        sortTable(schedT, dosageCol, TableColumn.SortType.DESCENDING);
     }
 
-    public void sortTable(TableView<Schedule> t, TableColumn<Schedule, String> c) {
-        c.setSortType(TableColumn.SortType.DESCENDING);
+    public void sortTable(TableView t, TableColumn c, TableColumn.SortType s) {
+        c.setSortType(s);
         t.getSortOrder().add(c);
         t.sort();
     }
@@ -582,6 +578,18 @@ public class patientTable implements Initializable {
         });
     }
 
+    public void graphs(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("../gui/graphs.fxml"));
+        Stage stage = new Stage();
+        Scene scene = new Scene(root);
+        Stage current = (Stage) main.getScene().getWindow();
+        stage.initOwner(current);
+
+        draw.popUp(root, stage, scene);
+
+
+    }
+
     /**
      * Logs out the user by closing the Main Interface and drawing the Login Interface
      * @throws IOException
@@ -644,6 +652,7 @@ public class patientTable implements Initializable {
         searchBar.clear();
         updatePatientButton.setLayoutX(755);
         filterButton.setLayoutX(865);
+        displayName(id, _name, type);
     }
 
     public void switchtoRecords(ActionEvent event) {
@@ -691,6 +700,7 @@ public class patientTable implements Initializable {
             searchBar.setLayoutX(25);
             filterButton.setLayoutX(900);
         }
+        displayName(id, _name, type);
     }
 
     public void switchtoAccountManagement(ActionEvent event) {
@@ -729,6 +739,7 @@ public class patientTable implements Initializable {
         searchBar.clear();
         filterButton.setLayoutX(865);
 
+        displayName(id, _name, type);
     }
 
     public void switchtoVaccine(ActionEvent event) {
@@ -762,34 +773,92 @@ public class patientTable implements Initializable {
         addVaccineButton.setOpacity(1);
         addVaccineButton.setDisable(false);
 
-        searchBar.setPromptText("Search by Username or User ID");
+        searchBar.setPromptText("Search by Vaccine Brand or Vaccine ID");
         searchBar.setLayoutX(65);
         searchBar.clear();
         filterButton.setLayoutX(865);
 
+        displayName(id, _name, type);
     }
 
     public void search(KeyEvent event) {
         if (recordsButton.getEffect() != null) {
             FilteredList<Schedule> filteredList = new FilteredList<>(patients, b->true);
             searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
-                filteredList.setPredicate(schedule -> {
+                filteredList.setPredicate(row -> {
                     if(newValue == null || newValue.isEmpty()) {
                         return true;
                     }
                     String lowercase = newValue.toLowerCase(Locale.ROOT);
 
-                    if(schedule.getPatientLName().toLowerCase(Locale.ROOT).contains(lowercase))
+                    if(row.getPatientLName().toLowerCase(Locale.ROOT).contains(lowercase) ||
+                            row.getPatientFName().toLowerCase(Locale.ROOT).contains(lowercase))
                         return true;
-                    else return String.valueOf(schedule.getPatientNum()).contains(lowercase);
+                    else return String.valueOf(row.getPatientNum()).contains(lowercase);
                 });
             });
 
             SortedList<Schedule> sortedList = new SortedList<>(filteredList);
             sortedList.comparatorProperty().bind(patientT.comparatorProperty());
             patientT.setItems(sortedList);
-        } else if (scheduleButton.getEffect() != null) {
-            // TODO: Search Schedule Table
+        }
+        else if (scheduleButton.getEffect() != null) {
+            FilteredList<Schedule> filteredList = new FilteredList<>(schedules, b->true);
+            searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+                filteredList.setPredicate(row -> {
+                    if(newValue == null || newValue.isEmpty()) {
+                        return true;
+                    }
+                    String lowercase = newValue.toLowerCase(Locale.ROOT);
+
+                    if(row.getPatientLName().toLowerCase(Locale.ROOT).contains(lowercase) ||
+                            row.getPatientFName().toLowerCase(Locale.ROOT).contains(lowercase))
+                        return true;
+                    else return String.valueOf(row.getPatientNum()).contains(lowercase);
+                });
+            });
+
+            SortedList<Schedule> sortedList = new SortedList<>(filteredList);
+            sortedList.comparatorProperty().bind(schedT.comparatorProperty());
+            schedT.setItems(sortedList);
+        }
+        else if (vaccineInfoButton.getEffect() != null) {
+            FilteredList<Vaccine> filteredList = new FilteredList<>(vaccines, b->true);
+            searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+                filteredList.setPredicate(row -> {
+                    if(newValue == null || newValue.isEmpty()) {
+                        return true;
+                    }
+                    String lowercase = newValue.toLowerCase(Locale.ROOT);
+
+                    if(row.getVaccineBrand().toLowerCase(Locale.ROOT).contains(lowercase))
+                        return true;
+                    else return String.valueOf(row.getVaccineID()).contains(lowercase);
+                });
+            });
+
+            SortedList<Vaccine> sortedList = new SortedList<>(filteredList);
+            sortedList.comparatorProperty().bind(vaccineT.comparatorProperty());
+            vaccineT.setItems(sortedList);
+        }
+        else {
+            FilteredList<Account> filteredList = new FilteredList<>(accounts, b->true);
+            searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+                filteredList.setPredicate(row -> {
+                    if(newValue == null || newValue.isEmpty()) {
+                        return true;
+                    }
+                    String lowercase = newValue.toLowerCase(Locale.ROOT);
+
+                    if(row.getUsername().toLowerCase(Locale.ROOT).contains(lowercase))
+                        return true;
+                    else return String.valueOf(row.getUserID()).contains(lowercase);
+                });
+            });
+
+            SortedList<Account> sortedList = new SortedList<>(filteredList);
+            sortedList.comparatorProperty().bind(accountT.comparatorProperty());
+            accountT.setItems(sortedList);
         }
     }
 

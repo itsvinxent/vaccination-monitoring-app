@@ -99,7 +99,7 @@ public class addVaccine implements Initializable {
             Optional<ButtonType> action = alert.showAndWait();
 
             if (action.get() == ButtonType.OK) {
-                if (scheduleDAO.getPatientCountBasedOnVaccineID(vaccine.getVaccineID()) == 0){
+                if (graphDAO.getPatientCountBasedOnVaccineID(vaccine.getVaccineID()) == 0){
                     vaccineDAO.deleteVaccine(vaccine);
                 } else {
                     alert = new Alert(Alert.AlertType.ERROR);
