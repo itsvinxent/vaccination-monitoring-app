@@ -102,18 +102,14 @@ public class patientTable implements Initializable {
     @FXML
     private TextField searchBar;
     @FXML
-    private Button addPatientButton, updatePatientButton, addAccountButton, addVaccineButton;
+    private Button addPatientButton, updatePatientButton, addAccountButton, addVaccineButton, reloadButton;
     @FXML
     private Button recordsButton, scheduleButton, accountMButton, vaccineInfoButton;
-    @FXML
-    private ComboBox<String> filterButton;
     @FXML
     private Label nameLabel, schedTitle, recordTitle, accountTitle, vaccineTitle;
 
     // Var
     static InnerShadow innerShadow = new InnerShadow();
-    static ObservableList<String> filters =
-            FXCollections.observableArrayList("Vaccine Brand", "Vaccination Status");
     static ObservableList<Schedule> patients;
     static ObservableList<Schedule> schedules;
     static ObservableList<Vaccine> vaccines;
@@ -151,7 +147,6 @@ public class patientTable implements Initializable {
         patientStatus.setCellValueFactory(new PropertyValueFactory<Schedule, String>("status"));
         // Sets the ObservableList that contains the records.
         patientT.setItems(patients);
-        filterButton.setItems(filters);
         // set Row Color to complete, incomplete
         patientT.setRowFactory(tv -> new TableRow<Schedule>() {
             @Override
@@ -182,7 +177,6 @@ public class patientTable implements Initializable {
         // Sets the ObservableList that contains the records.
         vaccines = vaccineDAO.getAllVaccine();
         vaccineT.setItems(vaccines);
-        filterButton.setItems(filters);
 
         sortTable(vaccineT, vaccineIDCol, TableColumn.SortType.ASCENDING);
     }
@@ -196,7 +190,6 @@ public class patientTable implements Initializable {
         // Sets the ObservableList that contains the records.
         accounts = accountDAO.getAllAccounts();
         accountT.setItems(accounts);
-        filterButton.setItems(filters);
 
         sortTable(accountT, userIDCol, TableColumn.SortType.ASCENDING);
     }
@@ -287,7 +280,7 @@ public class patientTable implements Initializable {
                 addPatientButton.setOpacity(0);
                 setTableColumnSizes(false);
                 searchBar.setLayoutX(65);
-                filterButton.setLayoutX(865);
+                reloadButton.setLayoutX(865);
                 patients = scheduleDAO.getPatientByDoctor(id);
                 schedules = scheduleDAO.getCurrentScheduleByDoctor(currentDate, id);
                 break;
@@ -630,8 +623,6 @@ public class patientTable implements Initializable {
 
         addPatientButton.setOpacity(0);
         addPatientButton.setDisable(true);
-        filterButton.setOpacity(1);
-        filterButton.setDisable(false);
         addAccountButton.setOpacity(0);
         addAccountButton.setDisable(true);
         addVaccineButton.setOpacity(0);
@@ -642,7 +633,7 @@ public class patientTable implements Initializable {
         searchBar.setLayoutX(65);
         searchBar.clear();
         updatePatientButton.setLayoutX(755);
-        filterButton.setLayoutX(865);
+        reloadButton.setLayoutX(865);
         displayName(id, _name, type);
     }
 
@@ -677,8 +668,6 @@ public class patientTable implements Initializable {
         }
         updatePatientButton.setOpacity(0);
         updatePatientButton.setDisable(true);
-        filterButton.setOpacity(1);
-        filterButton.setDisable(false);
         addAccountButton.setOpacity(0);
         addAccountButton.setDisable(true);
         addVaccineButton.setOpacity(0);
@@ -689,7 +678,7 @@ public class patientTable implements Initializable {
         searchBar.clear();
         if (!type.equals("doctor")) {
             searchBar.setLayoutX(25);
-            filterButton.setLayoutX(900);
+            reloadButton.setLayoutX(900);
         }
         displayName(id, _name, type);
     }
@@ -718,8 +707,6 @@ public class patientTable implements Initializable {
         addPatientButton.setDisable(true);
         updatePatientButton.setDisable(true);
         updatePatientButton.setOpacity(0);
-        filterButton.setOpacity(1);
-        filterButton.setDisable(false);
         addAccountButton.setOpacity(1);
         addAccountButton.setDisable(false);
         addVaccineButton.setOpacity(0);
@@ -728,7 +715,7 @@ public class patientTable implements Initializable {
         searchBar.setPromptText("Search by Username or User ID");
         searchBar.setLayoutX(65);
         searchBar.clear();
-        filterButton.setLayoutX(865);
+        reloadButton.setLayoutX(865);
 
         displayName(id, _name, type);
     }
@@ -757,8 +744,6 @@ public class patientTable implements Initializable {
         addPatientButton.setDisable(true);
         updatePatientButton.setDisable(true);
         updatePatientButton.setOpacity(0);
-        filterButton.setOpacity(1);
-        filterButton.setDisable(false);
         addAccountButton.setOpacity(0);
         addAccountButton.setDisable(true);
         addVaccineButton.setOpacity(1);
@@ -767,7 +752,7 @@ public class patientTable implements Initializable {
         searchBar.setPromptText("Search by Vaccine Brand or Vaccine ID");
         searchBar.setLayoutX(65);
         searchBar.clear();
-        filterButton.setLayoutX(865);
+        reloadButton.setLayoutX(865);
 
         displayName(id, _name, type);
     }
@@ -851,6 +836,10 @@ public class patientTable implements Initializable {
             sortedList.comparatorProperty().bind(accountT.comparatorProperty());
             accountT.setItems(sortedList);
         }
+    }
+
+    public void reloadTables() {
+        displayName(id, _name, type);
     }
 
 }

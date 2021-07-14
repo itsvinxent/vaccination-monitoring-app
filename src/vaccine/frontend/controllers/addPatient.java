@@ -60,7 +60,7 @@ public class addPatient implements Initializable {
     }
 
     public boolean errorChecker(){
-        if(patientFName.getText()==""||patientFName.getText().matches(".*[^a-zA-Z].*")||patientLName.getText()==""||
+        if(patientFName.getText()==""||patientFName.getText().matches(".*[^a-z A-Z].*")||patientLName.getText()==""||
         patientLName.getText().matches(".*[^a-z A-Z].*")||cityAddress.getText()==""||cityAddress.getText().matches(".*[^a-z A-Z].*")||
         vaccineID.getValue()==null||drID.getValue()==null||schedule.getValue()==null||age.getText()==""||
         !age.getText().matches(".*[^a-z A-Z].*")||sex.getText()==""||sex.getText().matches(".*[^a-z A-Z].*")||
