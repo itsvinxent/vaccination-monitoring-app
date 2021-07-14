@@ -63,10 +63,10 @@ public class addPatient implements Initializable {
         if(patientFName.getText()==""||patientFName.getText().matches(".*[^a-z A-Z].*")||patientLName.getText()==""||
         patientLName.getText().matches(".*[^a-z A-Z].*")||cityAddress.getText()==""||cityAddress.getText().matches(".*[^a-z A-Z].*")||
         vaccineID.getValue()==null||drID.getValue()==null||schedule.getValue()==null||age.getText()==""||
-        !age.getText().matches(".*[^a-z A-Z].*")||sex.getText()==""||sex.getText().matches(".*[^a-z A-Z].*")||
-        drID2.getValue()==null){
+        !age.getText().matches(".*[^a-z A-Z].*")||sex.getText()==""||sex.getText().matches(".*[^mMfF].*")||sex.getText().length()>1||
+        drID2.getValue()==null||Integer.parseInt(age.getText())<18){
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Please Fill in all the details and correct format");
+            alert.setContentText("Please Fill in all the details and correct format\n Vaccines are only allowed for 18 years old and above");
             alert.show();
         }else{
             return true;
@@ -112,7 +112,7 @@ public class addPatient implements Initializable {
                     patientLName.getText(),
                     patientFName.getText(),
                     age.getText(),
-                    sex.getText(),
+                    capitalize(sex.getText()),
                     capitalize(cityAddress.getText()),
                     vaccineID.getValue(),
                     first_dose,
@@ -147,7 +147,7 @@ public class addPatient implements Initializable {
                     patientLName.getText(),
                     patientFName.getText(),
                     age.getText(),
-                    sex.getText(),
+                    capitalize(sex.getText()),
                     capitalize(cityAddress.getText()),
                     vaccineID.getValue(),
                     firstDose.getEditor().getText(),
@@ -221,6 +221,16 @@ public class addPatient implements Initializable {
                     drID2.setItems(vacc);
                 }
                 secondDose.getEditor().setText(second_dose);
+
+                if(getAvailableVaccinators(first_dose).isEmpty()||getAvailableVaccinators(second_dose).isEmpty()){
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setContentText("No available vaccinators for the date. Please select a new date.");
+                    alert.show();
+                    firstDose.getEditor().setText(null);
+                    secondDose.getEditor().setText(null);
+                    drID.setItems(null);
+                    drID2.setItems(null);
+                }
             }
 
         } catch (ParseException e) {

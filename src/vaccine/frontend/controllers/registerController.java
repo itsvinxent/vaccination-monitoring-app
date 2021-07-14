@@ -74,10 +74,10 @@ public class registerController {
         if (chkSat.isSelected()) days++;
 
         if(doctor.isSelected()){
-            if(fname.getText()==""||lname.getText()==""||username.getText()==""||
+            if(fname.getText()==""||lname.getText()==""||username.getText()==""||username.getText().length()<5||password.getText().length()<5||
                     fname.getText().matches(".*[^a-z A-Z].*")||lname.getText().matches(".*[^a-z A-Z].*")||days<=2){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setContentText("Please Fill in all the details and correct format. Select at least three (3) days for the schedule");
+                alert.setContentText("Please Fill in all the details and correct format.\n Select at least three (3) days for the schedule");
                 alert.show();
             }
             else{
@@ -85,7 +85,7 @@ public class registerController {
             }
         }
         else if(medstaff.isSelected()){
-            if(fname.getText()==""||lname.getText()==""||username.getText()==""||
+            if(fname.getText()==""||lname.getText()==""||username.getText()==""||username.getText().length()<5||password.getText().length()<5||
                     fname.getText().matches(".*[^a-z A-Z].*")||lname.getText().matches(".*[^a-z A-Z].*")){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setContentText("Please Fill in all the details and correct format");
@@ -226,7 +226,7 @@ public class registerController {
             Optional<ButtonType> action = alert.showAndWait();
 
             if (action.get() == ButtonType.OK) {
-                if (account.getUsertype().equals("doctor")){
+                if (account.getUsertype().equals("vaccinator")){
                     if (scheduleDAO.getPatientByDoctor(account.getUserID()).isEmpty()) {
                         accountDAO.deleteAccount(account);
                         doctorDAO.deleteDoctor(doctors);
@@ -297,7 +297,7 @@ public class registerController {
             String[] fullname = staff.getStaffName().split(",", -2);
             lname.setText(fullname[0].strip());
             fname.setText(fullname[1].strip());
-        }else if(account.getUsertype().equals("doctor")){
+        }else if(account.getUsertype().equals("vaccinator")){
             doctors = doctorDAO.getDoctorByUserID(staffID);
             doctor.setSelected(true);
             disableSchedule(false);

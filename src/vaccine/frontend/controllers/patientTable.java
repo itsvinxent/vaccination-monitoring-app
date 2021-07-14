@@ -274,8 +274,8 @@ public class patientTable implements Initializable {
         type = usertype;
         id = ID;
         switch (type) {
-            case "doctor":
-                msg = "Welcome, Dr. " + name;
+            case "vaccinator":
+                msg = "Welcome, " + name;
                 addPatientButton.setDisable(true);
                 addPatientButton.setOpacity(0);
                 setTableColumnSizes(false);
@@ -399,7 +399,7 @@ public class patientTable implements Initializable {
     public void updatePopUp(MouseEvent event) throws IOException {
         try {
             if (patientT.getSelectionModel().getSelectedItem() != null) {
-                if (event.getClickCount() == 2 && (!type.equals("doctor"))) {
+                if (event.getClickCount() == 2 && (!type.equals("vaccinator"))) {
                     FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("../gui/addPatient.fxml")));
                     Parent root = loader.load();
                     Scene scene = new Scene(root);
@@ -480,7 +480,7 @@ public class patientTable implements Initializable {
 
     public void getSchedule(MouseEvent event) throws IOException {
         if (schedT.getSelectionModel().getSelectedItem() != null) {
-            if (event.getClickCount() == 2 && (!type.equals("doctor"))) {
+            if (event.getClickCount() == 2 && (!type.equals("vaccinator"))) {
                 FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("../gui/addPatient.fxml")));
                 Parent root = loader.load();
                 Scene scene = new Scene(root);
@@ -499,7 +499,7 @@ public class patientTable implements Initializable {
                 });
                 stage.getOnHidden().handle(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
             } else {
-                if (type.equals("doctor")){
+                if (type.equals("vaccinator")){
                     selectedSchedule = scheduleDAO.getPatientByPatientID(
                             schedT.getSelectionModel().getSelectedItem().getPatientNum()
                     );
@@ -554,7 +554,7 @@ public class patientTable implements Initializable {
                 schedT.getSelectionModel().clearSelection();
                 vaccineT.getSelectionModel().clearSelection();
                 accountT.getSelectionModel().clearSelection();
-                if (type.equals("doctor")){
+                if (type.equals("vaccinator")){
                     updatePatientButton.setOpacity(0);
                     updatePatientButton.setDisable(true);
                 }
@@ -659,7 +659,7 @@ public class patientTable implements Initializable {
         accountMButton.setEffect(null);
         vaccineInfoButton.setEffect(null);
 
-        if (type.equals("doctor")){
+        if (type.equals("vaccinator")){
             addPatientButton.setOpacity(0);
             addPatientButton.setDisable(true);
         }else{
@@ -676,7 +676,7 @@ public class patientTable implements Initializable {
         // Adjust other components
         searchBar.setPromptText("Search by Patient Name or Patient ID");
         searchBar.clear();
-        if (!type.equals("doctor")) {
+        if (!type.equals("vaccinator")) {
             searchBar.setLayoutX(25);
             reloadButton.setLayoutX(900);
         }

@@ -64,7 +64,7 @@
                <columns>
                   <TableColumn fx:id="timeCol" minWidth="40.0" prefWidth="150.0" resizable="false" text="Time" />
                   <TableColumn fx:id="patientNameCol" minWidth="100.0" prefWidth="200.0" resizable="false" text="Patient Name" />
-                  <TableColumn fx:id="docNameCol" minWidth="100.0" prefWidth="200.0" resizable="false" text="Assigned Doctor" visible="false" />
+                  <TableColumn fx:id="docNameCol" minWidth="100.0" prefWidth="200.0" resizable="false" text="Vaccinator" visible="false" />
                   <TableColumn fx:id="vaccineCol" minWidth="50.0" prefWidth="175.0" resizable="false" text="Vaccine" />
                   <TableColumn fx:id="dosageCol" minWidth="50.0" prefWidth="175.0" resizable="false" text="Dosage" />
                </columns>
@@ -75,18 +75,18 @@
                   <TableColumn fx:id="patientName" prefWidth="150.0" resizable="false" text="Name" />
                   <TableColumn fx:id="vaccineBrand" prefWidth="125.0" resizable="false" text="Vaccine" />
                   <TableColumn fx:id="firstDose" prefWidth="125.0" resizable="false" text="1st Dose" />
-                  <TableColumn fx:id="doctorName" prefWidth="150.0" resizable="false" text="Assigned Doctor" />
+                  <TableColumn fx:id="doctorName" prefWidth="150.0" resizable="false" text="Vaccinator" />
                   <TableColumn fx:id="secondDose" prefWidth="125.0" resizable="false" text="2nd Dose" />
-                  <TableColumn fx:id="doctorName1" prefWidth="150.0" resizable="false" text="Assigned Doctor" />
+                  <TableColumn fx:id="doctorName1" prefWidth="150.0" resizable="false" text="Vaccinator" />
                   <TableColumn fx:id="patientStatus" prefWidth="112.0" resizable="false" text="Status" />
                </columns>
             </TableView>
             <TableView fx:id="accountT" disable="true" layoutX="65.0" layoutY="180.0" onMouseClicked="#staffUpdatePopUp" opacity="0.0" prefHeight="500.0" prefWidth="900.0">
                <columns>
-                  <TableColumn fx:id="userIDCol" minWidth="40.0" prefWidth="140.0" resizable="false" text="User ID" />
-                  <TableColumn fx:id="usernameCol" minWidth="100.0" prefWidth="200.0" resizable="false" text="Username" />
-                  <TableColumn fx:id="passwordCol" minWidth="100.0" prefWidth="200.0" resizable="false" text="Password" />
-                  <TableColumn fx:id="usertypeCol" minWidth="50.0" prefWidth="180.0" resizable="false" text="Usertype" />
+                  <TableColumn fx:id="userIDCol" minWidth="40.0" prefWidth="171.0" resizable="false" text="User ID" />
+                  <TableColumn fx:id="usernameCol" minWidth="100.0" prefWidth="263.0" resizable="false" text="Username" />
+                  <TableColumn fx:id="passwordCol" minWidth="100.0" prefWidth="206.0" resizable="false" text="Password" />
+                  <TableColumn fx:id="usertypeCol" minWidth="50.0" prefWidth="259.0" resizable="false" text="Usertype" />
                </columns>
             </TableView>
             <TableView fx:id="vaccineT" disable="true" layoutX="65.0" layoutY="180.0" onMouseClicked="#vaccineUpdatePopUp" opacity="0.0" prefHeight="500.0" prefWidth="900.0">
