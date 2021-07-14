@@ -72,7 +72,6 @@ public class registerController {
         if (chkThurs.isSelected()) days++;
         if (chkFri.isSelected()) days++;
         if (chkSat.isSelected()) days++;
-        System.out.println(days);
 
         if(doctor.isSelected()){
             if(fname.getText()==""||lname.getText()==""||username.getText()==""||
@@ -96,6 +95,7 @@ public class registerController {
                 return true;
             }
         }
+        else return true;
         return false;
     }
 
@@ -184,10 +184,11 @@ public class registerController {
                 usertype = doctor.getText().toLowerCase(Locale.ROOT);
             else if (medstaff.isSelected())
                 usertype = medstaff.getText().toLowerCase(Locale.ROOT);
-
+            else
+                usertype = "admin";
             // Creates an Account object, which is sent as a parameter in the updateAccount method
             String salt;
-            if (!(pass.equals(decryptedPass)) || account.getSalt() == null){
+            if (!(pass.equals(decryptedPass)) || account.getSalt() == null || usertype.equals("admin")){
                 salt = AES256.generateSalt();
             }else{
                 salt = account.getSalt();
@@ -203,7 +204,7 @@ public class registerController {
             if (medstaff.isSelected()) {
                 staff = new Staff(id, staff.getStaffID(), fullname);
                 staffDAO.updateStaff(staff);
-            } else {
+            } else if(doctor.isSelected()) {
                 doctors = new Doctor(id, doctors.getDoctorNum(), fullname, sched);
                 doctorDAO.updateDoctor(doctors);
             }
@@ -238,6 +239,11 @@ public class registerController {
                 } else if (account.getUsertype().equals("medical staff")){
                     accountDAO.deleteAccount(account);
                     staffDAO.deleteStaff(staff);
+                } else {
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Error deleting this account. You cannot delete the Administrator Account.");
+                    alert.setTitle("Error");
+                    alert.show();
                 }
 
 

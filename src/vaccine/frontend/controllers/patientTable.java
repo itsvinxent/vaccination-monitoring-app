@@ -292,13 +292,12 @@ public class patientTable implements Initializable {
                 schedules = scheduleDAO.getCurrentScheduleByDoctor(currentDate, id);
                 break;
 
-            case "medstaff":
+            case "medical staff":
                 msg = "Welcome, " + name;
                 vaccineInfoButton.setDisable(false);
                 vaccineInfoButton.setOpacity(1);
                 setTableColumnSizes(true);
                 patients = scheduleDAO.getAllPatients();
-                System.out.println("a");
                 schedules = scheduleDAO.getCurrentSchedule(currentDate);
                 break;
 
@@ -311,7 +310,6 @@ public class patientTable implements Initializable {
                 vaccineInfoButton.setLayoutY(332);
                 setTableColumnSizes(true);
                 patients = scheduleDAO.getAllPatients();
-                System.out.println("a");
                 schedules = scheduleDAO.getCurrentSchedule(currentDate);
                 break;
         }
@@ -343,7 +341,6 @@ public class patientTable implements Initializable {
 
             stage.setOnHidden(new EventHandler<WindowEvent>() {
                 public void handle(WindowEvent we) {
-                    //reloadRecordTable();
                     displayName(id,_name,type);
                 }
             });
@@ -422,7 +419,6 @@ public class patientTable implements Initializable {
                     addPatient.setFieldContent(patientT.getSelectionModel().getSelectedItem().getPatientNum());
                     stage.setOnHidden(new EventHandler<WindowEvent>() {
                         public void handle(WindowEvent we) {
-                            //reloadRecordTable();
                             displayName(id, _name, type);
                         }
                     });
@@ -450,8 +446,6 @@ public class patientTable implements Initializable {
                 addVaccine.setFieldContent(vaccineT.getSelectionModel().getSelectedItem().getVaccineID());
                 stage.setOnHidden(new EventHandler<WindowEvent>() {
                     public void handle(WindowEvent we) {
-                        System.out.println("nice");
-                        reloadVaccineTable();
                         displayName(id,_name,type);
                     }
                 });
@@ -479,8 +473,6 @@ public class patientTable implements Initializable {
                 registerController.setFieldContent(accountT.getSelectionModel().getSelectedItem().getUserID());
                 stage.setOnHidden(new EventHandler<WindowEvent>() {
                     public void handle(WindowEvent we) {
-                        System.out.println("nice");
-                        reloadStaffTable();
                         displayName(id,_name,type);
                     }
                 });
@@ -509,7 +501,6 @@ public class patientTable implements Initializable {
                 addPatient.setUpdateStatusFields(schedT.getSelectionModel().getSelectedItem().getPatientNum());
                 stage.setOnHidden(new EventHandler<WindowEvent>() {
                     public void handle(WindowEvent we) {
-                        //reloadRecordTable();
                         displayName(id,_name,type);
                     }
                 });
