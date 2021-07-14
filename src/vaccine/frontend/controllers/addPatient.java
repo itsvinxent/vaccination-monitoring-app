@@ -14,6 +14,8 @@ import vaccine.backend.classes.Schedule;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.*;
 
 import vaccine.backend.dao.*;
@@ -35,7 +37,7 @@ public class addPatient implements Initializable {
     private Button saveEntry, updateEntry, deleteEntry, updatestatus;
 
     @FXML
-    private Label upatientFName, upatientLName, upatientage, upatientsex;
+    private Label upatientID, upatientFName, upatientLName, upatientage, upatientsex;
 
     @FXML
     private RadioButton ufirstdose, useconddose, uincomplete;
@@ -56,7 +58,17 @@ public class addPatient implements Initializable {
         ObservableList<String> sched = FXCollections.observableArrayList("AM", "PM");
         vaccineID.setItems(vaccines);
         schedule.setItems(sched);
+        disableSunday();
+    }
 
+    public void disableSunday() {
+        firstDose.setDayCellFactory(dp -> new DateCell() {
+            public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                LocalDate today = LocalDate.now();
+                setDisable(empty || item.getDayOfWeek() == DayOfWeek.SUNDAY || item.compareTo(today) < 0);
+            }
+        });
     }
 
     public boolean errorChecker(){
@@ -309,6 +321,7 @@ public class addPatient implements Initializable {
 
     public void setUpdateStatusFields(int patientID) {
         patient = scheduleDAO.getPatientByPatientID(patientID);
+        upatientID.setText(upatientID.getText() + patient.getPatientNum());
         upatientFName.setText(patient.getPatientFName());
         upatientLName.setText(patient.getPatientLName());
         upatientage.setText(patient.getAge());

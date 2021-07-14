@@ -59,7 +59,7 @@ public class loginController {
             String name;
             String usertype = details.getUsertype();
             int id = details.getUserID();
-            if (usertype.equals("doctor")){
+            if (usertype.equals("vaccinator")){
                 Doctor doctor = doctorDAO.getDoctorByUserID(id);
                 name = doctor.getDoctorName();
             }
