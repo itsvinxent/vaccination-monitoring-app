@@ -52,4 +52,19 @@ public class graphDAO {
         }
         return count;
     }
+
+    public static int getPatientCountBasedOnVaccineIDandStatus(int vaccineID) {
+        int count = 0;
+        try {
+            conn = SqliteDBCon.Connector();
+            ps = conn.prepareStatement("SELECT SUM(CASE WHEN vacID = ? and status='incomplete' or status='partial' THEN 1 ELSE 0 END) AS [Total Patients] FROM schedule_info");
+            ps.setInt(1, vaccineID);
+            rs = ps.executeQuery();
+            count = rs.getInt("Total Patients");
+            conn.close();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return count;
+    }
 }

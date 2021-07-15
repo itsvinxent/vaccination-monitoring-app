@@ -239,4 +239,26 @@ public class accountDAO {
             exception.printStackTrace();
         }
     }
+
+    public static void createAdmin() {
+        int id = 0;
+        try {
+            conn = SqliteDBCon.Connector();
+            ps = conn.prepareStatement("select * from user_info where usertype='admin'");
+            rs = ps.executeQuery();
+            if (!rs.next()){
+                String salt = AES256.generateSalt();
+                Account a = new Account("admin",
+                        AES256.securePassword("admin",salt,true),
+                        "admin",
+                        salt);
+                id=addAccount(a);
+                setLoginStatus(id,"out");
+            }
+            conn.close();
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+    }
 }

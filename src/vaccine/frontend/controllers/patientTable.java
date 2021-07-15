@@ -1,6 +1,5 @@
 package vaccine.frontend.controllers;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -202,6 +201,7 @@ public class patientTable implements Initializable {
         dosageCol.setCellValueFactory(new PropertyValueFactory<Schedule, String>("status"));
 
         schedT.setItems(schedules);
+        sortTable(schedT, timeCol, TableColumn.SortType.ASCENDING);
         sortTable(schedT, dosageCol, TableColumn.SortType.DESCENDING);
     }
 

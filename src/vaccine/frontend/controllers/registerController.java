@@ -286,11 +286,11 @@ public class registerController {
         account = accountDAO.getAccountByUserID(staffID);
         username.setText(account.getUsername());
         password.setText(account.getPassword());
-        if (!account.getUsertype().equals("admin")){
-            String rawPass = account.getPassword();
-            decryptedPass = AES256.securePassword(rawPass, account.getSalt(), false);
-            password.setText(decryptedPass);
-        }
+
+        String rawPass = account.getPassword();
+        decryptedPass = AES256.securePassword(rawPass, account.getSalt(), false);
+        password.setText(decryptedPass);
+
 
         if(account.getUsertype().equals("medical staff")){
             staff = staffDAO.getStaffByUserID(staffID);

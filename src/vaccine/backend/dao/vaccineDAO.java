@@ -25,12 +25,11 @@ public class vaccineDAO {
      * @return ObservableList of Vaccine Bean object/s.
      * if null, the vaccine_info table is empty or the query failed to execute.
      */
-
     public static ObservableList<Vaccine> getAllVaccine() {
         ObservableList<Vaccine> list = FXCollections.observableArrayList();
         try {
             conn = SqliteDBCon.Connector();
-            ps = conn.prepareStatement("select * from vaccine_info where storageAmount != 0");
+            ps = conn.prepareStatement("select * from vaccine_info");
             rs = ps.executeQuery();
             while(rs.next()) {
                 list.add(new Vaccine(rs.getInt("vaccineID"),
@@ -50,7 +49,7 @@ public class vaccineDAO {
         ObservableList<String> list = FXCollections.observableArrayList();
         try {
             conn = SqliteDBCon.Connector();
-            ps = conn.prepareStatement("select vaccineBrand from vaccine_info");
+            ps = conn.prepareStatement("select vaccineBrand from vaccine_info where storageAmount != 0");
             rs = ps.executeQuery();
             while(rs.next()) {
                 list.add(rs.getString("vaccineBrand"));
