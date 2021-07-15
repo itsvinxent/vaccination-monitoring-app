@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="main" prefHeight="585.0" prefWidth="763.0" style="-fx-background-color: #0e2a47;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.frontend.controllers.registerController">
+<AnchorPane fx:id="main" prefHeight="585.0" prefWidth="763.0" style="-fx-background-color: #0e2a47;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.frontend.controllers.registerController">
    <children>
       <Button fx:id="registerButton" alignment="CENTER" layoutX="284.0" layoutY="460.0" mnemonicParsing="false" onAction="#register" prefHeight="58.0" prefWidth="171.0" style="-fx-background-color: #48ffd5;" text="Register">
          <font>
@@ -39,14 +45,14 @@
             <Font name="Arial Rounded MT Bold" size="20.0" />
          </font>
       </Label>
-      <TextField fx:id="username" layoutX="250.0" layoutY="293.0" prefHeight="30.0" prefWidth="410.0" />
-      <PasswordField fx:id="password" layoutX="250.0" layoutY="343.0" prefHeight="30.0" prefWidth="410.0" />
+      <TextField fx:id="username" layoutX="250.0" layoutY="293.0" prefHeight="30.0" prefWidth="410.0" promptText="5 - 10 characters only" />
+      <PasswordField fx:id="password" layoutX="250.0" layoutY="343.0" prefHeight="30.0" prefWidth="410.0" promptText="5 and above characters only" />
       <Label fx:id="cpasswordLabel" layoutX="60.0" layoutY="393.0" prefHeight="33.0" prefWidth="142.0" text="Confirm Pass:" textFill="#f8f6f6">
          <font>
             <Font name="Arial Rounded MT Bold" size="20.0" />
          </font>
       </Label>
-      <PasswordField fx:id="cpassword" layoutX="250.0" layoutY="393.0" prefHeight="30.0" prefWidth="410.0" />
+      <PasswordField fx:id="cpassword" layoutX="250.0" layoutY="393.0" prefHeight="30.0" prefWidth="410.0" promptText="Re-enter password" />
       <Button alignment="CENTER" layoutX="489.0" layoutY="458.0" mnemonicParsing="false" onAction="#cancel" prefHeight="62.0" prefWidth="171.0" style="-fx-background-color: #48ffd5;" text="Cancel">
          <font>
             <Font name="Arial Rounded MT Bold" size="20.0" />

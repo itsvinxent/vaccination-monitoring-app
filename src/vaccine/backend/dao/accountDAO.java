@@ -114,12 +114,28 @@ public class accountDAO {
                 }
 
                 if(user.equals(username) && pass.equals(password)){
-                    u.setUserID(rs.getInt("userID"));
-                    u.setUsertype(rs.getString("usertype"));
-                    u.setUsername(username);
-                    u.setPassword(password);
-                    conn.close();
-                    return u;
+                    if (!rs.getString("usertype").equals("admin")) {
+                        if (rs.getString("loginstatus").equals("out") ) {
+                            u.setUserID(rs.getInt("userID"));
+                            u.setUsertype(rs.getString("usertype"));
+                            u.setUsername(username);
+                            u.setPassword(password);
+                            conn.close();
+                            return u;
+                        } else {
+                            conn.close();
+                            u.setUserID(-2);
+                            return u;
+                        }
+                    } else {
+                        u.setUserID(rs.getInt("userID"));
+                        u.setUsertype(rs.getString("usertype"));
+                        u.setUsername(username);
+                        u.setPassword(password);
+                        conn.close();
+                        return u;
+                    }
+
                 } else {
                     conn.close();
                     u.setUserID(-1);
@@ -209,5 +225,18 @@ public class accountDAO {
             exception.printStackTrace();
         }
         return list;
+    }
+
+    public static void setLoginStatus(int userID, String stat) {
+        try {
+            conn = SqliteDBCon.Connector();
+            ps = conn.prepareStatement("update user_info set loginstatus=? where userID = ?");
+            ps.setString(1, stat);
+            ps.setInt(2, userID);
+            ps.executeUpdate();
+            conn.close();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 }

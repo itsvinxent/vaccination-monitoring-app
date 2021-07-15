@@ -74,8 +74,8 @@ public class registerController {
         if (chkSat.isSelected()) days++;
 
         if(doctor.isSelected()){
-            if(fname.getText()==""||lname.getText()==""||username.getText()==""||username.getText().length()<5||password.getText().length()<5||
-                    fname.getText().matches(".*[^a-z A-Z].*")||lname.getText().matches(".*[^a-z A-Z].*")||days<=2){
+            if(fname.getText()==""||lname.getText()==""||username.getText()==""||(username.getText().length()<=5&&username.getText().length()>=10)||
+                    password.getText().length()<5||fname.getText().matches(".*[^a-z A-Z].*")||lname.getText().matches(".*[^a-z A-Z].*")||days<=2){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setContentText("Please Fill in all the details and correct format.\n Select at least three (3) days for the schedule");
                 alert.show();
@@ -85,8 +85,8 @@ public class registerController {
             }
         }
         else if(medstaff.isSelected()){
-            if(fname.getText()==""||lname.getText()==""||username.getText()==""||username.getText().length()<5||password.getText().length()<5||
-                    fname.getText().matches(".*[^a-z A-Z].*")||lname.getText().matches(".*[^a-z A-Z].*")){
+            if(fname.getText()==""||lname.getText()==""||username.getText()==""||(username.getText().length()<=5&&username.getText().length()>=10)||
+                    password.getText().length()<5||fname.getText().matches(".*[^a-z A-Z].*")||lname.getText().matches(".*[^a-z A-Z].*")){
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setContentText("Please Fill in all the details and correct format");
                 alert.show();
@@ -133,6 +133,7 @@ public class registerController {
                         // Creates an Account object, which is sent as a parameter in the addAccount method
                         Account account = new Account(user, pass, usertype, salt);
                         int id = accountDAO.addAccount(account);
+                        accountDAO.setLoginStatus(id, "out");
 
                         // Checks if the record is inserted
                         if (id == -1) throw new IOException("Error");
@@ -149,17 +150,18 @@ public class registerController {
                                 doctorDAO.addDoctor(doctor);
                             }
                         }
+                        // Closes the current window after processing.
+                        Stage stage = (Stage) main.getScene().getWindow();
+                        stage.hide();
+                        // Reloads the table to see the inserted record.
+                        registerButton.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
                     } else {
                         Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setContentText("Username already exists.");
                         alert.show();
                     }
                 }
-                // Closes the current window after processing.
-                Stage stage = (Stage) main.getScene().getWindow();
-                stage.hide();
-                // Reloads the table to see the inserted record.
-                registerButton.setOnAction(event1 -> stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_HIDDEN)));
+
             }
 
         } catch (IOException | NoSuchAlgorithmException exception) {

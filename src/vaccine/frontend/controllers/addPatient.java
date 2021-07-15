@@ -31,7 +31,7 @@ public class addPatient implements Initializable {
     private ComboBox<String> drID, drID2, vaccineID, schedule;
 
     @FXML
-    private AnchorPane main, mainupd;
+    private AnchorPane main, mainupd, win;
 
     @FXML
     private Button saveEntry, updateEntry, deleteEntry, updatestatus;
@@ -104,7 +104,7 @@ public class addPatient implements Initializable {
                 "Monday",
                 "Tuesday",
                 "Wednesday",
-                "Thusday",
+                "Thursday",
                 "Friday",
                 "Saturday"
         };
@@ -234,7 +234,7 @@ public class addPatient implements Initializable {
                 }
                 secondDose.getEditor().setText(second_dose);
 
-                if(getAvailableVaccinators(first_dose).isEmpty()||getAvailableVaccinators(second_dose).isEmpty()){
+                if(event.getSource() != vaccineID && (getAvailableVaccinators(first_dose).isEmpty()||getAvailableVaccinators(second_dose).isEmpty())){
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setContentText("No available vaccinators for the date. Please select a new date.");
                     alert.show();
@@ -243,6 +243,7 @@ public class addPatient implements Initializable {
                     drID.setItems(null);
                     drID2.setItems(null);
                 }
+                calendar.add(Calendar.DAY_OF_MONTH, interval*(-1));
             }
 
         } catch (ParseException e) {

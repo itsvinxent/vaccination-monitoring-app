@@ -1,45 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="main" prefHeight="585.0" prefWidth="763.0" style="-fx-background-color: #0e2a47;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.frontend.controllers.addVaccine">
+<AnchorPane fx:id="main" prefHeight="550.0" prefWidth="700.0" style="-fx-background-color: #0e2a47;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.frontend.controllers.addVaccine">
    <children>
-      <Button fx:id="vaccineEntry" alignment="CENTER" layoutX="309.0" layoutY="460.0" mnemonicParsing="false" onAction="#saveVaccine" prefHeight="58.0" prefWidth="171.0" style="-fx-background-color: #48ffd5;" text="Add Vaccine">
+      <Button fx:id="vaccineEntry" alignment="CENTER" layoutX="275.0" layoutY="366.0" mnemonicParsing="false" onAction="#saveVaccine" prefHeight="58.0" prefWidth="171.0" style="-fx-background-color: #48ffd5;" text="Add Vaccine">
          <font>
             <Font name="Arial Rounded MT Bold" size="20.0" />
          </font>
       </Button>
-      <Label layoutX="67.0" layoutY="123.0" text="Vaccine Brand:" textFill="#f8f6f6">
+      <Label layoutX="47.0" layoutY="151.0" text="Vaccine Brand:" textFill="#f8f6f6">
          <font>
             <Font name="Arial Rounded MT Bold" size="20.0" />
          </font>
       </Label>
-      <TextField fx:id="vaccineBrand" layoutX="275.0" layoutY="120.0" prefHeight="30.0" prefWidth="410.0" />
-      <TextField fx:id="dosageStock" layoutX="275.0" layoutY="162.0" prefHeight="30.0" prefWidth="410.0" />
-      <Label layoutX="67.0" layoutY="217.0" text="Dosage" textFill="#f8f6f6">
+      <TextField fx:id="vaccineBrand" layoutX="266.0" layoutY="148.0" prefHeight="30.0" prefWidth="410.0" />
+      <TextField fx:id="dosageStock" layoutX="266.0" layoutY="212.0" prefHeight="30.0" prefWidth="410.0" />
+      <Label layoutX="47.0" layoutY="264.0" text="Dosage" textFill="#f8f6f6">
          <font>
             <Font name="Arial Rounded MT Bold" size="20.0" />
          </font>
       </Label>
-      <Label layoutX="67.0" layoutY="240.0" prefHeight="23.0" prefWidth="150.0" text="Interval(Days):" textFill="#f8f6f6">
+      <Label layoutX="47.0" layoutY="292.0" prefHeight="23.0" prefWidth="150.0" text="Interval(Days):" textFill="#f8f6f6">
          <font>
             <Font name="Arial Rounded MT Bold" size="20.0" />
          </font>
       </Label>
-      <Button alignment="CENTER" layoutX="514.0" layoutY="458.0" mnemonicParsing="false" onAction="#cancel" prefHeight="62.0" prefWidth="171.0" style="-fx-background-color: #48ffd5;" text="Cancel">
+      <Button alignment="CENTER" layoutX="505.0" layoutY="364.0" mnemonicParsing="false" onAction="#cancel" prefHeight="62.0" prefWidth="171.0" style="-fx-background-color: #48ffd5;" text="Cancel">
          <font>
             <Font name="Arial Rounded MT Bold" size="20.0" />
          </font>
       </Button>
-      <Label layoutX="67.0" layoutY="165.0" text="Initial Dosage Stock:" textFill="#f8f6f6">
+      <Label layoutX="47.0" layoutY="215.0" text="Initial Dosage Stock:" textFill="#f8f6f6">
          <font>
             <Font name="Arial Rounded MT Bold" size="20.0" />
          </font>
       </Label>
-      <TextField fx:id="dosageInterval" layoutX="275.0" layoutY="225.0" prefHeight="30.0" prefWidth="410.0" />
+      <TextField fx:id="dosageInterval" layoutX="266.0" layoutY="288.0" prefHeight="30.0" prefWidth="410.0" />
       <Button fx:id="vaccineUpdate" alignment="CENTER" disable="true" layoutX="309.0" layoutY="460.0" mnemonicParsing="false" onAction="#updateVaccine" prefHeight="58.0" prefWidth="171.0" style="-fx-background-color: #48ffd5;" text="Update" visible="false">
          <font>
             <Font name="Arial Rounded MT Bold" size="20.0" />

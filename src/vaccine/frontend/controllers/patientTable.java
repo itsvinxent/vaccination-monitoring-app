@@ -586,6 +586,7 @@ public class patientTable implements Initializable {
             Optional <ButtonType> action = alert.showAndWait();
 
             if (action.get() == ButtonType.OK) {
+                accountDAO.setLoginStatus(id, "out");
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/login.fxml"));
                 Parent root = loader.load();
                 Stage stage = new Stage();
@@ -840,6 +841,11 @@ public class patientTable implements Initializable {
 
     public void reloadTables() {
         displayName(id, _name, type);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setContentText("Tables are now updated.");
+        alert.setHeaderText("Tables loaded successfully.");
+        alert.setTitle("Success");
+        alert.show();
     }
 
 }
