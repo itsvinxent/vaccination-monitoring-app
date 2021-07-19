@@ -157,20 +157,59 @@ public class scheduleDAO {
      * @param date value to be checked in the firstTime/secondTime attribute of each tuple. (Current Date)
      * @return ObservableList of Schedule Bean object/s.
      */
-    public static ObservableList<Schedule> getCurrentSchedule(String date) {
+    public static ObservableList<Schedule> getCurrentScheduleFirst(String date) {
         ObservableList<Schedule> list = FXCollections.observableArrayList();
         try {
             conn = SqliteDBCon.Connector();
             ps = conn.prepareStatement("SELECT * FROM schedule_info " +
-                    "WHERE firstDose = ? and status = 'incomplete' or secondDose = ? and status = 'partial'");
+                    "WHERE firstDose = ? and status = 'incomplete'");
             ps.setString(1, date);
-            ps.setString(2, date);
             rs = ps.executeQuery();
             while(rs.next()) {
                 list.add(
                         new Schedule(
                                 rs.getInt("patientID"),
                                 doctorDAO.getDoctorNameByDoctorID(rs.getInt("doctor1ID")),
+                                doctorDAO.getDoctorNameByDoctorID(rs.getInt("doctor1ID")),
+                                rs.getString("patientLName"),
+                                rs.getString("patientFName"),
+                                rs.getString("age"),
+                                rs.getString("sex"),
+                                rs.getString("city"),
+                                vaccineDAO.getVaccineByVaccineID(rs.getInt("vacID")).getVaccineBrand(),
+                                rs.getString("firstDose"),
+                                rs.getString("secondDose"),
+                                rs.getString("firstTime"),
+                                rs.getString("secondTime"),
+                                rs.getString("status")
+                        )
+                );
+            }
+            conn.close();
+        } catch (Exception exception) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error!");
+            alert.setHeaderText("An error occurred.");
+            alert.setContentText("Error: " + exception + "\nPlease contact the Administrator for more info.");
+            alert.showAndWait();
+            return null;
+        }
+        return list;
+    }
+
+    public static ObservableList<Schedule> getCurrentScheduleSecond(String date, ObservableList<Schedule> list) {
+
+        try {
+            conn = SqliteDBCon.Connector();
+            ps = conn.prepareStatement("SELECT * FROM schedule_info " +
+                    "WHERE secondDose = ? and status = 'partial'");
+            ps.setString(1, date);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                list.add(
+                        new Schedule(
+                                rs.getInt("patientID"),
+                                doctorDAO.getDoctorNameByDoctorID(rs.getInt("doctor2ID")),
                                 doctorDAO.getDoctorNameByDoctorID(rs.getInt("doctor2ID")),
                                 rs.getString("patientLName"),
                                 rs.getString("patientFName"),

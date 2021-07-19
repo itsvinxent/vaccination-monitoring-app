@@ -121,8 +121,8 @@ public class addPatient implements Initializable {
             patient = new Schedule(
                     drID.getValue(),
                     drID2.getValue(),
-                    patientLName.getText(),
-                    patientFName.getText(),
+                    patientLName.getText().replaceAll("\\s", ""),
+                    patientFName.getText().replaceAll("\\s", ""),
                     age.getText(),
                     capitalize(sex.getText()),
                     capitalize(cityAddress.getText()),
@@ -156,8 +156,8 @@ public class addPatient implements Initializable {
                     patient.getPatientNum(),
                     drID.getValue(),
                     drID2.getValue(),
-                    patientLName.getText(),
-                    patientFName.getText(),
+                    patientLName.getText().replaceAll("\\s", ""),
+                    patientFName.getText().replaceAll("\\s", ""),
                     age.getText(),
                     capitalize(sex.getText()),
                     capitalize(cityAddress.getText()),
@@ -173,7 +173,6 @@ public class addPatient implements Initializable {
                 vaccineDAO.updateStorageAmount(vaccineDAO.getVaccineIDByBrand(patient.getVaccineBrand()), -1);
                 vaccineDAO.updateStorageAmount(vaccineDAO.getVaccineIDByBrand(updatedPatient.getVaccineBrand()), 1);
             }
-            System.out.println(updatedPatient.getFirstDose());
             Stage stage = (Stage) main.getScene().getWindow();
             stage.hide();
 
@@ -284,8 +283,8 @@ public class addPatient implements Initializable {
         patient = scheduleDAO.getPatientByPatientID(patientID);
         drID.setValue(patient.getDoctorName_1());
         drID2.setValue(patient.getDoctorName_2());
-        patientFName.setText(patient.getPatientFName());
-        patientLName.setText(patient.getPatientLName());
+        patientFName.setText(patient.getPatientFName().replaceAll("\\s", ""));
+        patientLName.setText(patient.getPatientLName().replaceAll("\\s", ""));
         age.setText(patient.getAge());
         sex.setText(patient.getSex());
         vaccineID.setValue(patient.getVaccineBrand());

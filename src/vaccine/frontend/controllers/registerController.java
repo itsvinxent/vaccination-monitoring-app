@@ -297,8 +297,8 @@ public class registerController {
             medstaff.setSelected(true);
             disableSchedule(true);
             String[] fullname = staff.getStaffName().split(",", -2);
-            lname.setText(fullname[0].strip());
-            fname.setText(fullname[1].strip());
+            lname.setText(fullname[0].replaceAll("\\s", ""));
+            fname.setText(fullname[1].replaceAll("\\s", ""));
         }else if(account.getUsertype().equals("vaccinator")){
             doctors = doctorDAO.getDoctorByUserID(staffID);
             doctor.setSelected(true);
@@ -312,8 +312,8 @@ public class registerController {
             if (sched.contains("Saturday")) chkSat.setSelected(true);
 
             String[] fullname = doctors.getDoctorName().split(",", -2);
-            lname.setText(fullname[0].strip());
-            fname.setText(fullname[1].strip());
+            lname.setText(fullname[0].replaceAll("\\s", ""));
+            fname.setText(fullname[1].replaceAll("\\s", ""));
         } else {
             disableSchedule(true);
             fname.setDisable(true);

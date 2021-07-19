@@ -291,7 +291,8 @@ public class patientTable implements Initializable {
                 vaccineInfoButton.setOpacity(1);
                 setTableColumnSizes(true);
                 patients = scheduleDAO.getAllPatients();
-                schedules = scheduleDAO.getCurrentSchedule(currentDate);
+                schedules = scheduleDAO.getCurrentScheduleFirst(currentDate);
+                schedules = scheduleDAO.getCurrentScheduleSecond(currentDate, schedules);
                 break;
 
             default:
@@ -303,7 +304,8 @@ public class patientTable implements Initializable {
                 vaccineInfoButton.setLayoutY(332);
                 setTableColumnSizes(true);
                 patients = scheduleDAO.getAllPatients();
-                schedules = scheduleDAO.getCurrentSchedule(currentDate);
+                schedules = scheduleDAO.getCurrentScheduleFirst(currentDate);
+                schedules = scheduleDAO.getCurrentScheduleSecond(currentDate, schedules);
                 break;
         }
         nameLabel.setText(msg);
