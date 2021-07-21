@@ -1,4 +1,4 @@
-package vaccine.frontend.controllers;
+package vaccine.frontend;
 
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;

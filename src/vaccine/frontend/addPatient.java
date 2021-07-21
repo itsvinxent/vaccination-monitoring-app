@@ -1,4 +1,4 @@
-package vaccine.frontend.controllers;
+package vaccine.frontend;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -283,8 +283,8 @@ public class addPatient implements Initializable {
         patient = scheduleDAO.getPatientByPatientID(patientID);
         drID.setValue(patient.getDoctorName_1());
         drID2.setValue(patient.getDoctorName_2());
-        patientFName.setText(patient.getPatientFName().replaceAll("\\s", ""));
-        patientLName.setText(patient.getPatientLName().replaceAll("\\s", ""));
+        patientFName.setText(patient.getPatientFName());
+        patientLName.setText(patient.getPatientLName());
         age.setText(patient.getAge());
         sex.setText(patient.getSex());
         vaccineID.setValue(patient.getVaccineBrand());

@@ -19,10 +19,10 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         try{
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("frontend/gui/login.fxml")));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("frontend/login.fxml")));
             Scene scene = new Scene(root);
 
-            Image logo = new Image("vaccine/frontend/gui/img/GitHub.png");
+            Image logo = new Image("vaccine/frontend/img/GitHub.png");
             stage.setTitle("Vaccine Monitoring App");
             stage.setResizable(false);
             stage.getIcons().add(logo);

@@ -1,17 +1,10 @@
 package vaccine.backend.dao;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.chart.PieChart;
-import javafx.scene.control.Alert;
-import vaccine.backend.classes.Vaccine;
 import vaccine.backend.util.SqliteDBCon;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
-import vaccine.frontend.controllers.addPatient;
 
 public class graphDAO {
     static Connection conn = null;

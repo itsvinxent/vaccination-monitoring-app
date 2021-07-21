@@ -1,4 +1,4 @@
-package vaccine.frontend.controllers;
+package vaccine.frontend;
 
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -353,7 +353,7 @@ public class patientTable implements Initializable {
      * @throws IOException
      */
     public void registerPopUp(ActionEvent event) throws  IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("../gui/register.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("register.fxml"));
         Stage stage = new Stage();
         Scene scene = new Scene(root);
         Stage current = (Stage) main.getScene().getWindow();
@@ -376,7 +376,7 @@ public class patientTable implements Initializable {
      * @throws IOException
      */
     public void vaccinePopUp(ActionEvent event) throws  IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("../gui/addVaccine.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("addVaccine.fxml"));
         Stage stage = new Stage();
         Scene scene = new Scene(root);
         Stage current = (Stage) main.getScene().getWindow();
@@ -402,7 +402,7 @@ public class patientTable implements Initializable {
         try {
             if (patientT.getSelectionModel().getSelectedItem() != null) {
                 if (event.getClickCount() == 2 && (!type.equals("vaccinator"))) {
-                    FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("../gui/addPatient.fxml")));
+                    FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("addPatient.fxml")));
                     Parent root = loader.load();
                     Scene scene = new Scene(root);
                     Stage stage = new Stage();
@@ -429,7 +429,7 @@ public class patientTable implements Initializable {
     public void vaccineUpdatePopUp(MouseEvent event) throws IOException {
         try {
             if (event.getClickCount() == 2 && vaccineT.getSelectionModel().getSelectedItem() != null){
-                FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("../gui/addVaccine.fxml")));
+                FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("addVaccine.fxml")));
                 Parent root = loader.load();
                 Scene scene = new Scene(root);
                 Stage stage = new Stage();
@@ -456,7 +456,7 @@ public class patientTable implements Initializable {
     public void staffUpdatePopUp(MouseEvent event) throws IOException {
         try {
             if (event.getClickCount() == 2 && accountT.getSelectionModel().getSelectedItem() != null){
-                FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("../gui/register.fxml")));
+                FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("register.fxml")));
                 Parent root = loader.load();
                 Scene scene = new Scene(root);
                 Stage stage = new Stage();
@@ -483,7 +483,7 @@ public class patientTable implements Initializable {
     public void getSchedule(MouseEvent event) throws IOException {
         if (schedT.getSelectionModel().getSelectedItem() != null) {
             if (event.getClickCount() == 2 && (!type.equals("vaccinator"))) {
-                FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("../gui/addPatient.fxml")));
+                FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("addPatient.fxml")));
                 Parent root = loader.load();
                 Scene scene = new Scene(root);
                 Stage stage = new Stage();
@@ -565,7 +565,7 @@ public class patientTable implements Initializable {
     }
 
     public void graphs(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("../gui/graphs.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("graphs.fxml"));
         Stage stage = new Stage();
         Scene scene = new Scene(root);
         Stage current = (Stage) main.getScene().getWindow();
@@ -589,7 +589,7 @@ public class patientTable implements Initializable {
 
             if (action.get() == ButtonType.OK) {
                 accountDAO.setLoginStatus(id, "out");
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/login.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
                 Parent root = loader.load();
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);

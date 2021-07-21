@@ -1,4 +1,4 @@
-package vaccine.frontend.controllers;
+package vaccine.frontend;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

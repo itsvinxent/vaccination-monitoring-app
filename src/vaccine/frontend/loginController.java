@@ -1,12 +1,9 @@
-package vaccine.frontend.controllers;
+package vaccine.frontend;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -18,10 +15,7 @@ import javafx.stage.WindowEvent;
 import vaccine.backend.classes.Account;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 import vaccine.backend.classes.Doctor;
 import vaccine.backend.classes.Staff;
@@ -61,7 +55,7 @@ public class loginController {
             alert.show();
         }
         else {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../gui/dashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("dashboard.fxml"));
             root = loader.load();
             stage = new Stage();
             scene = new Scene(root);

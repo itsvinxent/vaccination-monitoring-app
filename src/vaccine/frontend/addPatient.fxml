@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="win" minHeight="-Infinity" minWidth="-Infinity" prefHeight="560.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.frontend.controllers.addPatient">
+<AnchorPane fx:id="win" minHeight="-Infinity" minWidth="-Infinity" prefHeight="560.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vaccine.frontend.addPatient">
    <children>
       <AnchorPane fx:id="main" prefHeight="560.0" prefWidth="650.0" style="-fx-background-color: #0e2a47;">
          <children>

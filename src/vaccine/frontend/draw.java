@@ -1,4 +1,4 @@
-package vaccine.frontend.controllers;
+package vaccine.frontend;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -21,7 +21,7 @@ public class draw {
      */
     public static void screen(Parent parent, Stage stage, Scene scene) {
         try {
-            Image logo = new Image("vaccine/frontend/gui/img/GitHub.png");
+            Image logo = new Image("vaccine/frontend/img/GitHub.png");
             stage.setTitle("Vaccine Monitoring App");
             stage.setResizable(false);
             stage.getIcons().add(logo);

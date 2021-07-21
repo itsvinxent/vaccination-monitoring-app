@@ -15,7 +15,7 @@ public class SqliteDBCon {
         try{
             Class.forName("org.sqlite.JDBC");
             String currentPath = System.getProperty("user.dir");
-            return DriverManager.getConnection("jdbc:sqlite:"+currentPath+"\\src\\vaccine\\vaccinedb.db");
+            return DriverManager.getConnection("jdbc:sqlite:"+currentPath+"\\vaccinedb.db");
         } catch (Exception e) {
             //To do
             return null;
